@@ -4,9 +4,9 @@ x509_extensions = v3_req
 prompt = no
 [req_distinguished_name]
 C = PH
-ST = Albay
-L = Legazpi
-O = Eric Reyes
+ST = Luzon
+L = Metro Manila
+O = PH Developers
 OU = N/A
 CN = www.localhost.com
 [v3_req]
