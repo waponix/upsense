@@ -12,9 +12,7 @@ broker.listen(() => {
 
     let receiver = new Receiver(TOPIC);
     receiver.connect(() => {
-        let storage = new Storage((message) => {
-            console.log(message);
-        });
+        let storage = new Storage();
 
         receiver.onMessage = (topic, message) => {
             storage.save(JSON.parse(message.toString()));

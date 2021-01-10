@@ -1,53 +1,43 @@
-const Influx = require('influx');
+const {InfluxDB, Point} = require('@influxdata/influxdb-client');
 
-const DATABASE = 'temperature_reading';
+// You can generate a Token from the "Tokens Tab" in the UI
+const TOKEN = 'sHq-XTHEV0o4TQr5r4ihijDcGEzorE5Sq3n_eGvuEMYo6SkKOmTRxd54NsqX8m0VrhOMt6DvazGhvmAat_kKfw==';
+const ORG = 'upsense';
+const BUCKET = 'temperature';
 
-const CONNECTION_OPTION = {
-    host: 'localhost',
-    port: 8086,
-    database: DATABASE,
-    username: 'root',
-    password: 'admin123',
-    schema: [
-        {
-            measurement: 'temperature',
-            fields: {
-                temperature: Influx.FieldType.FLOAT,
-            },
-            tags: ['host'],
-        },
-    ],
-};
+class Storage
+{
+    client = null;
 
-class Storage {
-    influx = null;
-
-    constructor(cb = () => {})
+    constructor()
     {
-        this.influx = new Influx.InfluxDB(CONNECTION_OPTION);
+        this.client = new InfluxDB({url: 'http://localhost:8086', token: TOKEN});
 
-        this.influx.getDatabaseNames().then((names) => {
-            console.log(names);
-            if (!names.includes(DATABASE)) {
-                return this.influx.createDatabase(DATABASE);
-            }
-
-            return null;
-        }).then(cb);
+        return this;
     }
 
-    save(message, cb = () => {}) {
-        console.log(`Storing message: ${message.temperature} ${message.timestamp}`);
-        this.influx.writePoints([
-            {
-                measurement: 'temperature',
-                fields: {
-                    temperature: message.temperature,
-                },
-                timestamp: message.timestamp,
-            },
-        ])
-            .then(cb)
+    save(reading)
+    {
+        const writeApi = this.client.getWriteApi(ORG, BUCKET);
+        writeApi.useDefaultTags({host: 'host1'});
+
+        const point = new Point('reading');
+        point
+            .floatField('temperature', reading.temperature)
+            .intField('timestamp', reading.timestamp);
+
+        writeApi.writePoint(point);
+        writeApi
+            .close()
+            .then(() => {
+                console.log(reading);
+            })
+            .catch(e => {
+                console.error(e)
+                console.log('\nFinished ERROR')
+            });
+
+        return this;
     }
 }
 
