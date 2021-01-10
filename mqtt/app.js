@@ -1,6 +1,7 @@
 const Broker = require('./broker');
 const Receiver = require('./receiver');
 const Transmitter = require('./transmitter');
+const Storage = require('./storage');
 
 const TOPIC = 'sensor/temperature/reading';
 
@@ -11,8 +12,12 @@ broker.listen(() => {
 
     let receiver = new Receiver(TOPIC);
     receiver.connect(() => {
+        let storage = new Storage((message) => {
+            console.log(message);
+        });
+
         receiver.onMessage = (topic, message) => {
-            console.log(JSON.parse(message.toString()));
+            storage.save(JSON.parse(message.toString()));
         }
     });
 

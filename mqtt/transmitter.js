@@ -1,4 +1,5 @@
 const mqtt = require('mqtt');
+const moment = require('moment');
 
 const CONNECT_OPTIONS = {
     port: 1883,
@@ -27,8 +28,12 @@ class Transmitter
             // keep sending the temperature
             this.tick = setInterval(() => {
                 let temperature = 100 * Math.random();
+                let timestamp = moment().unix();
 
-                this.send(JSON.stringify({temperature}));
+                this.send(JSON.stringify({
+                    temperature,
+                    timestamp
+                }));
             }, this.interval);
         });
 
