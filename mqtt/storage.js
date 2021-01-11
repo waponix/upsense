@@ -1,9 +1,5 @@
 const {InfluxDB, Point} = require('@influxdata/influxdb-client');
-
-// You can generate a Token from the "Tokens Tab" in the UI
-const TOKEN = 'sHq-XTHEV0o4TQr5r4ihijDcGEzorE5Sq3n_eGvuEMYo6SkKOmTRxd54NsqX8m0VrhOMt6DvazGhvmAat_kKfw==';
-const ORG = 'upsense';
-const BUCKET = 'temperature';
+const {INFLUX_TOKEN, INFLUX_ORG, INFLUX_BUCKET, INFLUX_PROTOCOL, INFLUX_PORT, INFLUX_HOST} = require('./config');
 
 class Storage
 {
@@ -11,14 +7,14 @@ class Storage
 
     constructor()
     {
-        this.client = new InfluxDB({url: 'http://localhost:8086', token: TOKEN});
+        this.client = new InfluxDB({url: INFLUX_PROTOCOL  + '://' + INFLUX_HOST + ':' + INFLUX_PORT, token: INFLUX_TOKEN});
 
         return this;
     }
 
     save(reading)
     {
-        const writeApi = this.client.getWriteApi(ORG, BUCKET);
+        const writeApi = this.client.getWriteApi(INFLUX_ORG, INFLUX_BUCKET);
         writeApi.useDefaultTags({host: 'host1'});
 
         const point = new Point('reading');

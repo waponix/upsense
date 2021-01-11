@@ -1,12 +1,13 @@
 const mqtt = require('mqtt');
 const moment = require('moment');
+const {MQTT_PORT, MQTT_HOST, MQTT_PROTOCOL, MQTT_USERNAME, MQTT_PASSWORD} = require('./config');
 
 const CONNECT_OPTIONS = {
-    port: 1883,
-    host: 'localhost',
-    protocol: 'mqtts',
-    username: 'root',
-    password: 'admin',
+    port: MQTT_PORT,
+    host: MQTT_HOST,
+    protocol: MQTT_PROTOCOL,
+    username: MQTT_USERNAME,
+    password: MQTT_PASSWORD,
     rejectUnauthorized: false,
 };
 

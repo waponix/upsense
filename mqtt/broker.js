@@ -1,8 +1,8 @@
 const tls = require('tls');
 const fs = require('fs');
 const aedes = require('aedes');
+const {MQTT_PORT, MQTT_HOST} = require('./config');
 
-const PORT = 1883;
 const OPTIONS = {
     key: fs.readFileSync('./certificates/cert.key'),
     cert: fs.readFileSync('./certificates/cert.pem'),
@@ -18,10 +18,10 @@ class Broker
         this.aedes = aedes();
         this.server = tls.createServer(OPTIONS, this.aedes.handle);
 
-        console.log('Starting MQTT broker on port:' + PORT);
+        console.log('Starting MQTT broker on port: ' + MQTT_PORT);
 
-        this.server.listen(PORT, () => {
-            console.log('MQTT broker now running at localhost:' + PORT);
+        this.server.listen(MQTT_PORT, () => {
+            console.log('MQTT broker now running at ' + MQTT_HOST + ': ' + MQTT_PORT);
             cb();
         });
 
