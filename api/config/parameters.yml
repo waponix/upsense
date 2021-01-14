@@ -1,0 +1,10 @@
+# JWT parameters
+jwt:
+    secret: upsense_secret # TODO: change this to a more sophisticated value
+    refreshSecret: upsense_refresh_secret
+    algorithm: HS256
+    issuer: https://upsense.com
+    expiration: 1 hr
+
+pagination:
+    limit: 20
