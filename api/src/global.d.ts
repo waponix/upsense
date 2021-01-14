@@ -1,3 +1,1 @@
-declare module Global {
-    refresh
-}
+declare module Global {    refresh}
