@@ -11,6 +11,7 @@ import User from '@paljs/ui/User';
 import { getPathReady } from './Sidebar';
 import { Location } from '@reach/router';
 import { breakpointDown } from '@paljs/ui/breakpoints';
+import { getUser } from "../services/auth";
 
 const HeaderStyle = styled.div`
   display: flex;
@@ -114,7 +115,7 @@ const Header: React.FC<HeaderProps> = (props) => {
             },
             {
               content: (
-                <Link to="/app/dashboard" className="logo">
+                <Link to="/app/home/dashboard" className="logo">
                   Upsense
                 </Link>
               ),
@@ -186,7 +187,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                       ]}
                       Link={Link}
                     >
-                      <User image="url('/icons/icon-72x72.png')" name="Ahmed Elywa" title="Manger" size="Medium" />
+                      <User image={`url('${getUser().picture}')`} name={getUser().username} title={getUser().role} size="Medium" />
                     </ContextMenu>
                   )}
                 </Location>
