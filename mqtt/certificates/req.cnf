@@ -1,1 +1,22 @@
-[req]distinguished_name = req_distinguished_namex509_extensions = v3_reqprompt = no[req_distinguished_name]C = PHST = LuzonL = Metro ManilaO = PH DevelopersOU = N/ACN = www.localhost.com[v3_req]keyUsage = digitalSignatureextendedKeyUsage = serverAuthsubjectAltName = @alt_names[alt_names]DNS.1 = www.localhost.comDNS.2 = localhost.comDNS.3 = localhost
+[req]
+distinguished_name = distinguished_name
+x509_extensions = v3_req
+prompt = no
+
+[distinguished_name]
+C = PH
+ST = Luzon
+L = Metro Manila
+O = PH Developers
+OU = N/A
+CN = www.localhost.com
+
+[v3_req]
+keyUsage = digitalSignature
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = www.localhost.com
+DNS.2 = localhost.com
+DNS.3 = localhost

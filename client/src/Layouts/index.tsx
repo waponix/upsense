@@ -58,7 +58,7 @@ const LayoutPage: React.FC<{ pageContext: { layout: string } }> = ({ children, p
               <LayoutColumns>
                 <LayoutColumn className="main-content">{children}</LayoutColumn>
               </LayoutColumns>
-              {pageContext.layout !== 'auth' && <LayoutFooter>Footer</LayoutFooter>}
+              {/*{pageContext.layout !== 'auth' && <LayoutFooter>All rights reserved {new Date().getFullYear()}</LayoutFooter>}*/}
             </LayoutContent>
           </LayoutContainer>
         </Layout>

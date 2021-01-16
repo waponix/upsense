@@ -80,25 +80,25 @@ const Header: React.FC<HeaderProps> = (props) => {
         </Label>
       ),
     },
-    {
-      value: 'cosmic',
-      label: (
-        <Label>
-          <EvaIcon name="droplet" options={{ fill: '#5a37b8' }} />
-          Cosmic
-        </Label>
-      ),
-    },
-    {
-      value: 'corporate',
-      label: (
-        <Label>
-          <EvaIcon name="droplet" options={{ fill: '#3366ff' }} />
-          Corporate
-        </Label>
-      ),
-      selected: true,
-    },
+    // {
+    //   value: 'cosmic',
+    //   label: (
+    //     <Label>
+    //       <EvaIcon name="droplet" options={{ fill: '#5a37b8' }} />
+    //       Cosmic
+    //     </Label>
+    //   ),
+    // },
+    // {
+    //   value: 'corporate',
+    //   label: (
+    //     <Label>
+    //       <EvaIcon name="droplet" options={{ fill: '#3366ff' }} />
+    //       Corporate
+    //     </Label>
+    //   ),
+    //   selected: true,
+    // },
   ];
   return (
     <LayoutHeader fixed>
@@ -114,8 +114,8 @@ const Header: React.FC<HeaderProps> = (props) => {
             },
             {
               content: (
-                <Link to="/" className="logo">
-                  Admin Template
+                <Link to="/app/dashboard" className="logo">
+                  Upsense
                 </Link>
               ),
             },
@@ -131,47 +131,47 @@ const Header: React.FC<HeaderProps> = (props) => {
                 />
               ),
             },
-            {
-              content: (
-                <Button size="Small" onClick={() => props.changeDir()}>
-                  {props.dir}
-                </Button>
-              ),
-            },
+            // {
+            //   content: (
+            //     <Button size="Small" onClick={() => props.changeDir()}>
+            //       {props.dir}
+            //     </Button>
+            //   ),
+            // },
           ]}
         />
         <Actions
           size="Small"
           className="right"
           actions={[
-            {
-              content: (
-                <a
-                  className="left"
-                  href={`https://github.com/paljs/gatsby-admin-template`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span className="github">Support us in GitHub</span>
-                  <img src={`https://badgen.net/github/stars/paljs/gatsby-admin-template`} />
-                </a>
-              ),
-            },
-            {
-              content: (
-                <a
-                  href="https://join.slack.com/t/paljs/shared_invite/zt-ju5j9bb9-onkc9ZksqPZq~yIYJ3BfKw"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img height="20" src="/slack.svg" alt="slack" />
-                </a>
-              ),
-            },
-            {
-              icon: 'twitter',
-              url: { href: 'https://twitter.com/AhmedElywh', target: '_blank' },
-            },
+            // {
+            //   content: (
+            //     <a
+            //       className="left"
+            //       href={`https://github.com/paljs/gatsby-admin-template`}
+            //       target="_blank"
+            //       rel="noreferrer"
+            //     >
+            //       <span className="github">Support us in GitHub</span>
+            //       <img src={`https://badgen.net/github/stars/paljs/gatsby-admin-template`} />
+            //     </a>
+            //   ),
+            // },
+            // {
+            //   content: (
+            //     <a
+            //       href="https://join.slack.com/t/paljs/shared_invite/zt-ju5j9bb9-onkc9ZksqPZq~yIYJ3BfKw"
+            //       target="_blank"
+            //       rel="noreferrer"
+            //     >
+            //       <img height="20" src="/slack.svg" alt="slack" />
+            //     </a>
+            //   ),
+            // },
+            // {
+            //   icon: 'twitter',
+            //   url: { href: 'https://twitter.com/AhmedElywh', target: '_blank' },
+            // },
             {
               content: (
                 <Location>
