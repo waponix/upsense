@@ -8,7 +8,7 @@ import Header from './Header';
 import SimpleLayout from './SimpleLayout';
 import SidebarCustom from './Sidebar';
 import { Router } from "@reach/router";
-import PrivateRoute from "../components/PrivateRoutes";
+import PrivateRoute from "../components/PrivateRoute";
 import Dashboard from "../pages/app/home/dashboard";
 
 const getDefaultTheme = (): DefaultTheme['name'] => {
