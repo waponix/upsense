@@ -115,8 +115,8 @@ const Header: React.FC<HeaderProps> = (props) => {
             },
             {
               content: (
-                <Link to="/app/home/dashboard" className="logo">
-                  Upsense
+                <Link to="/app/dashboard" className="logo">
+                    <img height="45" src="/logo.png" alt="Upsense" />
                 </Link>
               ),
             },
