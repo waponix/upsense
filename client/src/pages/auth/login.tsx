@@ -22,8 +22,6 @@ export default function Login() {
     // v will be true or false
   };
 
-  console.log(location.pathname);
-
   const onSubmit = async (e: any) => {
     e.preventDefault();
 

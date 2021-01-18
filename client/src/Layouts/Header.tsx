@@ -116,22 +116,22 @@ const Header: React.FC<HeaderProps> = (props) => {
             {
               content: (
                 <Link to="/app/dashboard" className="logo">
-                    <img height="45" src="/logo.png" alt="Upsense" />
+                    <img height="45" src="/logo-black-transparent-bg.png" alt="Upsense" />
                 </Link>
               ),
             },
-            {
-              content: (
-                <SelectStyled
-                  isSearchable={false}
-                  shape="SemiRound"
-                  placeholder="Themes"
-                  value={themeOptions.find((item) => item.value === props.theme.value)}
-                  options={themeOptions}
-                  onChange={({ value }: { value: DefaultTheme['name'] }) => props.theme.set(value)}
-                />
-              ),
-            },
+            // {
+            //   content: (
+            //     <SelectStyled
+            //       isSearchable={false}
+            //       shape="SemiRound"
+            //       placeholder="Themes"
+            //       value={themeOptions.find((item) => item.value === props.theme.value)}
+            //       options={themeOptions}
+            //       onChange={({ value }: { value: DefaultTheme['name'] }) => props.theme.set(value)}
+            //     />
+            //   ),
+            // },
             // {
             //   content: (
             //     <Button size="Small" onClick={() => props.changeDir()}>
@@ -187,7 +187,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                       ]}
                       Link={Link}
                     >
-                      <User image={`url('${getUser().picture}')`} name={getUser().username} title={getUser().role} size="Medium" />
+                      <User image={`url('${getUser().picture || ''}')`} name={getUser().username || ''} title={getUser().role || ''} size="Medium" />
                     </ContextMenu>
                   )}
                 </Location>

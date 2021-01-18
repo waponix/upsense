@@ -11,7 +11,7 @@ exports.onCreatePage = ({ page, actions }) => {
   if (page.path.match(/^\/app/)) {
     // paths under app will be restricted
     page.matchPath = '/app/*';
-    craetePage(page);
+    createPage(page);
   }
 
   if (page.path.match(/auth/)) {
