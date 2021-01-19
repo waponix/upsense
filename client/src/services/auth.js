@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-import { requestAuth } from './api';
+import { endAuth, requestAuth } from './api';
 
 const TOKEN_KEY = '_token';
 const USER_KEY = '_user';
@@ -85,6 +85,7 @@ export const isLoggedIn = () => {
  * @param callback
  */
 export const logout = callback => {
+    endAuth();
     setToken({});
     setUser({});
     callback();

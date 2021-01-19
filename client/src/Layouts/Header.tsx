@@ -183,7 +183,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                       currentPath={getPathReady(location.pathname)}
                       items={[
                         { title: 'Profile', link: { to: '/modal-overlays/tooltip' } },
-                        { title: 'Log out', link: { to: '/logout' } },
+                        { title: 'Log out', link: { to: '/auth/logout' } },
                       ]}
                       Link={Link}
                     >

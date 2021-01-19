@@ -46,3 +46,20 @@ export const getCompanies = async (...args) => {
         console.log(e.response)
     }
 }
+
+export const endAuth = async () => {
+    try {
+        const requestBody = {
+            query:
+            `   
+                mutation {
+                    logout(auth: "${getToken('refreshToken')}")
+                }
+            `
+        };
+
+        await axios.post(apiAuthUrl, requestBody);
+    } catch (e) {
+        console.log(e);
+    }
+}

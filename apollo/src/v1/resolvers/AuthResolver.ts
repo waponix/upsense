@@ -1,12 +1,9 @@
 import { Arg, Query, Mutation, Resolver } from 'type-graphql';
 import {getRepository, Repository} from 'typeorm';
 import { Admin } from '../entities/Admin';
-import { jwtConfig } from '../../config';
 import { Token } from '../objects/Token';
 import { RefreshToken } from '../entities/RefreshToken';
 import { TokenProviderService } from "../services/TokenProviderService";
-
-const jwt = require('jsonwebtoken');
 
 @Resolver()
 export class AuthResolver
@@ -35,8 +32,6 @@ export class AuthResolver
         // validate credential
         let admin: Admin | undefined = await this.adminRepo.findOne({ where: {username}, relations: ['refreshToken'] });
         let token = new Token();
-
-        console.log(admin);
 
         if (admin && admin.validatePassword(password)) {
             const accessToken = this.tokenService.generateAccessToken(admin);
@@ -91,6 +86,6 @@ export class AuthResolver
         }
 
         // will always return operation complete
-        return 'Operation complete';
+        return 'Operation successful';
     }
 }
