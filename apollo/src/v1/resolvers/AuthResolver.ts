@@ -53,17 +53,18 @@ export class AuthResolver
         token.message = 'Invalid refresh token';
         token.resultCode = 3;
 
+        let refreshToken: RefreshToken | undefined = await this.tokenRepo.findOne({where: {token: auth}, relations: ['admin']});
+
         let decoded = null;
-        let error = null;
+        let error = '';
 
         if (! await this.tokenService.verifyRefreshToken(auth, decoded, error)) {
+            // delete the token in the database
+            if (refreshToken) await this.tokenRepo.remove(refreshToken);
+            token.message = error;
             // return empty token
             return token;
         }
-
-        // TODO: check refresh token expired
-
-        let refreshToken: RefreshToken | undefined = await this.tokenRepo.findOne({where: {token: auth}, relations: ['admin']});
 
         if (!refreshToken) {
             // if refresh don't token exist
