@@ -23,5 +23,6 @@ export const jwtConfig = {
     secret: process.env.JWT_SECRET,
     refreshSecret: process.env.JWT_REFRESH_SECRET,
     issuer: process.env.JWT_ISSUER,
-    expiry: process.env.JWT_EXPIRY
+    expiry: process.env.JWT_EXPIRY,
+    refreshExpiry: process.env.JWT_REFRESH_EXPIRY
 }

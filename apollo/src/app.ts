@@ -38,6 +38,7 @@ class App
 
         this.app = express();
         this.app.use(
+            cors(), // enable cross-origin
             bodyParser.json(), // support application/json type post data
             bodyParser.urlencoded({ extended: true }), //support application/x-www-form-urlencoded post data)
         );
@@ -53,8 +54,7 @@ class App
     {
         this.app.use(
             '/api/graphql/auth',
-            this.jwt.optional,
-            cors() // enable cross-origin
+            this.jwt.optional
         );
 
         this.apiAuthSchema = await buildSchema({
@@ -77,7 +77,6 @@ class App
             '/api/graphql',
             this.jwt.required,
             this.jwt.authenticationErrorHandler,
-            cors() // enable cross-origin
         );
 
         this.apiSchema = await buildSchema({

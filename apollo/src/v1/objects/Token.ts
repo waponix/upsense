@@ -4,10 +4,10 @@ import { ObjectType, Field, Int } from 'type-graphql';
 export class Token
 {
     @Field(() => String, { nullable: true })
-    accessToken: string | null = null;
+    accessToken!: string;
 
     @Field(() => String, { nullable: true })
-    refreshToken: string | null = null;
+    refreshToken!: string;
 
     // always fail by default
     @Field(() => String)
