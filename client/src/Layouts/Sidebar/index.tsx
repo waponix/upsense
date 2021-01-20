@@ -29,21 +29,21 @@ const SidebarCustom: React.ForwardRefRenderFunction<Omit<SidebarRefObject, 'hide
 
   return (
     <Sidebar getState={getState} ref={sidebarRef} property="start" containerFixed responsive className="menu-sidebar">
-      {seeHeader && (
-        <header>
-          <Button
-            size="Tiny"
-            status="Primary"
-            onClick={() => {
-              setMenuState(!menuState);
-              menuRef.current?.toggle();
-            }}
-            fullWidth
-          >
-            {menuState ? <EvaIcon name="arrow-circle-up" /> : <EvaIcon name="arrow-circle-down" />}
-          </Button>
-        </header>
-      )}
+      {/*{seeHeader && (*/}
+      {/*  <header>*/}
+      {/*    <Button*/}
+      {/*      size="Tiny"*/}
+      {/*      status="Primary"*/}
+      {/*      onClick={() => {*/}
+      {/*        setMenuState(!menuState);*/}
+      {/*        menuRef.current?.toggle();*/}
+      {/*      }}*/}
+      {/*      fullWidth*/}
+      {/*    >*/}
+      {/*      {menuState ? <EvaIcon name="arrow-circle-up" /> : <EvaIcon name="arrow-circle-down" />}*/}
+      {/*    </Button>*/}
+      {/*  </header>*/}
+      {/*)}*/}
       <SidebarBody>
         <Location>
           {({ location }) => (

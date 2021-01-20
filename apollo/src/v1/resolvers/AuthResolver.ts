@@ -71,6 +71,8 @@ export class AuthResolver
             return token;
         }
 
+        // generate a new refresh token
+        token.refreshToken = await this.tokenService.generateRefreshToken(refreshToken.admin);
         token.accessToken = this.tokenService.generateAccessToken(refreshToken.admin);
         token.resultCode = 0;
         token.message = 'Operation success';

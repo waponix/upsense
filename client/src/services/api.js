@@ -1,33 +1,48 @@
 import axios from 'axios';
 import { getToken } from './auth';
-import jwtDecode from 'jwt-decode';
+import { refreshAuth } from './authApi';
 
 const apiBaseUri = 'http://localhost:8443/';
-const apiAuthUrl = `${apiBaseUri}api/graphql/auth`;
-const apiUrl = `${apiBaseUri}api/graphql`;
+const apiAuthUrl = `api/graphql/auth`;
+const apiUrl = `api/graphql`;
 
-// use this for all of the api calls under /api/graphql
-const authorization = (type = 'access') => {
-    return {
-        headers: {
-            Authorization: `Bearer ${getToken(`${type}Token`)}`
+// use this for accessing apis under /api/graphql
+let api = axios.create({
+    baseURL: apiBaseUri,
+    timeout: 1000,
+    headers: {'Content-Type': 'application/json'}
+});
+
+api.interceptors.request.use(
+    config => {
+        const token = getToken();
+
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
         }
-    };
-}
+        return config;
+    },
+    error => {
+        Promise.reject(error);
+    });
 
-// this is only used in login page
-export const requestAuth = async (username, password) => {
-    const requestBody = { query:
-            `mutation {
-                login (username: "${username}" password: "${password}") {
-                    accessToken
-                    refreshToken
-                }
-            }`};
-    let {data: {data: {login}}} = await axios.post(apiAuthUrl, requestBody);
+api.interceptors.response.use(
+    response => {
+        return response;
+    }, async error => {
+        const originalRequest = error.config;
 
-    return login;
-}
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+           await refreshAuth();
+
+            api.defaults.headers.common['Authorization'] = `Bearer ${getToken()}`;
+            return api(originalRequest);
+        }
+
+        return Promise.reject(error);
+    });
 
 export const getCompanies = async (...args) => {
     try {
@@ -39,27 +54,10 @@ export const getCompanies = async (...args) => {
             }
         }`};
 
-        let {data: {data: {companies}}} = await axios.post(apiUrl, requestBody, authorization());
+        let {data: {data: {companies}}} = await api.post(apiUrl, requestBody);
 
         return companies;
     } catch (e) {
-        console.log(e.response)
+        console.log(e.response);
     }
-}
-
-export const endAuth = async () => {
-    try {
-        const requestBody = {
-            query:
-            `   
-                mutation {
-                    logout(auth: "${getToken('refreshToken')}")
-                }
-            `
-        };
-
-        await axios.post(apiAuthUrl, requestBody);
-    } catch (e) {
-        console.log(e);
-    }
-}
+};

@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-import { endAuth, requestAuth } from './api';
+import { endAuth, requestAuth } from './authApi';
 
 const TOKEN_KEY = '_token';
 const USER_KEY = '_user';
@@ -10,7 +10,20 @@ export const isBrowser = () => typeof window !== 'undefined';
  * Store the token data
  * @param token
  */
-const setToken = token => window.localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
+
+export const setToken = token => {
+    window.localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
+
+    if (token.accessToken) {
+        const accessToken = token.accessToken;
+        const { user } = jwtDecode(accessToken);
+
+        // set the user
+        setUser(user);
+    } else {
+        setUser({});
+    }
+}
 
 /**
  * Get the stored token
@@ -49,14 +62,8 @@ export const handleLogin = async (credentials, successCallback, errorCallback) =
     try {
         let { accessToken, refreshToken, resultCode } = await requestAuth(credentials.username, credentials.password);
 
-        let payload = jwtDecode(accessToken);
-        let user = payload.user;
-
         // save the token
         setToken({ accessToken, refreshToken });
-
-        // save the user
-        setUser(user);
 
         successCallback();
     } catch (e) {
@@ -87,6 +94,5 @@ export const isLoggedIn = () => {
 export const logout = callback => {
     endAuth();
     setToken({});
-    setUser({});
     callback();
 };
