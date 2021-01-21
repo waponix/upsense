@@ -7,11 +7,13 @@ import { buildSchema } from 'type-graphql';
 import { appConfig } from './config';
 import { JwtAuth } from './components/security/JwtAuth';
 import { ApiAuthChecker } from './components/security/ApiAuthChecker';
+import http from 'http';
 
 // Import Resolvers
 import { AuthResolver } from './v1/resolvers/AuthResolver';
 import { AdminResolver } from './v1/resolvers/AdminResolver';
 import { CompanyResolver } from './v1/resolvers/CompanyResolver';
+import { SensorResolver } from './v1/resolvers/SensorResolver';
 
 const { ApolloServer } = require('apollo-server-express');
 
@@ -21,10 +23,10 @@ class App
     apiSchema: any;
     apiAuthSchema: any;
     app: any;
+    httpServer: any;
     apiServer: any;
     apiAuthServer: any;
     jwt: any;
-
 
     constructor()
     {
@@ -37,6 +39,7 @@ class App
         this.connection = await createConnection();
 
         this.app = express();
+        this.httpServer = http.createServer(this.app);
         this.app.use(
             cors(), // enable cross-origin
             bodyParser.json(), // support application/json type post data
@@ -47,7 +50,7 @@ class App
         await this.initApiServer();
 
         // listen to the configured port number
-        this.app.listen(appConfig.port, () => console.log(`API Server running at port ${appConfig.port}`));
+        this.httpServer.listen(appConfig.port, () => console.log(`API Server running at port ${appConfig.port}`));
     }
 
     private async initApiAuthServer()
@@ -59,7 +62,8 @@ class App
 
         this.apiAuthSchema = await buildSchema({
             resolvers: [
-                AuthResolver
+                AuthResolver,
+                SensorResolver,
             ],
             authChecker: () => true
         });
@@ -67,6 +71,8 @@ class App
         this.apiAuthServer = new ApolloServer({
             schema: this.apiAuthSchema
         });
+
+        this.apiAuthServer.installSubscriptionHandlers(this.httpServer)
 
         this.apiAuthServer.applyMiddleware({ app: this.app, path: '/api/graphql/auth' });
     }
