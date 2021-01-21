@@ -7,9 +7,9 @@ import { SidebarRefObject } from '@paljs/ui/Sidebar';
 import Header from './Header';
 import SimpleLayout from './SimpleLayout';
 import SidebarCustom from './Sidebar';
-import { Router } from "@reach/router";
-import PrivateRoute from "../components/PrivateRoute";
-import Dashboard from '../pages/app/home/dashboard';
+import { Router } from '@reach/router';
+import PrivateRoute from '../components/PrivateRoute';
+import Dashboard from '../pages/home/dashboard';
 
 const getDefaultTheme = (): DefaultTheme['name'] => {
   if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -48,7 +48,7 @@ const LayoutPage: React.FC<{ pageContext: { layout: string } }> = ({ children, p
         <SimpleLayout />
         <Layout evaIcons={icons} dir={dir} className={pageContext.layout === 'auth' ? 'auth-layout' : ''}>
           <Router>
-            <PrivateRoute path="/app/home/dashboard"></PrivateRoute>
+            <PrivateRoute path="/home/dashboard" component={Dashboard}></PrivateRoute>
           </Router>
           {pageContext.layout !== 'auth' && (
             <Header

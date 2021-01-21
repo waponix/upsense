@@ -11,7 +11,7 @@ import User from '@paljs/ui/User';
 import { getPathReady } from './Sidebar';
 import { Location } from '@reach/router';
 import { breakpointDown } from '@paljs/ui/breakpoints';
-import { getUser } from "../services/auth";
+import { getUser } from '../services/auth';
 
 const HeaderStyle = styled.div`
   display: flex;
@@ -115,8 +115,8 @@ const Header: React.FC<HeaderProps> = (props) => {
             },
             {
               content: (
-                <Link to="/app/dashboard" className="logo">
-                    <img height="45" src="/logo-black-transparent-bg.png" alt="Upsense" />
+                <Link to="/home/dashboard" className="logo">
+                  <img height="45" src="/logo-black-transparent-bg.png" alt="Upsense" />
                 </Link>
               ),
             },
@@ -182,12 +182,17 @@ const Header: React.FC<HeaderProps> = (props) => {
                       placement="bottom"
                       currentPath={getPathReady(location.pathname)}
                       items={[
-                        { title: 'Profile', link: { to: '/modal-overlays/tooltip' } },
+                        { title: 'Profile', link: { to: '/admin/profile' } },
                         { title: 'Log out', link: { to: '/auth/logout' } },
                       ]}
                       Link={Link}
                     >
-                      <User image={`url('${getUser().picture || ''}')`} name={getUser().username || ''} title={getUser().role || ''} size="Medium" />
+                      <User
+                        image={`url('${getUser().picture || ''}')`}
+                        name={getUser().username || ''}
+                        title={getUser().role || ''}
+                        size="Medium"
+                      />
                     </ContextMenu>
                   )}
                 </Location>
