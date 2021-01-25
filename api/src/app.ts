@@ -51,8 +51,8 @@ class App
 
         console.log(`API Server running at port ${appConfig.port}`);
 
-        await this.initApiServer();
         await this.initApiAuthServer();
+        await this.initApiServer();
         // await this.initWebsocketServer();
     }
 
