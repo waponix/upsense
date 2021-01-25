@@ -2,28 +2,28 @@ import 'reflect-metadata';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { createConnection, Connection } from 'typeorm';
+import { createConnection } from 'typeorm';
 import { buildSchema } from 'type-graphql';
 import { appConfig } from './config';
 import { JwtAuth } from './components/security/JwtAuth';
 import { ApiAuthChecker } from './components/security/ApiAuthChecker';
-import http from 'http';
+import { ApolloServer } from 'apollo-server-express';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { execute, subscribe } from 'graphql';
+import { createServer } from 'http';
 
 // Import Resolvers
 import { AuthResolver } from './v1/resolvers/AuthResolver';
 import { AdminResolver } from './v1/resolvers/AdminResolver';
 import { CompanyResolver } from './v1/resolvers/CompanyResolver';
-import { SensorResolver } from './v1/resolvers/SensorResolver';
-
-const { ApolloServer } = require('apollo-server-express');
+// import { SensorResolver } from './v1/resolvers/SensorResolver';
 
 class App
 {
     connection: any;
-    apiSchema: any;
-    apiAuthSchema: any;
     app: any;
     httpServer: any;
+    websocketServer: any;
     apiServer: any;
     apiAuthServer: any;
     jwt: any;
@@ -39,19 +39,40 @@ class App
         this.connection = await createConnection();
 
         this.app = express();
-        this.httpServer = http.createServer(this.app);
+        this.httpServer = createServer(this.app);
         this.app.use(
             cors(), // enable cross-origin
             bodyParser.json(), // support application/json type post data
             bodyParser.urlencoded({ extended: true }), //support application/x-www-form-urlencoded post data)
         );
 
-        await this.initApiAuthServer();
-        await this.initApiServer();
-
         // listen to the configured port number
-        this.httpServer.listen(appConfig.port, () => console.log(`API Server running at port ${appConfig.port}`));
+        await this.httpServer.listen(appConfig.port);
+
+        console.log(`API Server running at port ${appConfig.port}`);
+
+        await this.initApiServer();
+        await this.initApiAuthServer();
+        // await this.initWebsocketServer();
     }
+
+/*    private async initWebsocketServer()
+    {
+        const schema = await buildSchema({
+            resolvers: [
+                SensorResolver
+            ],
+            authChecker: () => true
+        });
+        this.websocketServer = new SubscriptionServer({
+            execute,
+            subscribe,
+            schema,
+        }, {
+            server: this.httpServer,
+            path: '/subscriptions'
+        });
+    }*/
 
     private async initApiAuthServer()
     {
@@ -60,47 +81,41 @@ class App
             this.jwt.optional
         );
 
-        this.apiAuthSchema = await buildSchema({
+        const schema = await buildSchema({
             resolvers: [
-                AuthResolver,
-                SensorResolver,
+                AuthResolver
             ],
             authChecker: () => true
         });
 
-        this.apiAuthServer = new ApolloServer({
-            schema: this.apiAuthSchema
-        });
-
-        this.apiAuthServer.installSubscriptionHandlers(this.httpServer)
-
-        this.apiAuthServer.applyMiddleware({ app: this.app, path: '/api/graphql/auth' });
+        this.apiAuthServer = new ApolloServer({ schema });
+        this.apiAuthServer.applyMiddleware({ app: this.app, path: '/api/graphql/auth'});
     }
 
     private async initApiServer()
     {
         this.app.use(
             '/api/graphql',
-            this.jwt.required,
+            // this.jwt.required,
             this.jwt.authenticationErrorHandler,
         );
 
-        this.apiSchema = await buildSchema({
+        const schema = await buildSchema({
             resolvers: [
                 AdminResolver,
                 CompanyResolver,
+                // SensorResolver
             ],
-            authChecker: ApiAuthChecker,
+            authChecker: /*ApiAuthChecker*/ () => true,
         });
 
         this.apiServer = new ApolloServer({
-            schema: this.apiSchema,
+            schema,
             context: (args: any) => {
-                const user = args.req.user.user || null;
+                const { user } = args.req.user || { user: null };
                 return { user };
             }
         });
-
         this.apiServer.applyMiddleware({ app: this.app, path: '/api/graphql' });
     }
 }
