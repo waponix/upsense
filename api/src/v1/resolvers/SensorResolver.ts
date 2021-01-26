@@ -1,7 +1,8 @@
 import {Args, Query, Resolver, Root, Subscription} from 'type-graphql';
 import { SensorPayload } from '../objects/SensorPayload';
 import sensorDataReceiver from '../mqtt/receivers/SensorDataReceiver';
-import { Sensor } from "../entities/Sensor";
+import { Sensor } from '../entities/Sensor';
+import { SubscriberArgs } from '../resolverArgs/SubscriberArgs';
 
 @Resolver()
 export class SensorResolver
@@ -12,14 +13,16 @@ export class SensorResolver
     }
     @Subscription(() => SensorPayload, {
         subscribe: () => {
-            return sensorDataReceiver.pubSub.asyncIterator('sensor/temperature/reading');
+            return sensorDataReceiver.pubSub.asyncIterator('sensor/+/temperature/reading');
         }})
     reading (
-        @Root() sensorPayload: SensorPayload
+        @Root() { temperature, timestamp }: SensorPayload,
+        @Args() { topic }: SubscriberArgs
     ) {
+        console.log(topic);
         let reading = new SensorPayload();
-        reading.temperature = sensorPayload.temperature;
-        reading.timestamp = sensorPayload.timestamp;
+        reading.temperature = temperature;
+        reading.timestamp = timestamp;
         return reading;
     }
 }
