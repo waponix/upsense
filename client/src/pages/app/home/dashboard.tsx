@@ -1,68 +1,51 @@
-import { Accordion, AccordionItem, AccordionRefObject } from '@paljs/ui/Accordion';
-import { Button } from '@paljs/ui/Button';
-import { Card, CardBody } from '@paljs/ui/Card';
+import React, { Component } from 'react';
+import SEO from '../../../components/SEO';
+import Loadable from '@loadable/component';
 import Row from '@paljs/ui/Row';
 import Col from '@paljs/ui/Col';
-import { List, ListItem } from '@paljs/ui/List';
-import React, {useRef, useState} from 'react';
-import SEO from '../../../components/SEO';
-import { getCompanies } from "../../../services/api";
+import { Card, CardHeader } from '@paljs/ui/Card';
 
-const Dashboard = () => {
-  const accordionRef = useRef<AccordionRefObject>(null);
-  const style = { marginBottom: '1.5rem' };
+class Dashboard extends Component {
+  constructor(props: {}) {
+    super(props);
 
-  let [companies, setCompanies] = useState([]);
-
-  const loadCompanies = async () => {
-      setCompanies(await getCompanies());
-  };
-
-  const CompanyList = () => {
-    const record = companies.map(company => {
-      return (
-          <tr>
-            <td>{company.name}</td>
-            <td>{company.createdAt}</td>
-          </tr>
-      );
-    });
-
-    return (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Created at</th>
-            </tr>
-          </thead>
-          <tbody>
-          { record }
-          </tbody>
-        </table>
-    );
+    this.state = {
+      options: {
+        chart: {
+          id: 'temp-timeseries',
+        },
+        xaxis: {
+          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+        },
+      },
+      series: [
+        {
+          name: 'series-1',
+          data: [30, 40, 45, 50, 49, 60, 70, 91],
+        },
+      ],
+    };
   }
 
-  return (
-    <>
-      <SEO title="Dashboard" />
-      <Row>
-        <Col breakPoint={{ xs: 12, lg: 6 }}>
-          <Card>
-            <header>Companies</header>
-            <CardBody>
-              <Row>
-                <Col breakPoint={{ xs: 12, lg: 12}}>
-                  <Button onClick={loadCompanies}>Load</Button>
-                  <CompanyList/>
-                </Col>
-              </Row>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </>
-  );
-};
+  render() {
+    return (
+      <div>
+        <SEO title="Dashboard" />
+        <Row>
+          <Col breakPoint={{ xs: 6, md: 6, lg: 6 }}>
+            <Card>
+              <CardHeader>Real-time temperature</CardHeader>
+              <div className="temp-time-chart">
+                <LoadableChart options={this.state.options} series={this.state.series} type="line" />
+              </div>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+}
 
 export default Dashboard;
+
+const LoadableChart = Loadable(() => import('react-apexcharts/src/react-apexcharts'));

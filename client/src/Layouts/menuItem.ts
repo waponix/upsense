@@ -4,7 +4,7 @@ const items: MenuItemType[] = [
   {
     title: 'Dashboard',
     icon: { name: 'bar-chart-outline' },
-    link: { to: '/home/dashboard' },
+    link: { to: '/app/home/dashboard' },
   },
   {
     title: 'General',
@@ -13,12 +13,12 @@ const items: MenuItemType[] = [
       {
         title: 'Reports',
         icon: { name: 'layers-outline' },
-        link: { to: '/app/reports/index' },
+        link: { to: '/app/reports' },
       },
       {
         title: 'Logs',
         icon: { name: 'book-outline' },
-        link: { to: '/app/logs/index' },
+        link: { to: '/app/logs' },
       },
     ],
   },
@@ -29,27 +29,27 @@ const items: MenuItemType[] = [
       {
         title: 'Admin',
         icon: { name: 'people-outline' },
-        link: { to: '/app/admin/index' },
+        link: { to: '/app/admin' },
       },
       {
         title: 'Company',
         icon: { name: 'briefcase-outline' },
-        link: { to: '/app/company/index' },
+        link: { to: '/app/company' },
       },
       {
         title: 'Branch',
         icon: { name: 'grid-outline' },
-        link: { to: '/app/branch/index' },
+        link: { to: '/app/branch' },
       },
       {
         title: 'Hubs',
         icon: { name: 'radio-outline' },
-        link: { to: '/app/hubs/index' },
+        link: { to: '/app/hubs' },
       },
       {
         title: 'Zones',
         icon: { name: 'pin-outline' },
-        link: { to: '/app/zones/index' },
+        link: { to: '/app/zones' },
       },
     ],
   },
@@ -57,13 +57,7 @@ const items: MenuItemType[] = [
   {
     title: 'Settings',
     icon: { name: 'options-outline' },
-    children: [
-      {
-        title: 'Notification',
-        icon: { name: 'bell-outline' },
-        link: { to: '/app/notification-settings/index' },
-      },
-    ],
+    link: { to: '/app/settings' },
   },
   // {
   //   title: 'Extra Components',
