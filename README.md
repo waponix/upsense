@@ -1,1 +1,1 @@
-# UpsenseUpsense is an [IoT](https://en.wikipedia.org/wiki/Internet_of_things) application for managing and monitoring temperature readings#### Built With:> - NodeJS v14.15.4> - InfluxDB v1.8.3> - Docker v20.10.2
+# UpsenseUpsense is an [IoT](https://en.wikipedia.org/wiki/Internet_of_things) application for managing and monitoring temperature readings#### Built With:> - NodeJS v14.15.4> - Postgresql v13.1> - InfluxDB v1.8.3> - Docker v20.10.2# Docker Prerequisitesthe following docker images are needed for this project```> docker pull influxdb:1.8.3``` 
