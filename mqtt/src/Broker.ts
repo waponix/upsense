@@ -4,8 +4,8 @@ import aedes, {Client} from 'aedes';
 import { mqttConfig } from './config';
 
 const OPTIONS = {
-    key: fs.readFileSync('../certificates/cert.key'),
-    cert: fs.readFileSync('../certificates/cert.pem'),
+    key: fs.readFileSync(`${__dirname}/../../certificates/cert.key`),
+    cert: fs.readFileSync(`${__dirname}/../../certificates/cert.pem`),
 };
 
 export class Broker
