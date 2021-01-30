@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:10.5.8-focal
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_DATABASE: upsense
+
+  api:
+    image: upsense-api:latest
+    ports:
+      - 8443:8443
+    volumes:
+      - ./api:/var/www/upsense_api
+    links:
+      - mariadb
+      - influxdb
+
+  influxdb:
+    image: influxdb:1.8.3
+    ports:
+      - 8086:8086
+    volumes:
+      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
+      - ./influxdb/storage:/var/lib/influxdb
+
+  mqtt-broker:
+    image: upsense-mqtt-broker:latest
+    ports:
+      - 1883:1883
+    volumes:
+      - ./mqtt:/var/www/upsense_mqtt_broker
+    links:
+      - influxdb
