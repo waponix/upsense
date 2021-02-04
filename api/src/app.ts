@@ -36,7 +36,11 @@ class App
 
     private async initServer()
     {
-        this.connection = await createConnection();
+        try {
+            this.connection = await createConnection();
+        } catch (e:any) {
+            console.log(`Database connection failed: ${e.message}`);
+        }
 
         this.app = express();
         this.httpServer = createServer(this.app);
@@ -96,7 +100,7 @@ class App
     {
         this.app.use(
             '/api/graphql',
-            // this.jwt.required,
+            this.jwt.required,
             this.jwt.authenticationErrorHandler,
         );
 
@@ -106,7 +110,7 @@ class App
                 CompanyResolver,
                 // SensorResolver
             ],
-            authChecker: /*ApiAuthChecker*/ () => true,
+            authChecker: ApiAuthChecker,
         });
 
         this.apiServer = new ApolloServer({
@@ -120,4 +124,4 @@ class App
     }
 }
 
-const APP = new App();
+new App();
