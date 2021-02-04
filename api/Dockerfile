@@ -7,6 +7,7 @@ ADD ./.env /var/www
 
 RUN mkdir api
 COPY ./api/package.json /var/www/api
+COPY ./api/package-lock.json /var/www/api
 RUN cd /var/www/api && npm install
 COPY ./api /var/www/api
 

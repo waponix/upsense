@@ -10,6 +10,7 @@ ADD ./.env /var/www
 
 RUN mkdir mqtt_broker
 COPY ./mqtt/package.json /var/www/mqtt_broker
+COPY ./mqtt/package-lock.json /var/www/mqtt_broker
 
 RUN cd /var/www/mqtt_broker && npm install
 
