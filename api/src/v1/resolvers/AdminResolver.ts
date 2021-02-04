@@ -1,7 +1,7 @@
 import {Resolver, Query, Mutation, Authorized, Arg} from 'type-graphql';
 import { Admin } from '../entities/Admin';
 import { getRepository, Repository } from 'typeorm';
-import {CreateAdmin, UpdateAdmin} from '../resolverInputs/AdminDataInput';
+import {CreateAdminInput, UpdateAdminInput} from '../resolverInputs/AdminDataInput';
 
 @Resolver()
 export class AdminResolver
@@ -25,15 +25,16 @@ export class AdminResolver
 
     @Authorized('ROLE_ADMIN')
     @Mutation(() => Admin)
-    async createAdmin(@Arg("data") data: CreateAdmin) {
-        const admin = this.repo.create(data);
+    async createAdmin(@Arg("data") data: CreateAdminInput) {
+        let admin = this.repo.create(data);
+        admin.role = 'ROLE_ADMIN';
         await admin.save();
         return admin;
     }
 
     @Authorized('ROLE_ADMIN')
     @Mutation(() => Admin)
-    async updateAdmin(@Arg("id") id: number, @Arg("data") data: UpdateAdmin) {
+    async updateAdmin(@Arg("id") id: number, @Arg("data") data: UpdateAdminInput) {
         const admin = await this.repo.findOne({ where: { id }});
 
         if (!admin) {

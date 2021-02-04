@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, Arg, Ctx } from 'type-graphql';
 import {getRepository, Repository} from 'typeorm';
 import { Company } from '../entities/Company';
 import { QueryArgs } from '../resolverArgs/QueryArgs';
-import { CompanyDataInput } from '../resolverInputs/CompanyDataInput';
+import { CreateCompanyInput } from '../resolverInputs/CompanyDataInput';
 import { Context } from '../objects/Context';
 
 @Resolver()
@@ -31,7 +31,7 @@ export class CompanyResolver
     }
 
     @Mutation(() => Company)
-    async addCompany(@Arg('data') data: CompanyDataInput) {
+    async createCompany(@Arg('data') data: CreateCompanyInput) {
         let company = new Company();
 
         company.name = data.name;
