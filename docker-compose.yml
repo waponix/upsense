@@ -16,7 +16,7 @@ services:
     ports:
       - 8443:8443
     volumes:
-      - ./api:/var/www/upsense_api
+      - ./api:/var/www/api
     links:
       - mariadb:mysql
       - influxdb
