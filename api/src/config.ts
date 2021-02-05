@@ -12,7 +12,7 @@ export const appConfig = {
  * API pagination config
  */
 export const paginationConfig = {
-    pageMax: process.env.PAGE_LIMIT
+    limit: 25
 }
 
 /**

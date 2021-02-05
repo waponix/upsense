@@ -12,6 +12,8 @@ CREATE TABLE `admins` (
   `email` text DEFAULT NULL UNIQUE,
   `mobile_number` text DEFAULT NULL,
   `refresh_token_id` int(11) DEFAULT NULL UNIQUE,
+  `created_at` bigint(20) NOT NULL ON CREATE CURRENT_TIMESTAMP,
+  `updated_at` bigint(20) NOT NULL ON CREATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
