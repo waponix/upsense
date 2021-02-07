@@ -2,9 +2,9 @@ import {Admin} from "../entities/Admin";
 import {BaseRepository, ListOptions} from "./BaseRepository";
 import {paginationConfig} from "../../config";
 import {AdminRole} from "../../components/types/AdminRoleTypes";
-import {CreateAdminInput, UpdateAdminInput} from "../resolverInputs/AdminDataInput";
+import {CreateManagerInput, UpdateManagerInput} from "../resolverInputs/ManagerDataInput";
 
-export class AdminRepository extends BaseRepository
+export class ManagerRepository extends BaseRepository
 {
     private searchFields: string[] = [
         'id',
@@ -21,7 +21,7 @@ export class AdminRepository extends BaseRepository
      */
     async getList (options: ListOptions = {}) {
         let parameters: any = {
-            role: AdminRole.admin
+            role: AdminRole.manager
         };
         let whereStatements = [
             'admin.role = :role'
@@ -92,7 +92,7 @@ export class AdminRepository extends BaseRepository
         return await this.manager.getRepository(Admin).findOne({where: { email }});
     }
 
-    async create (data: CreateAdminInput) {
+    async create (data: CreateManagerInput) {
         const repository = await this.manager.getRepository(Admin);
         let admin: Admin = new Admin();
         admin.username = data.username;
@@ -102,7 +102,7 @@ export class AdminRepository extends BaseRepository
         admin.email = data.email;
         admin.mobileNumber = data.mobileNumber;
         admin.picture = data.picture;
-        admin.role = AdminRole.admin
+        admin.role = AdminRole.manager;
         await repository.save(admin);
         return admin;
     }
@@ -112,7 +112,7 @@ export class AdminRepository extends BaseRepository
      * @param admin
      * @param data
      */
-    async update (admin: Admin, data: UpdateAdminInput) {
+    async update (admin: Admin, data: UpdateManagerInput) {
         admin.firstName = data.firstName || admin.firstName;
         admin.lastName = data.lastName || admin.lastName;
         admin.email = data.email || admin.email;

@@ -1,31 +1,31 @@
 import {Resolver, Query, Mutation, Authorized, Arg, Args} from 'type-graphql';
 import { Admin } from '../entities/Admin';
-import {AdminFilterInput, CreateAdminInput, UpdateAdminInput} from '../resolverInputs/AdminDataInput';
-import {AdminRepository} from "../repositories/AdminRepository";
+import {ManagerFilterInput, CreateManagerInput, UpdateManagerInput} from '../resolverInputs/ManagerDataInput';
 import {QueryArgs} from "../resolverArgs/QueryArgs";
 import {SortType} from "../../components/types/SortOrderTypes";
-import {AdminResponse, SingleAdminResponse} from "../response/AdminResponse";
+import {ManagerResponse, SingleManagerResponse} from "../response/ManagerResponse";
 import {Status} from "../../components/types/ResponseStatusTypes";
 import {getConnection} from "typeorm";
+import {ManagerRepository} from "../repositories/MangerRepository";
 
 @Resolver()
-export class AdminResolver
+export class ManagerResolver
 {
-    private repo: AdminRepository;
+    private repo: ManagerRepository;
 
     constructor() {
-        this.repo = new AdminRepository();
+        this.repo = new ManagerRepository();
         this.repo.init(getConnection());
     }
 
     @Authorized('ROLE_ADMIN')
-    @Query(() => AdminResponse)
-    async getAdmins(
+    @Query(() => ManagerResponse)
+    async getManagers(
         // @Arg('sort') sort: SortType,
         @Args() {id, pageOffset, find}: QueryArgs,
-        @Arg('filters', { nullable: true }) filters?: AdminFilterInput
+        @Arg('filters', { nullable: true }) filters?: ManagerFilterInput
     ) {
-        let response = new AdminResponse();
+        let response = new ManagerResponse();
 
         response.result = await this.repo.getList({filters, page: pageOffset, find});
 
@@ -33,19 +33,19 @@ export class AdminResolver
     }
 
     @Authorized('ROLE_ADMIN')
-    @Query(() => SingleAdminResponse)
-    async getAdmin(@Arg("id") id: number) {
-        let response: SingleAdminResponse = new SingleAdminResponse();
+    @Query(() => SingleManagerResponse)
+    async getManager(@Arg("id") id: number) {
+        let response: SingleManagerResponse = new SingleManagerResponse();
 
         try {
-            let admin: Admin | undefined = await this.repo.findOneById(id);
+            let manager: Admin | undefined = await this.repo.findOneById(id);
 
-            if (admin === undefined) {
+            if (manager === undefined) {
                 response.status = Status.NotFound;
-                response.message = 'Operation failed, admin not found';
+                response.message = 'Operation failed, manager not found';
             }
 
-            response.result = admin;
+            response.result = manager;
         } catch {
             response.status = Status.InternalError;
             response.message = 'Operation failed, something went wrong please try again later';
@@ -55,20 +55,20 @@ export class AdminResolver
     }
 
     @Authorized('ROLE_ADMIN')
-    @Mutation(() => SingleAdminResponse)
-    async createAdmin(@Arg("data") data: CreateAdminInput) {
-        let response: SingleAdminResponse = new SingleAdminResponse();
-        let admin: Admin | undefined = await this.repo.findOneByUsername(data.username);
+    @Mutation(() => SingleManagerResponse)
+    async createManager(@Arg("data") data: CreateManagerInput) {
+        let response: SingleManagerResponse = new SingleManagerResponse();
+        let manager: Admin | undefined = await this.repo.findOneByUsername(data.username);
 
-        if (admin !== undefined) {
+        if (manager !== undefined) {
             response.status = Status.Error;
             response.message = 'Operation failed, username already in use';
 
             return response;
         }
 
-        admin = await this.repo.findOneByEmail(data.email);
-        if (admin !== undefined) {
+        manager = await this.repo.findOneByEmail(data.email);
+        if (manager !== undefined) {
             response.status = Status.Error;
             response.message = 'Operation failed, a user with this email already exist';
 
@@ -77,69 +77,69 @@ export class AdminResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let admin = await this.repo.create(data);
-            response.result = admin;
+            let manager = await this.repo.create(data);
+            response.result = manager;
             await this.repo.queryRunner.commitTransaction();
         } catch {
             await this.repo.queryRunner.rollbackTransaction();
             response.status = Status.Error;
-            response.message = 'Operation failed, unable to save admin data';
+            response.message = 'Operation failed, unable to save manager data';
         }
 
         return response;
     }
 
     @Authorized('ROLE_ADMIN')
-    @Mutation(() => SingleAdminResponse)
-    async updateAdmin(@Arg("id") id: number, @Arg("data") data: UpdateAdminInput) {
-        let response: SingleAdminResponse = new SingleAdminResponse();
+    @Mutation(() => SingleManagerResponse)
+    async updateManager(@Arg("id") id: number, @Arg("data") data: UpdateManagerInput) {
+        let response: SingleManagerResponse = new SingleManagerResponse();
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let admin = await this.repo.findOneById( id );
+            let manager = await this.repo.findOneById( id );
 
-            if (!admin) {
+            if (!manager) {
                 response.status = Status.NotFound;
-                response.message = 'Operation failed, admin not found';
+                response.message = 'Operation failed, manager not found';
 
                 return response;
             }
 
-            await this.repo.update(admin, data);
+            await this.repo.update(manager, data);
 
-            response.result = admin;
+            response.result = manager;
             await this.repo.queryRunner.commitTransaction();
         } catch {
             await this.repo.queryRunner.rollbackTransaction();
             response.status = Status.Error;
-            response.message = 'Operation failed, unable to update admin data';
+            response.message = 'Operation failed, unable to update manager data';
         }
 
         return response;
     }
 
     @Authorized('ROLE_ADMIN')
-    @Mutation(() => SingleAdminResponse)
-    async removeAdmin(@Arg("id") id: number) {
-        let response: SingleAdminResponse = new SingleAdminResponse();
+    @Mutation(() => SingleManagerResponse)
+    async removeManager(@Arg("id") id: number) {
+        let response: SingleManagerResponse = new SingleManagerResponse();
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let admin = await this.repo.findOneById( id );
+            let manager = await this.repo.findOneById( id );
 
-            if (!admin) {
+            if (!manager) {
                 response.status = Status.NotFound;
-                response.message = 'Operation failed, admin not found';
+                response.message = 'Operation failed, manager not found';
 
                 return response;
             }
 
-            await this.repo.delete(admin);
+            await this.repo.delete(manager);
             await this.repo.queryRunner.commitTransaction();
         } catch {
             await this.repo.queryRunner.rollbackTransaction();
             response.status = Status.Error;
-            response.message = 'Operation failed, unable to delete admin data';
+            response.message = 'Operation failed, unable to delete manager data';
         }
 
         return response;

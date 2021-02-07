@@ -16,6 +16,8 @@ import { createServer } from 'http';
 import { AuthResolver } from './v1/resolvers/AuthResolver';
 import { AdminResolver } from './v1/resolvers/AdminResolver';
 import { CompanyResolver } from './v1/resolvers/CompanyResolver';
+import { ManagerResolver } from "./v1/resolvers/ManagerResolver";
+
 // import { SensorResolver } from './v1/resolvers/SensorResolver';
 
 class App
@@ -107,6 +109,7 @@ class App
         const schema = await buildSchema({
             resolvers: [
                 AdminResolver,
+                ManagerResolver,
                 CompanyResolver,
                 // SensorResolver
             ],

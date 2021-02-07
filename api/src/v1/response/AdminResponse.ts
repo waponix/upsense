@@ -8,3 +8,10 @@ export class AdminResponse extends Response
     @Field(() => [Admin], { nullable: true })
     result?: Admin[];
 }
+
+@ObjectType()
+export class SingleAdminResponse extends Response
+{
+    @Field(() => Admin, { nullable: true })
+    result?: Admin;
+}
