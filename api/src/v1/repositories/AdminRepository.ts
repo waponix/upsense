@@ -80,10 +80,27 @@ export class AdminRepository extends BaseRepository
         return await this.manager.getRepository(Admin).findOne({where: { id }});
     }
 
+    async findOneByUsername (username: string) {
+        return await this.manager.getRepository(Admin).findOne({where: { username }});
+    }
+
+    async findOneByEmail (email: string) {
+        return await this.manager.getRepository(Admin).findOne({where: { email }});
+    }
+
     async create (data: CreateAdminInput) {
-        let admin: Admin = await this.manager.getRepository(Admin).create(data);
+        const repository = await this.manager.getRepository(Admin);
+        let admin: Admin = new Admin();
+        admin.username = data.username;
+        admin.password = data.password;
+        admin.firstName = data.firstName;
+        admin.lastName = data.lastName;
+        admin.email = data.email;
+        admin.mobileNumber = data.mobileNumber;
+        admin.picture = data.picture;
         admin.role = AdminRole.admin
-        await admin.save();
+        await repository.save(admin);
+        console.log(admin);
         return admin;
     }
 
@@ -98,7 +115,7 @@ export class AdminRepository extends BaseRepository
         admin.email = data.email || admin.email;
         admin.picture = data.picture || admin.picture;
         admin.mobileNumber = data.mobileNumber || admin.mobileNumber;
-        await admin.save();
+        await this.manager.getRepository(Admin).save(admin);
         return true;
     }
 

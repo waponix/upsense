@@ -59,18 +59,32 @@ export class AdminResolver
     @Mutation(() => SingleAdminResponse)
     async createAdmin(@Arg("data") data: CreateAdminInput) {
         let response: SingleAdminResponse = new SingleAdminResponse();
+        let admin: Admin | undefined = await this.adminRepo.findOneByUsername(data.username);
+
+        if (admin !== undefined) {
+            response.status = Status.Error;
+            response.message = 'Operation failed, username already in user';
+
+            return response;
+        }
+
+        admin = await this.adminRepo.findOneByEmail(data.email);
+        if (admin !== undefined) {
+            response.status = Status.Error;
+            response.message = 'Operation failed, a user with this email already exist';
+
+            return response;
+        }
 
         await this.adminRepo.queryRunner.startTransaction();
         try {
             let admin = await this.adminRepo.create(data);
-            response.result = await admin;
+            response.result = admin;
             await this.adminRepo.queryRunner.commitTransaction();
         } catch {
             await this.adminRepo.queryRunner.rollbackTransaction();
             response.status = Status.Error;
             response.message = 'Operation failed, unable to save admin data';
-        } finally {
-            await this.adminRepo.queryRunner.release();
         }
 
         return response;
@@ -100,8 +114,6 @@ export class AdminResolver
             await this.adminRepo.queryRunner.rollbackTransaction();
             response.status = Status.Error;
             response.message = 'Operation failed, unable to update admin data';
-        } finally {
-            await this.adminRepo.queryRunner.release();
         }
 
         return response;
@@ -129,8 +141,6 @@ export class AdminResolver
             await this.adminRepo.queryRunner.rollbackTransaction();
             response.status = Status.Error;
             response.message = 'Operation failed, unable to delete admin data';
-        } finally {
-            await this.adminRepo.queryRunner.release();
         }
 
         return response;

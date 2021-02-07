@@ -9,7 +9,7 @@ CREATE TABLE `admins` (
   `picture` text DEFAULT '',
   `first_name` text DEFAULT '',
   `last_name` text DEFAULT '',
-  `email` text DEFAULT NULL UNIQUE,
+  `email` text NOT NULL UNIQUE DEFAULT '',
   `mobile_number` text DEFAULT NULL,
   `refresh_token_id` int(11) DEFAULT NULL UNIQUE,
   `created_at` bigint(20) NOT NULL DEFAULT 0,
