@@ -2,9 +2,9 @@ import {Admin} from "../entities/Admin";
 import {BaseRepository, ListOptions} from "./BaseRepository";
 import {paginationConfig} from "../../config";
 import {AdminRole} from "../../components/types/AdminRoleTypes";
-import {CreateAdminInput, UpdateAdminInput} from "../resolverInputs/AdminDataInput";
+import {CreateUserInput, UpdateUserInput} from "../resolverInputs/UserDataInput";
 
-export class AdminRepository extends BaseRepository
+export class UserRepository extends BaseRepository
 {
     private searchFields: string[] = [
         'id',
@@ -16,12 +16,12 @@ export class AdminRepository extends BaseRepository
     ];
 
     /**
-     * Get admin list
+     * Get user list
      * @param options
      */
     async getList (options: ListOptions = {}) {
         let parameters: any = {
-            role: AdminRole.admin
+            role: AdminRole.user
         };
         let whereStatements = [
             'admin.role = :role'
@@ -77,7 +77,7 @@ export class AdminRepository extends BaseRepository
     }
 
     /**
-     * Get single admin by id
+     * Get single user by id
      * @param id
      */
     async findOneById (id: number) {
@@ -93,49 +93,49 @@ export class AdminRepository extends BaseRepository
     }
 
     /**
-     * Create admin
+     * Create user
      * @param data
      */
-    async create (data: CreateAdminInput) {
+    async create (data: CreateUserInput) {
         const repository = await this.manager.getRepository(Admin);
-        let admin: Admin = new Admin();
-        admin.username = data.username;
-        admin.password = data.password;
-        admin.firstName = data.firstName;
-        admin.lastName = data.lastName;
-        admin.email = data.email;
-        admin.mobileNumber = data.mobileNumber;
-        admin.picture = data.picture;
-        admin.role = AdminRole.admin
-        await repository.save(admin);
-        return admin;
+        let user: Admin = new Admin();
+        user.username = data.username;
+        user.password = data.password;
+        user.firstName = data.firstName;
+        user.lastName = data.lastName;
+        user.email = data.email;
+        user.mobileNumber = data.mobileNumber;
+        user.picture = data.picture;
+        user.role = AdminRole.manager;
+        await repository.save(user);
+        return user;
     }
 
     /**
-     * Update admin
-     * @param admin
+     * Update user
+     * @param user
      * @param data
      */
-    async update (admin: Admin, data: UpdateAdminInput) {
+    async update (user: Admin, data: UpdateUserInput) {
         if (!!data.password) {
-            admin.password = data.password;
-            admin.hashPassword()
+            user.password = data.password;
+            user.hashPassword()
         }
-        admin.firstName = data.firstName || admin.firstName;
-        admin.lastName = data.lastName || admin.lastName;
-        admin.email = data.email || admin.email;
-        admin.picture = data.picture || admin.picture;
-        admin.mobileNumber = data.mobileNumber || admin.mobileNumber;
-        await this.manager.getRepository(Admin).save(admin);
+        user.firstName = data.firstName || user.firstName;
+        user.lastName = data.lastName || user.lastName;
+        user.email = data.email || user.email;
+        user.picture = data.picture || user.picture;
+        user.mobileNumber = data.mobileNumber || user.mobileNumber;
+        await this.manager.getRepository(Admin).save(user);
         return true;
     }
 
     /**
-     * Delete admin
-     * @param admin
+     * Delete user
+     * @param user
      */
-    async delete (admin: Admin) {
-        await this.manager.getRepository(Admin).remove(admin);
+    async delete (user: Admin) {
+        await this.manager.getRepository(Admin).remove(user);
         return true;
     }
 }

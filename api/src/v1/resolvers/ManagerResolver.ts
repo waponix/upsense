@@ -18,7 +18,7 @@ export class ManagerResolver
         this.repo.init(getConnection());
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
     @Query(() => ManagerResponse)
     async getManagers(
         // @Arg('sort') sort: SortType,
@@ -32,7 +32,7 @@ export class ManagerResolver
         return response;
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
     @Query(() => SingleManagerResponse)
     async getManager(@Arg("id") id: number) {
         let response: SingleManagerResponse = new SingleManagerResponse();
@@ -54,7 +54,7 @@ export class ManagerResolver
         return response;
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
     @Mutation(() => SingleManagerResponse)
     async createManager(@Arg("data") data: CreateManagerInput) {
         let response: SingleManagerResponse = new SingleManagerResponse();
@@ -77,7 +77,7 @@ export class ManagerResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let manager = await this.repo.create(data);
+            let manager: Admin = await this.repo.create(data);
             response.result = manager;
             await this.repo.queryRunner.commitTransaction();
         } catch {
@@ -89,18 +89,18 @@ export class ManagerResolver
         return response;
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
     @Mutation(() => SingleManagerResponse)
     async updateManager(@Arg("id") id: number, @Arg("data") data: UpdateManagerInput) {
         let response: SingleManagerResponse = new SingleManagerResponse();
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let manager = await this.repo.findOneById( id );
+            let manager: Admin | undefined = await this.repo.findOneById( id );
 
-            if (!manager) {
+            if (manager === undefined) {
                 response.status = Status.NotFound;
-                response.message = 'Operation failed, manager not found';
+                response.message = 'Operation failed, manager data not found';
 
                 return response;
             }
@@ -118,18 +118,18 @@ export class ManagerResolver
         return response;
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
     @Mutation(() => SingleManagerResponse)
     async removeManager(@Arg("id") id: number) {
         let response: SingleManagerResponse = new SingleManagerResponse();
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let manager = await this.repo.findOneById( id );
+            let manager: Admin | undefined = await this.repo.findOneById( id );
 
-            if (!manager) {
+            if (manager === undefined) {
                 response.status = Status.NotFound;
-                response.message = 'Operation failed, manager not found';
+                response.message = 'Operation failed, manager data not found';
 
                 return response;
             }

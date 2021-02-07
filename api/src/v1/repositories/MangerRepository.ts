@@ -16,7 +16,7 @@ export class ManagerRepository extends BaseRepository
     ];
 
     /**
-     * Get the admin list
+     * Get manager list
      * @param options
      */
     async getList (options: ListOptions = {}) {
@@ -77,7 +77,7 @@ export class ManagerRepository extends BaseRepository
     }
 
     /**
-     * Get single admin by id
+     * Get single manager by id
      * @param id
      */
     async findOneById (id: number) {
@@ -92,38 +92,50 @@ export class ManagerRepository extends BaseRepository
         return await this.manager.getRepository(Admin).findOne({where: { email }});
     }
 
+    /**
+     * Create manager
+     * @param data
+     */
     async create (data: CreateManagerInput) {
         const repository = await this.manager.getRepository(Admin);
-        let admin: Admin = new Admin();
-        admin.username = data.username;
-        admin.password = data.password;
-        admin.firstName = data.firstName;
-        admin.lastName = data.lastName;
-        admin.email = data.email;
-        admin.mobileNumber = data.mobileNumber;
-        admin.picture = data.picture;
-        admin.role = AdminRole.manager;
-        await repository.save(admin);
-        return admin;
+        let manager: Admin = new Admin();
+        manager.username = data.username;
+        manager.password = data.password;
+        manager.firstName = data.firstName;
+        manager.lastName = data.lastName;
+        manager.email = data.email;
+        manager.mobileNumber = data.mobileNumber;
+        manager.picture = data.picture;
+        manager.role = AdminRole.manager;
+        await repository.save(manager);
+        return manager;
     }
 
     /**
-     * Update the admin
-     * @param admin
+     * Update manager
+     * @param manager
      * @param data
      */
-    async update (admin: Admin, data: UpdateManagerInput) {
-        admin.firstName = data.firstName || admin.firstName;
-        admin.lastName = data.lastName || admin.lastName;
-        admin.email = data.email || admin.email;
-        admin.picture = data.picture || admin.picture;
-        admin.mobileNumber = data.mobileNumber || admin.mobileNumber;
-        await this.manager.getRepository(Admin).save(admin);
+    async update (manager: Admin, data: UpdateManagerInput) {
+        if (!!data.password) {
+            manager.password = data.password;
+            manager.hashPassword()
+        }
+        manager.firstName = data.firstName || manager.firstName;
+        manager.lastName = data.lastName || manager.lastName;
+        manager.email = data.email || manager.email;
+        manager.picture = data.picture || manager.picture;
+        manager.mobileNumber = data.mobileNumber || manager.mobileNumber;
+        await this.manager.getRepository(Admin).save(manager);
         return true;
     }
 
-    async delete (admin: Admin) {
-        await this.manager.getRepository(Admin).remove(admin);
+    /**
+     * Delete manager
+     * @param manager
+     */
+    async delete (manager: Admin) {
+        await this.manager.getRepository(Admin).remove(manager);
         return true;
     }
 }

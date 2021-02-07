@@ -17,6 +17,8 @@ import { AuthResolver } from './v1/resolvers/AuthResolver';
 import { AdminResolver } from './v1/resolvers/AdminResolver';
 import { CompanyResolver } from './v1/resolvers/CompanyResolver';
 import { ManagerResolver } from "./v1/resolvers/ManagerResolver";
+import { UserRepository } from "./v1/repositories/UserRepository";
+import {UserResolver} from "./v1/resolvers/UserResolver";
 
 // import { SensorResolver } from './v1/resolvers/SensorResolver';
 
@@ -110,6 +112,7 @@ class App
             resolvers: [
                 AdminResolver,
                 ManagerResolver,
+                UserResolver,
                 CompanyResolver,
                 // SensorResolver
             ],

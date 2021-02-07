@@ -77,7 +77,7 @@ export class AdminResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let admin = await this.repo.create(data);
+            let admin: Admin = await this.repo.create(data);
             response.result = admin;
             await this.repo.queryRunner.commitTransaction();
         } catch {
@@ -96,11 +96,11 @@ export class AdminResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let admin = await this.repo.findOneById( id );
+            let admin: Admin | undefined = await this.repo.findOneById( id );
 
-            if (!admin) {
+            if (admin === undefined) {
                 response.status = Status.NotFound;
-                response.message = 'Operation failed, admin not found';
+                response.message = 'Operation failed, admin data not found';
 
                 return response;
             }
@@ -125,11 +125,11 @@ export class AdminResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let admin = await this.repo.findOneById( id );
+            let admin: Admin | undefined = await this.repo.findOneById( id );
 
-            if (!admin) {
+            if (admin === undefined) {
                 response.status = Status.NotFound;
-                response.message = 'Operation failed, admin not found';
+                response.message = 'Operation failed, admin data not found';
 
                 return response;
             }
