@@ -1,8 +1,17 @@
 {
   "name": "upsense_mqtt_broker",
+  "repository": {
+    "type": "git",
+    "directory": "mqtt",
+    "url": "https://github.com/ericbermejoreyes/upsense/tree/main/mqtt"
+  },
   "version": "0.1.0",
   "description": "Node.js on Docker",
-  "author": "Eric Reyes <eric.bermejo.reyes@gmail.com>",
+  "author": {
+    "name": "Eric Bermejo Reyes",
+    "email": "eric.bermejo.reyes@gmail.com",
+    "url": "https://github.com/ericbermejoreyes"
+  },
   "main": "app.js",
   "scripts": {
     "start": "node ./dist/app.js",

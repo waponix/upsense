@@ -12,10 +12,13 @@ services:
       - ./mysql/default.sql:/docker-entrypoint-initdb.d/default.sql
 
   api:
+    build:
+      dockerfile: ./api/Dockerfile
+      context: ./
     image: upsense-api-dev:latest
     ports:
       - 8443:8443
-    volumes:
+    volumes: # Remove this if going to build for production
       - ./api:/var/www/api
     links:
       - mariadb:mysql
@@ -30,10 +33,13 @@ services:
       - ./influxdb/storage:/var/lib/influxdb
 
   mqtt-broker:
+    build:
+      dockerfile: ./mqtt/Dockerfile
+      context: ./
     image: upsense-mqtt-broker-dev:latest
     ports:
       - 1883:1883
-    volumes:
+    volumes: # Remove this if going to build for production
       - ./mqtt:/var/www/mqtt_broker
     links:
       - influxdb

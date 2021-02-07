@@ -1,23 +1,25 @@
 FROM node:14.15.4-slim
+
 EXPOSE 1883
 
 WORKDIR /var/www
 
 RUN mkdir certificates
+
 COPY ./certificates/ /var/www/certificates
 
 ADD ./.env /var/www
 
 RUN mkdir mqtt_broker
+
 COPY ./mqtt/package.json /var/www/mqtt_broker
-COPY ./mqtt/package-lock.json /var/www/mqtt_broker
 
 RUN cd /var/www/mqtt_broker && npm install
 
 COPY ./mqtt/ /var/www/mqtt_broker
 
-
 WORKDIR /var/www/mqtt_broker
+
 CMD ["npm", "run", "dev"]
 #CMD ["npm", "run", "build"]
 #CMD ["npm", "start"]
