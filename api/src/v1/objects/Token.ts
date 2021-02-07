@@ -1,4 +1,5 @@
 import { ObjectType, Field, Int } from 'type-graphql';
+import {RESPONSE_STATUS, Status} from "../../components/types/ResponseStatusTypes";
 
 @ObjectType()
 export class Token
@@ -8,11 +9,4 @@ export class Token
 
     @Field(() => String, { nullable: true })
     refreshToken!: string;
-
-    // always fail by default
-    @Field(() => String)
-    message: string = 'Invalid credentials';
-    // always fail by default
-    @Field(() => Int)
-    resultCode: number = 1;
 }

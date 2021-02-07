@@ -3,7 +3,11 @@ import { Admin } from '../entities/Admin';
 import {AdminFilterInput, CreateAdminInput, UpdateAdminInput} from '../resolverInputs/AdminDataInput';
 import {AdminRepository} from "../repositories/AdminRepository";
 import {QueryArgs} from "../resolverArgs/QueryArgs";
-import {SortType} from "../../components/types/SortOrderType";
+import {SortType} from "../../components/types/SortOrderTypes";
+import {AdminResponse} from "../response/AdminResponse";
+import {SingleAdminResponse} from "../response/SingleAdminResponse";
+import {Status} from "../../components/types/ResponseStatusTypes";
+import {getConnection} from "typeorm";
 
 @Resolver()
 export class AdminResolver
@@ -12,56 +16,123 @@ export class AdminResolver
 
     constructor() {
         this.adminRepo = new AdminRepository();
+        this.adminRepo.init(getConnection());
     }
 
     @Authorized('ROLE_ADMIN')
-    @Query(() => [Admin])
+    @Query(() => AdminResponse)
     async getAdmins(
         // @Arg('sort') sort: SortType,
-        @Args() {id, pageOffset, query}: QueryArgs,
+        @Args() {id, pageOffset, find}: QueryArgs,
         @Arg('filters', { nullable: true }) filters?: AdminFilterInput
     ) {
-        return this.adminRepo.getAdminList({filters, page: pageOffset, query});
+        let response = new AdminResponse();
+
+        response.result = await this.adminRepo.getList({filters, page: pageOffset, find});
+
+        return response;
     }
 
-    // @Authorized('ROLE_ADMIN')
-    // @Query(() => [Admin])
-    // async getAdmin(@Arg("id") id: number) {
-    //     return this.adminRepo.repo.findOne({ where: { id }});
-    // }
-    //
-    // @Authorized('ROLE_ADMIN')
-    // @Mutation(() => Admin)
-    // async createAdmin(@Arg("data") data: CreateAdminInput) {
-    //     let admin = this.adminRepo.repo.create(data);
-    //     admin.role = 'ROLE_ADMIN';
-    //     await admin.save();
-    //     return admin;
-    // }
-    //
-    // @Authorized('ROLE_ADMIN')
-    // @Mutation(() => Admin)
-    // async updateAdmin(@Arg("id") id: number, @Arg("data") data: UpdateAdminInput) {
-    //     const admin = await this.adminRepo.repo.findOne({ where: { id }});
-    //
-    //     if (!admin) {
-    //         throw new Error(`The admin with id: ${id} does not exist!`);
-    //     }
-    //
-    //     Object.assign(admin, data);
-    //     await admin.save();
-    //
-    //     return admin;
-    // }
-    //
-    // @Authorized('ROLE_ADMIN')
-    // @Mutation(() => Boolean)
-    // async removeAdmin(@Arg("id") id: number) {
-    //     try {
-    //         await this.adminRepo.repo.delete(id);
-    //         return true;
-    //     } catch {
-    //         return false;
-    //     }
-    // }
+    @Authorized('ROLE_ADMIN')
+    @Query(() => SingleAdminResponse)
+    async getAdmin(@Arg("id") id: number) {
+        let response: SingleAdminResponse = new SingleAdminResponse();
+
+        try {
+            let admin: Admin | undefined = await this.adminRepo.findOneById(id);
+
+            if (admin === undefined) {
+                response.status = Status.NotFound;
+                response.message = 'Operation failed, admin not found';
+            }
+
+            response.result = admin;
+        } catch {
+            response.status = Status.InternalError;
+            response.message = 'Operation failed, something went wrong please try again later';
+        }
+
+        return response;
+    }
+
+    @Authorized('ROLE_ADMIN')
+    @Mutation(() => SingleAdminResponse)
+    async createAdmin(@Arg("data") data: CreateAdminInput) {
+        let response: SingleAdminResponse = new SingleAdminResponse();
+
+        await this.adminRepo.queryRunner.startTransaction();
+        try {
+            let admin = await this.adminRepo.create(data);
+            response.result = await admin;
+            await this.adminRepo.queryRunner.commitTransaction();
+        } catch {
+            await this.adminRepo.queryRunner.rollbackTransaction();
+            response.status = Status.Error;
+            response.message = 'Operation failed, unable to save admin data';
+        } finally {
+            await this.adminRepo.queryRunner.release();
+        }
+
+        return response;
+    }
+
+    @Authorized('ROLE_ADMIN')
+    @Mutation(() => SingleAdminResponse)
+    async updateAdmin(@Arg("id") id: number, @Arg("data") data: UpdateAdminInput) {
+        let response: SingleAdminResponse = new SingleAdminResponse();
+
+        await this.adminRepo.queryRunner.startTransaction();
+        try {
+            let admin = await this.adminRepo.findOneById( id );
+
+            if (!admin) {
+                response.status = Status.NotFound;
+                response.message = 'Operation failed, admin not found';
+
+                return response;
+            }
+
+            await this.adminRepo.update(admin, data);
+
+            response.result = admin;
+            await this.adminRepo.queryRunner.commitTransaction();
+        } catch {
+            await this.adminRepo.queryRunner.rollbackTransaction();
+            response.status = Status.Error;
+            response.message = 'Operation failed, unable to update admin data';
+        } finally {
+            await this.adminRepo.queryRunner.release();
+        }
+
+        return response;
+    }
+
+    @Authorized('ROLE_ADMIN')
+    @Mutation(() => SingleAdminResponse)
+    async removeAdmin(@Arg("id") id: number) {
+        let response: SingleAdminResponse = new SingleAdminResponse();
+
+        await this.adminRepo.queryRunner.startTransaction();
+        try {
+            let admin = await this.adminRepo.findOneById( id );
+
+            if (!admin) {
+                response.status = Status.NotFound;
+                response.message = 'Operation failed, admin not found';
+
+                return response;
+            }
+
+            await this.adminRepo.delete(admin);
+            await this.adminRepo.queryRunner.commitTransaction();
+        } catch {
+            await this.adminRepo.queryRunner.rollbackTransaction();
+            response.status = Status.Error;
+            response.message = 'Operation failed, unable to delete admin data';
+        } finally {
+            await this.adminRepo.queryRunner.release();
+        }
+
+        return response;
+    }
 }

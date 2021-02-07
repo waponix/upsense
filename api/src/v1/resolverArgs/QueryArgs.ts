@@ -7,10 +7,10 @@ export class QueryArgs {
     id?: number;
 
     @Field(type => String, { nullable: true })
-    query?: string;
+    find?: string;
 
     @Field(type => Int, { nullable: true })
-    page?: number;
+    page?: number = 1;
 
     get pageOffset() {
         if (!this.page) {

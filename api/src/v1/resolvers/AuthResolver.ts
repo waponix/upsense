@@ -4,6 +4,8 @@ import { Admin } from '../entities/Admin';
 import { Token } from '../objects/Token';
 import { RefreshToken } from '../entities/RefreshToken';
 import { TokenProviderService } from "../services/TokenProviderService";
+import {Status} from "../../components/types/ResponseStatusTypes";
+import {AuthResponse} from "../response/AuthResponse";
 
 @Resolver()
 export class AuthResolver
@@ -24,7 +26,7 @@ export class AuthResolver
         return 'Use the login mutation for requesting token'
     }
 
-    @Mutation(() => Token)
+    @Mutation(() => AuthResponse)
     async login (
         @Arg('username', {nullable: false}) username : string,
         @Arg('password', {nullable: false}) password : string
@@ -32,6 +34,7 @@ export class AuthResolver
         // validate credential
         let admin: Admin | undefined = await this.adminRepo.findOne({ where: {username}, relations: ['refreshToken'] });
         let token = new Token();
+        let response = new AuthResponse();
 
         if (admin && admin.validatePassword(password)) {
             const accessToken = this.tokenService.generateAccessToken(admin);
@@ -39,19 +42,23 @@ export class AuthResolver
 
             token.accessToken = accessToken;
             token.refreshToken = refreshToken;
-            token.message = 'Operation success';
-            token.resultCode = 0;
+        } else {
+            response.status = Status.AuthenticationError;
+            response.message = "Operation failed, invalid credentials";
         }
 
-        return token;
+        response.result = token;
+
+        return response;
     }
 
-    @Mutation(() => Token)
+    @Mutation(() => AuthResponse)
     async refresh (@Arg('auth') auth : string) {
         let token: Token = new Token();
+        let response: AuthResponse = new AuthResponse();
 
-        token.message = 'Invalid refresh token';
-        token.resultCode = 3;
+        response.message = 'Operation failed, invalid refresh token';
+        response.status = Status.Error;
 
         let refreshToken: RefreshToken | undefined = await this.tokenRepo.findOne({where: {token: auth}, relations: ['admin']});
 
@@ -61,27 +68,30 @@ export class AuthResolver
         if (! await this.tokenService.verifyRefreshToken(auth, decoded, error)) {
             // delete the token in the database
             if (refreshToken) await this.tokenRepo.remove(refreshToken);
-            token.message = error;
+            response.message = error;
+            response.status = Status.Error
             // return empty token
             return token;
         }
 
         if (!refreshToken) {
-            // if refresh don't token exist
+            // if refresh token don't exist
+            response.message = 'Operation failed, token not found'
+            response.status = Status.NotFound
             return token;
         }
 
         // generate a new refresh token
         token.refreshToken = await this.tokenService.generateRefreshToken(refreshToken.admin);
         token.accessToken = this.tokenService.generateAccessToken(refreshToken.admin);
-        token.resultCode = 0;
-        token.message = 'Operation success';
+        response.result = token;
 
         return token;
     }
 
-    @Mutation(() => String)
+    @Mutation(() => AuthResponse)
     async logout(@Arg('auth') auth : string) {
+        let response: AuthResponse = new AuthResponse();
         const refreshToken: RefreshToken | undefined = await this.tokenRepo.findOne({token: auth});
 
         if (refreshToken) {
@@ -89,6 +99,6 @@ export class AuthResolver
         }
 
         // will always return operation complete
-        return 'Operation successful';
+        return response;
     }
 }

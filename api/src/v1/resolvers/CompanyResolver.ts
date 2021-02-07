@@ -16,7 +16,7 @@ export class CompanyResolver
 
     @Query(() => [Company])
     async companies(
-        @Args() {id, page, query}: QueryArgs,
+        @Args() {id, page}: QueryArgs,
     ) {
         let companies = null;
 
