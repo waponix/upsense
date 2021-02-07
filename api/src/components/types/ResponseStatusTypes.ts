@@ -1,0 +1,17 @@
+export type RESPONSE_STATUS = SUCCESS | NOT_FOUND | ERROR | INTERNAL_ERROR | UNAUTHORIZED | AUTHENTICATION_ERROR;
+
+type SUCCESS = 'SUCCESS';
+type NOT_FOUND = 'NOT_FOUND';
+type ERROR = 'ERROR';
+type INTERNAL_ERROR = 'INTERNAL_ERROR';
+type UNAUTHORIZED = 'UNAUTHORIZED';
+type AUTHENTICATION_ERROR = 'AUTHENTICATION_ERROR';
+
+export enum Status {
+    Success = 'SUCCESS',
+    NotFound = 'NOT_FOUND',
+    Error = 'ERROR',
+    InternalError = 'INTERNAL_ERROR',
+    Unauthorized = 'UNAUTHORIZED',
+    AuthenticationError = 'AUTHENTICATION_ERROR'
+}
