@@ -4,13 +4,13 @@ import { paginationConfig } from '../../config';
 @ArgsType()
 export class QueryArgs {
     @Field(type => Int, { nullable: true })
-    id?: number | null = null;
+    id?: number;
 
     @Field(type => String, { nullable: true })
-    search?: string | null = null;
+    query?: string;
 
     @Field(type => Int, { nullable: true })
-    page?: number | null = null;
+    page?: number;
 
     get pageOffset() {
         if (!this.page) {
