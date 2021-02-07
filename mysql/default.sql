@@ -3,17 +3,17 @@ USE `upsense`;
 CREATE TABLE `admins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role` enum('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER') NOT NULL DEFAULT 'ROLE_USER',
-  `username` text NOT NULL UNIQUE,
+  `username` text NOT NULL UNIQUE DEFAULT '',
   `password` text NOT NULL,
   `salt` text NOT NULL,
-  `picture` text DEFAULT NULL,
-  `first_name` text DEFAULT NULL,
-  `last_name` text DEFAULT NULL,
+  `picture` text DEFAULT '',
+  `first_name` text DEFAULT '',
+  `last_name` text DEFAULT '',
   `email` text DEFAULT NULL UNIQUE,
   `mobile_number` text DEFAULT NULL,
   `refresh_token_id` int(11) DEFAULT NULL UNIQUE,
-  `created_at` bigint(20) NOT NULL ON CREATE CURRENT_TIMESTAMP,
-  `updated_at` bigint(20) NOT NULL ON CREATE CURRENT_TIMESTAMP,
+  `created_at` bigint(20) NOT NULL DEFAULT 0,
+  `updated_at` bigint(20) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
 
