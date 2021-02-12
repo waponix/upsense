@@ -1,11 +1,11 @@
 import {Resolver, Query, Mutation, Authorized, Arg, Args} from 'type-graphql';
-import { Admin } from '../entities/Admin';
+import { Admin } from '../../entities/Admin';
 import {AdminFilterInput, CreateAdminInput, UpdateAdminInput} from '../resolverInputs/AdminDataInput';
 import {AdminRepository} from "../repositories/AdminRepository";
 import {QueryArgs} from "../resolverArgs/QueryArgs";
-import {SortType} from "../../components/types/SortOrderTypes";
+import {SortType} from "../../../components/types/SortOrderTypes";
 import {AdminResponse, SingleAdminResponse} from "../response/AdminResponse";
-import {Status} from "../../components/types/ResponseStatusTypes";
+import {Status} from "../../../components/types/ResponseStatusTypes";
 import {getConnection} from "typeorm";
 
 @Resolver()

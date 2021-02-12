@@ -1,5 +1,5 @@
 import { ArgsType, Field, Int } from 'type-graphql';
-import { paginationConfig } from '../../config';
+import { paginationConfig } from '../../../config';
 
 @ArgsType()
 export class QueryArgs {

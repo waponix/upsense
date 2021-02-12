@@ -1,12 +1,12 @@
-import tls from 'tls';
+import http from 'http';
 import fs from 'fs';
 import aedes, {Client} from 'aedes';
 import { mqttConfig } from './config';
 
-const OPTIONS = {
-    key: fs.readFileSync(`${__dirname}/../../certificates/cert.key`),
-    cert: fs.readFileSync(`${__dirname}/../../certificates/cert.pem`),
-};
+// const OPTIONS = {
+//     key: fs.readFileSync(`${__dirname}/../../certificates/cert.key`),
+//     cert: fs.readFileSync(`${__dirname}/../../certificates/cert.pem`),
+// };
 
 export class Broker
 {
@@ -15,7 +15,7 @@ export class Broker
 
     constructor() {
         this.aedes = aedes();
-        this.server = tls.createServer(OPTIONS, this.aedes.handle);
+        this.server = http.createServer(this.aedes.handle);
     }
 
     listen(cb: CallableFunction = () => {})
@@ -30,19 +30,19 @@ export class Broker
         return this;
     }
 
-    setupAuthentication()
-    {
-        this.aedes.authenticate = (client: Client, username: string, password: Buffer, cb: CallableFunction) => {
-            if (username && username === 'root') {
-                if (password && typeof password === 'object' && password.toString() === 'admin') {
-                    cb(null, true);
-                    console.log(`Client: ${client} authenticated successfully`);
-                }
-            } else {
-                cb(false, false);
-            }
-        }
-
-        return this;
-    }
+    // setupAuthentication()
+    // {
+    //     this.aedes.authenticate = (client: Client, username: string, password: Buffer, cb: CallableFunction) => {
+    //         if (username && username === 'root') {
+    //             if (password && typeof password === 'object' && password.toString() === 'admin') {
+    //                 cb(null, true);
+    //                 console.log(`Client: ${client} authenticated successfully`);
+    //             }
+    //         } else {
+    //             cb(false, false);
+    //         }
+    //     }
+    //
+    //     return this;
+    // }
 }

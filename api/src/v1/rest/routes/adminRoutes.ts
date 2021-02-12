@@ -1,8 +1,9 @@
 import {Router} from 'express';
-import Routes from '../../components/routes';
+import Routes from '../../../components/routes';
 import Controller from '../controllers/adminController';
-import jwtAuth from '../security/jwtAuth';
+import {JwtAuth} from '../../../components/security/JwtAuth';
 
+const jwtAuth = new JwtAuth();
 let routes = new Routes('/admins', Controller);
 
 routes.registerRoutes((router: Router, controller: Controller) => {
@@ -10,7 +11,7 @@ routes.registerRoutes((router: Router, controller: Controller) => {
     router
         .get('/', [jwtAuth.required], controller.getAdminsAction)
         .post('/', jwtAuth.optional, controller.postAdminAction)
-        .delete('/:uuid', jwtAuth.required, controller.deleteAdminAction);
+        .delete('/:id', jwtAuth.required, controller.deleteAdminAction);
 });
 
 module.exports = routes;

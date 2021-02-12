@@ -1,10 +1,10 @@
 import { Arg, Query, Mutation, Resolver } from 'type-graphql';
 import {getRepository, Repository} from 'typeorm';
-import { Admin } from '../entities/Admin';
+import { Admin } from '../../entities/Admin';
 import { Token } from '../objects/Token';
-import { RefreshToken } from '../entities/RefreshToken';
-import { TokenProviderService } from "../services/TokenProviderService";
-import {Status} from "../../components/types/ResponseStatusTypes";
+import { RefreshToken } from '../../entities/RefreshToken';
+import {TokenProviderService} from "../../services/TokenProviderService";
+import {Status} from "../../../components/types/ResponseStatusTypes";
 import {AuthResponse} from "../response/AuthResponse";
 
 @Resolver()

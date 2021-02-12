@@ -1,12 +1,11 @@
 import {Request} from 'express';
-import parameter from '../../components/helpers/parameter';
-const pagination: any = parameter.get('pagination');
+import {paginationConfig} from "../../../config";
 
 export default class ApiFilter
 {
     search: string = '';
     offset: number = 1;
-    limit: number = pagination.limit;
+    limit: number = paginationConfig.limit;
     filter: any = {};
     sort: any = [];
     order: any = ['asc'];

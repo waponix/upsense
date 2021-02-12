@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import Controller from '../../components/controller';
+import Controller from '../../../components/controller';
 import companyValidator from '../validators/companyValidator';
 import CompanyServices from '../services/companyServices';
 
@@ -13,7 +13,7 @@ export default class CompanyController extends Controller
 
         response
             .status(200)
-            .json(companies.map((company: any) => { return company.serialize(); }));
+            .json(companies);
     }
 
     async postCompanyAction(request: Request, response: Response)

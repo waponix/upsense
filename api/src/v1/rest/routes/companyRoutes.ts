@@ -1,7 +1,9 @@
 import {Router} from 'express';
-import Routes from '../../components/routes';
+import Routes from '../../../components/routes';
 import Controller from '../controllers/companyController';
-import jwtAuth from '../security/jwtAuth';
+import {JwtAuth} from "../../../components/security/JwtAuth";
+
+const jwtAuth = new JwtAuth();
 
 let routes = new Routes('/companies', Controller);
 

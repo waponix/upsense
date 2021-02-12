@@ -1,5 +1,5 @@
 import { AuthChecker } from 'type-graphql';
-import { Context } from '../../v1/objects/Context';
+import {Context} from "../../v1/graphql/objects/Context";
 
 /**
  * Note: this function should return true to grant access

@@ -1,5 +1,5 @@
 import {Field, ObjectType} from "type-graphql";
-import {RESPONSE_STATUS, Status} from "../../components/types/ResponseStatusTypes";
+import {RESPONSE_STATUS, Status} from "../../../components/types/ResponseStatusTypes";
 
 @ObjectType()
 export abstract class Response {

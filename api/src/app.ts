@@ -1,7 +1,8 @@
 import 'reflect-metadata';
-import express from 'express';
+import express, {Router} from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import restRouter from "./restRouter";
 import { createConnection } from 'typeorm';
 import { buildSchema } from 'type-graphql';
 import { appConfig } from './config';
@@ -13,12 +14,12 @@ import { execute, subscribe } from 'graphql';
 import { createServer } from 'http';
 
 // Import Resolvers
-import { AuthResolver } from './v1/resolvers/AuthResolver';
-import { AdminResolver } from './v1/resolvers/AdminResolver';
-import { CompanyResolver } from './v1/resolvers/CompanyResolver';
-import { ManagerResolver } from "./v1/resolvers/ManagerResolver";
-import { UserRepository } from "./v1/repositories/UserRepository";
-import {UserResolver} from "./v1/resolvers/UserResolver";
+import { AuthResolver } from './v1/graphql/resolvers/AuthResolver';
+import { AdminResolver } from './v1/graphql/resolvers/AdminResolver';
+import { CompanyResolver } from './v1/graphql/resolvers/CompanyResolver';
+import { ManagerResolver } from "./v1/graphql/resolvers/ManagerResolver";
+import { UserRepository } from "./v1/graphql/repositories/UserRepository";
+import {UserResolver} from "./v1/graphql/resolvers/UserResolver";
 
 // import { SensorResolver } from './v1/resolvers/SensorResolver';
 
@@ -54,14 +55,21 @@ class App
             bodyParser.urlencoded({ extended: true }), //support application/x-www-form-urlencoded post data)
         );
 
-        // listen to the configured port number
-        await this.httpServer.listen(appConfig.port);
+        try {
+            // listen to the configured port number
+            await this.httpServer.listen(appConfig.port);
 
-        console.log(`API Server running at port ${appConfig.port}`);
+            console.log(`API Server running at port ${appConfig.port}`);
 
-        await this.initApiAuthServer();
-        await this.initApiServer();
-        // await this.initWebsocketServer();
+            await this.initApiAuthServer();
+            await this.initApiServer();
+
+            // register rest endpoints
+            this.registerRoutes(restRouter);
+            // await this.initWebsocketServer();
+        } catch (e) {
+            console.log(`Server failed to start: ${e}`)
+        }
     }
 
 /*    private async initWebsocketServer()
@@ -85,7 +93,7 @@ class App
     private async initApiAuthServer()
     {
         this.app.use(
-            '/api/graphql/auth',
+            '/api/v1/graphql/auth',
             this.jwt.optional
         );
 
@@ -97,13 +105,13 @@ class App
         });
 
         this.apiAuthServer = new ApolloServer({ schema });
-        this.apiAuthServer.applyMiddleware({ app: this.app, path: '/api/graphql/auth'});
+        this.apiAuthServer.applyMiddleware({ app: this.app, path: '/api/v1/graphql/auth'});
     }
 
     private async initApiServer()
     {
         this.app.use(
-            '/api/graphql',
+            '/api/v1/graphql',
             this.jwt.required,
             this.jwt.authenticationErrorHandler,
         );
@@ -126,7 +134,21 @@ class App
                 return { user };
             }
         });
-        this.apiServer.applyMiddleware({ app: this.app, path: '/api/graphql' });
+        this.apiServer.applyMiddleware({ app: this.app, path: '/api/v1/graphql' });
+    }
+
+    /**
+     * Register the routes
+     * @param routes
+     */
+    public registerRoutes (routes: Router) {
+        this.security(routes);
+        return this;
+    }
+
+    private security (routes: Router)
+    {
+        this.app.use('/', routes);
     }
 }
 

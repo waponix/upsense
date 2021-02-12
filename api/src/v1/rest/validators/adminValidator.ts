@@ -1,4 +1,4 @@
-import Admin from '../entities/admin';
+import {Admin} from '../../entities/Admin';
 import {getRepository} from 'typeorm';
 const Validator = require('validatorjs');
 

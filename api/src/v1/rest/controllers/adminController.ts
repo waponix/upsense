@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
-import Controller from '../../components/controller';
-import Admin from '../entities/admin';
+import Controller from '../../../components/controller';
+import {Admin} from '../../entities/Admin';
 import AdminServices from '../services/adminServices';
 import adminValidator from '../validators/adminValidator';
 import {getRepository} from 'typeorm';
@@ -28,7 +28,7 @@ export default class AdminController extends Controller
 
         response
             .status(200)
-            .json(admins.map(admin => { return admin.adminSerialize(); }));
+            .json(admins);
     }
 
     /**
@@ -73,10 +73,10 @@ export default class AdminController extends Controller
     {
         let adminServices = new AdminServices((<any>request).user);
         let adminRepository = getRepository(Admin);
-        let uuid: any = request.params.uuid;
+        let id: any = request.params.id;
 
         // get the admin to be deleted
-        let admins: Admin[] = await adminRepository.find({uuid});
+        let admins: Admin[] = await adminRepository.find({id});
 
         if (admins.length <= 0) {
             response

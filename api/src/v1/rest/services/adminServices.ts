@@ -1,13 +1,12 @@
-import Admin from '../entities/admin';
+import {Admin} from '../../entities/Admin';
 import {getRepository, Like} from 'typeorm';
-import paramter from '../../components/helpers/parameter';
+import {paginationConfig} from "../../../config";
 import ApiFilter from '../filters/apiFilter';
 
 export default class AdminServices
 {
     private user: any;
     private adminRepository: any;
-    private pagination: any;
 
     /**
      *
@@ -17,7 +16,6 @@ export default class AdminServices
     constructor(user: any) {
         this.user = user;
         this.adminRepository = getRepository(Admin);
-        this.pagination = paramter.get('pagination');
     }
 
     async getAdminResourceList(filter: ApiFilter)

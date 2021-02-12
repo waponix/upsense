@@ -1,7 +1,7 @@
-import {Admin} from "../entities/Admin";
+import {Admin} from "../../entities/Admin";
 import {BaseRepository, ListOptions} from "./BaseRepository";
-import {paginationConfig} from "../../config";
-import {AdminRole} from "../../components/types/AdminRoleTypes";
+import {paginationConfig} from "../../../config";
+import {AdminRole} from "../../../components/types/AdminRoleTypes";
 import {CreateManagerInput, UpdateManagerInput} from "../resolverInputs/ManagerDataInput";
 
 export class ManagerRepository extends BaseRepository
