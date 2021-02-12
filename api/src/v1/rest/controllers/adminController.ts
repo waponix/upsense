@@ -5,6 +5,8 @@ import AdminServices from '../services/adminServices';
 import adminValidator from '../validators/adminValidator';
 import {getRepository} from 'typeorm';
 import ApiFilter from '../filters/apiFilter';
+import {ApiResponse} from "../objects/ApiResponse";
+import {Status} from "../../../components/types/ResponseStatusTypes";
 
 /**
  * The auth controller
@@ -25,10 +27,13 @@ export default class AdminController extends Controller
         let adminFilter = new ApiFilter(request);
         let adminServices = new AdminServices((<any>request).user);
         let admins = await adminServices.getAdminResourceList(adminFilter);
+        let apiResponse = new ApiResponse();
 
-        response
+        apiResponse.result = admins;
+
+        return response
             .status(200)
-            .json(admins);
+            .json(apiResponse);
     }
 
     /**
@@ -39,6 +44,7 @@ export default class AdminController extends Controller
      */
     async postAdminAction(request: Request, response: Response)
     {
+        let apiResponse = new ApiResponse();
         let adminServices = new AdminServices((<any>request).user);
         let body = request.body;
 
@@ -47,19 +53,22 @@ export default class AdminController extends Controller
 
         validation.checkAsync(async () => {
             // success callback
-            await adminServices.createAdminResource(body.admin)
+            const admin = await adminServices.createAdminResource(body.admin);
 
-            response
+            apiResponse.result = admin;
+
+            return response
                 .status(200)
-                .json({ message: 'Operation successful' });
+                .json(apiResponse);
         }, () => {
             // fail callback
-            response
+            apiResponse.status = Status.BadRequest;
+            apiResponse.message = 'Operation failed, argument values incorrect';
+            apiResponse.error = validation.errors.all();
+
+            return response
                 .status(400)
-                .json({
-                    message: 'Operation failed',
-                    errorMessage: validation.errors.all()
-                });
+                .json(apiResponse);
         });
     }
 
@@ -71,6 +80,7 @@ export default class AdminController extends Controller
      */
     async deleteAdminAction(request: Request, response: Response)
     {
+        let apiResponse = new ApiResponse();
         let adminServices = new AdminServices((<any>request).user);
         let adminRepository = getRepository(Admin);
         let id: any = request.params.id;
@@ -79,15 +89,17 @@ export default class AdminController extends Controller
         let admins: Admin[] = await adminRepository.find({id});
 
         if (admins.length <= 0) {
-            response
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = 'Operation failed, admin data not found';
+            return response
                 .status(404)
-                .json({ message: 'User not found' });
+                .json(apiResponse);
         }
 
         await adminServices.deleteAdminResource(admins);
 
-        response
+        return response
             .status(200)
-            .json({ message: 'Operation successful' });
+            .json(apiResponse);
     }
 }

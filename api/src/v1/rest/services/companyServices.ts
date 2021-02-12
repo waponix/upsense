@@ -24,6 +24,6 @@ export default class companyServices
 
         await this.companyRepository.save(company);
 
-        return this;
+        return company;
     }
 }

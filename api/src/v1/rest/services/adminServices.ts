@@ -43,7 +43,7 @@ export default class AdminServices
 
         this.adminRepository.save(admin);
 
-        return this;
+        return admin;
     }
 
     /**
