@@ -19,7 +19,7 @@ export class UserResolver
         this.repo.init(getConnection());
     }
 
-    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_USER'])
+    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
     @Query(() => UserResponse)
     async getUsers(
         // @Arg('sort') sort: SortType,
@@ -55,7 +55,7 @@ export class UserResolver
         return response;
     }
 
-    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_USER'])
+    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
     @Mutation(() => SingleUserResponse)
     async createUser(@Arg("data") data: CreateUserInput) {
         let response: SingleUserResponse = new SingleUserResponse();
@@ -119,7 +119,7 @@ export class UserResolver
         return response;
     }
 
-    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_USER'])
+    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
     @Mutation(() => SingleUserResponse)
     async removeUser(@Arg("id") id: number) {
         let response: SingleUserResponse = new SingleUserResponse();
