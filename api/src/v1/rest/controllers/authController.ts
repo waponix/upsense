@@ -15,7 +15,7 @@ import {RefreshToken} from "../../shared/entities/RefreshToken";
  */
 export default class AuthController extends Controller
 {
-    async requestJwtTokenAction(request: Request, response: Response)
+    async requestAuthTokenAction(request: Request, response: Response)
     {
         let apiResponse = new ApiResponse();
         const tokenProviderService = new TokenProviderService();
@@ -26,7 +26,7 @@ export default class AuthController extends Controller
         let admin: Admin | undefined = await adminRepo.findOne({ where: {id: user.id}, relations: ['refreshToken'] });
 
         if (admin === undefined) {
-            apiResponse.message = 'Operation failed, something went wrong, try again later'
+            apiResponse.message = 'Operation failed, something went wrong'
             apiResponse.status = Status.Error;
             response.status(400);
             return response.json(apiResponse);
@@ -46,21 +46,26 @@ export default class AuthController extends Controller
             .json(apiResponse);
     }
 
-    async refreshJwtTokenAction(request: Request, response: Response)
+    async refreshAuthTokenAction(request: Request, response: Response)
     {
         let apiResponse = new ApiResponse();
-        const tokenRepo: Repository<RefreshToken> = getRepository(RefreshToken);
-        const {auth} = request.body || {auth: null};
 
-        const refreshToken: RefreshToken | undefined = await tokenRepo.findOne({token: auth});
+        const {user} = (<any>request);
+        const tokenProviderService = new TokenProviderService();
+        try {
+            const token = tokenProviderService.generateAccessToken(user);
+            apiResponse.result = {
+                accessToken: token
+            };
 
-        if (refreshToken) {
-            await tokenRepo.remove(refreshToken);
+            return response.json(apiResponse);
+        } catch {
+            apiResponse.status = Status.Error;
+            apiResponse.message = 'Operation failed, something went wrong'
         }
-        return response.json(apiResponse);
     }
 
-    async invalidateJwtTokenAction(request: Request, response: Response)
+    async invalidateAuthTokenAction(request: Request, response: Response)
     {
         let apiResponse = new ApiResponse();
         const tokenRepo: Repository<RefreshToken> = getRepository(RefreshToken);

@@ -48,7 +48,7 @@ export class ManagerResolver
             response.result = manager;
         } catch {
             response.status = Status.InternalError;
-            response.message = 'Operation failed, something went wrong please try again later';
+            response.message = 'Operation failed, something went wrong';
         }
 
         return response;

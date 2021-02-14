@@ -9,9 +9,9 @@ const jwtAuth = new JwtAuth();
 
 routes.registerRoutes((router: Router, controller: Controller) => {
     // register the routes here
-    router.post('/login', jwtAuth.optional, passport.authenticate('basic', { session: false }), controller.requestJwtTokenAction);
-    router.post('/refresh', jwtAuth.optional, passport.authenticate('authtoken', { session: false, optional: false }), controller.refreshJwtTokenAction);
-    router.post('/logout', jwtAuth.optional, passport.authenticate('authtoken', { session: false, optional: false }), controller.invalidateJwtTokenAction);
+    router.post('/login', jwtAuth.optional, passport.authenticate('basic', { session: false }), controller.requestAuthTokenAction);
+    router.post('/refresh', jwtAuth.optional, passport.authenticate('jwt', { session: false, optional: false }), controller.refreshAuthTokenAction);
+    router.post('/logout', jwtAuth.optional, passport.authenticate('jwt', { session: false, optional: false }), controller.invalidateAuthTokenAction);
 });
 
 module.exports = routes;

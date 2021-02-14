@@ -10,7 +10,7 @@ routes.registerRoutes((router: Router, controller: Controller) => {
     // register the routes here
     router
         .get('/', [jwtAuth.required], controller.getAdminsAction)
-        .post('/', jwtAuth.optional, controller.postAdminAction)
+        .post('/', jwtAuth.required, controller.postAdminAction)
         .delete('/:id', jwtAuth.required, controller.deleteAdminAction);
 });
 

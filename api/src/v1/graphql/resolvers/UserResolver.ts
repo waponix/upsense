@@ -49,7 +49,7 @@ export class UserResolver
             response.result = user;
         } catch {
             response.status = Status.InternalError;
-            response.message = 'Operation failed, something went wrong please try again later';
+            response.message = 'Operation failed, something went wrong';
         }
 
         return response;
