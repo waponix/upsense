@@ -29,23 +29,24 @@
   },
   "dependencies": {
     "apollo-server": "^2.19.2",
+    "body-parser": "^1.19.0",
     "class-validator": "^0.13.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "body-parser": "^1.19.0",
-    "validatorjs": "^3.22.1",
     "express-jwt": "^6.0.0",
-    "yaml": "^1.10.0",
-    "passport": "^0.4.1",
-    "passport-http": "^0.3.0",
     "graphql-mqtt-subscriptions": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mariadb": "^2.5.2",
     "mqtt": "^4.2.6",
     "mysql": "^2.18.1",
+    "passport": "^0.4.1",
+    "passport-auth-token": "^1.0.1",
+    "passport-http": "^0.3.0",
     "reflect-metadata": "^0.1.13",
     "subscriptions-transport-ws": "^0.9.18",
     "type-graphql": "^1.1.1",
-    "typeorm": "^0.2.30"
+    "typeorm": "^0.2.30",
+    "validatorjs": "^3.22.1",
+    "yaml": "^1.10.0"
   }
 }
