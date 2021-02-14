@@ -2,9 +2,8 @@ import {Admin} from "../../shared/entities/Admin";
 import {BaseRepository, ListOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
-import {CreateManagerInput, UpdateManagerInput} from "../resolverInputs/ManagerDataInput";
 
-export class ManagerRepository extends BaseRepository
+export class AdminRepository extends BaseRepository
 {
     private searchFields: string[] = [
         'id',
@@ -16,12 +15,12 @@ export class ManagerRepository extends BaseRepository
     ];
 
     /**
-     * Get manager list
+     * Get admin list
      * @param options
      */
     async getList (options: ListOptions = {}) {
         let parameters: any = {
-            role: AdminRole.manager
+            role: AdminRole.admin
         };
         let whereStatements = [
             'admin.role = :role'
@@ -57,7 +56,7 @@ export class ManagerRepository extends BaseRepository
             }
         }
 
-        // create search statment if find is provided
+        // create search statement if find is provided
         if (options.find !== undefined) {
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
@@ -77,7 +76,7 @@ export class ManagerRepository extends BaseRepository
     }
 
     /**
-     * Get single manager by id
+     * Get single admin by id
      * @param id
      */
     async findOneById (id: number) {
@@ -93,49 +92,49 @@ export class ManagerRepository extends BaseRepository
     }
 
     /**
-     * Create manager
+     * Create admin
      * @param data
      */
-    async create (data: CreateManagerInput) {
+    async create (data: any) {
         const repository = await this.manager.getRepository(Admin);
-        let manager: Admin = new Admin();
-        manager.username = data.username;
-        manager.password = data.password;
-        manager.firstName = data.firstName;
-        manager.lastName = data.lastName;
-        manager.email = data.email;
-        manager.mobileNumber = data.mobileNumber;
-        manager.picture = data.picture;
-        manager.role = AdminRole.manager;
-        await repository.save(manager);
-        return manager;
+        let admin: Admin = new Admin();
+        admin.username = data.username;
+        admin.password = data.password;
+        admin.firstName = data.firstName;
+        admin.lastName = data.lastName;
+        admin.email = data.email;
+        admin.mobileNumber = data.mobileNumber;
+        admin.picture = data.picture;
+        admin.role = AdminRole.admin;
+        await repository.save(admin);
+        return admin;
     }
 
     /**
-     * Update manager
-     * @param manager
+     * Update admin
+     * @param admin
      * @param data
      */
-    async update (manager: Admin, data: UpdateManagerInput) {
+    async update (admin: Admin, data: any) {
         if (!!data.password) {
-            manager.password = data.password;
-            manager.hashPassword()
+            admin.password = data.password;
+            admin.hashPassword()
         }
-        manager.firstName = data.firstName || manager.firstName;
-        manager.lastName = data.lastName || manager.lastName;
-        manager.email = data.email || manager.email;
-        manager.picture = data.picture || manager.picture;
-        manager.mobileNumber = data.mobileNumber || manager.mobileNumber;
-        await this.manager.getRepository(Admin).save(manager);
+        admin.firstName = data.firstName || admin.firstName;
+        admin.lastName = data.lastName || admin.lastName;
+        admin.email = data.email || admin.email;
+        admin.picture = data.picture || admin.picture;
+        admin.mobileNumber = data.mobileNumber || admin.mobileNumber;
+        await this.manager.getRepository(Admin).save(admin);
         return true;
     }
 
     /**
-     * Delete manager
-     * @param manager
+     * Delete admin
+     * @param admin
      */
-    async delete (manager: Admin) {
-        await this.manager.getRepository(Admin).remove(manager);
+    async delete (admin: Admin) {
+        await this.manager.getRepository(Admin).remove(admin);
         return true;
     }
 }

@@ -10,7 +10,8 @@ const jwtAuth = new JwtAuth();
 routes.registerRoutes((router: Router, controller: Controller) => {
     // register the routes here
     router.post('/login', jwtAuth.optional, passport.authenticate('basic', { session: false }), controller.requestJwtTokenAction);
-    router.post('/logout', jwtAuth.required, controller.invalidateJwtTokenAction);
+    router.post('/refresh', jwtAuth.optional, passport.authenticate('authtoken', { session: false, optional: false }), controller.refreshJwtTokenAction);
+    router.post('/logout', jwtAuth.optional, passport.authenticate('authtoken', { session: false, optional: false }), controller.invalidateJwtTokenAction);
 });
 
 module.exports = routes;

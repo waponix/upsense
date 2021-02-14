@@ -1,6 +1,5 @@
 import {Connection, EntityManager, QueryRunner, Repository} from "typeorm";
 import {SortType} from "../../../components/types/SortOrderTypes";
-import {BaseEntity} from "../../entities/BaseEntity";
 
 export interface ListQueryOptions {
     builder?: any;

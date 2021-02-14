@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Arg, Ctx } from 'type-graphql';
 import {getRepository, Repository} from 'typeorm';
-import { Company } from '../../entities/Company';
+import { Company } from '../../shared/entities/Company';
 import { QueryArgs } from '../resolverArgs/QueryArgs';
 import { CreateCompanyInput } from '../resolverInputs/CompanyDataInput';
 import { Context } from '../objects/Context';

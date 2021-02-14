@@ -1,4 +1,4 @@
-import {Admin} from '../../entities/Admin';
+import {Admin} from '../../shared/entities/Admin';
 import {getRepository, Like} from 'typeorm';
 import {paginationConfig} from "../../../config";
 import ApiFilter from '../filters/apiFilter';

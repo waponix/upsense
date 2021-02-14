@@ -1,5 +1,5 @@
 import {Resolver, Query, Mutation, Authorized, Arg, Args} from 'type-graphql';
-import { Admin } from '../../entities/Admin';
+import { Admin } from '../../shared/entities/Admin';
 import {AdminFilterInput, CreateAdminInput, UpdateAdminInput} from '../resolverInputs/AdminDataInput';
 import {AdminRepository} from "../repositories/AdminRepository";
 import {QueryArgs} from "../resolverArgs/QueryArgs";

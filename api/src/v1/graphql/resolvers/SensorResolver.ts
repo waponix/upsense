@@ -1,7 +1,7 @@
 import { Query, Resolver, Root, Subscription } from 'type-graphql';
 import { SensorPayload } from '../objects/SensorPayload';
 import sensorDataReceiver from '../../mqtt/receivers/SensorDataReceiver';
-import { Sensor } from '../../entities/Sensor';
+import { Sensor } from '../../shared/entities/Sensor';
 
 @Resolver()
 export class SensorResolver

@@ -1,6 +1,7 @@
-import {Admin} from "../../v1/entities/Admin";
+import {Admin} from "../../v1/shared/entities/Admin";
 import {getRepository, Repository} from "typeorm";
 const {BasicStrategy} = require('passport-http');
+const {AuthTokenStrategy} = require('passport-auth-token');
 let passport = require('passport');
 
 // digest authentication for requesting jwt token
@@ -16,6 +17,12 @@ passport.use(new BasicStrategy(
 
         return done(null, admin);
     }
+));
+
+passport.use(new AuthTokenStrategy(
+   async (token: any, done: any) => {
+       console.log(token);
+   }
 ));
 
 export default passport;

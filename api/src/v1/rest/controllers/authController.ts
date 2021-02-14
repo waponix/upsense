@@ -1,10 +1,11 @@
 import {Request, Response} from 'express';
 import Controller from '../../../components/controller';
-import {TokenProviderService} from "../../services/TokenProviderService";
-import {Admin} from "../../entities/Admin";
+import {TokenProviderService} from "../../shared/services/TokenProviderService";
+import {Admin} from "../../shared/entities/Admin";
 import {getRepository, Repository} from "typeorm";
 import {ApiResponse} from "../objects/ApiResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
+import {RefreshToken} from "../../shared/entities/RefreshToken";
 
 /**
  * The auth controller
@@ -45,13 +46,31 @@ export default class AuthController extends Controller
             .json(apiResponse);
     }
 
-    async refreshJwtToken(request: Request, response: Response)
+    async refreshJwtTokenAction(request: Request, response: Response)
     {
-        return response.json({});
+        let apiResponse = new ApiResponse();
+        const tokenRepo: Repository<RefreshToken> = getRepository(RefreshToken);
+        const {auth} = request.body || {auth: null};
+
+        const refreshToken: RefreshToken | undefined = await tokenRepo.findOne({token: auth});
+
+        if (refreshToken) {
+            await tokenRepo.remove(refreshToken);
+        }
+        return response.json(apiResponse);
     }
 
     async invalidateJwtTokenAction(request: Request, response: Response)
     {
-        return response.json(['Operation successful']);
+        let apiResponse = new ApiResponse();
+        const tokenRepo: Repository<RefreshToken> = getRepository(RefreshToken);
+        const {auth} = request.body || {auth: null};
+
+        const refreshToken: RefreshToken | undefined = await tokenRepo.findOne({token: auth});
+
+        if (refreshToken) {
+            await tokenRepo.remove(refreshToken);
+        }
+        return response.json(apiResponse);
     }
 }

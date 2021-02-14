@@ -1,9 +1,9 @@
 import { Arg, Query, Mutation, Resolver } from 'type-graphql';
 import {getRepository, Repository} from 'typeorm';
-import { Admin } from '../../entities/Admin';
+import { Admin } from '../../shared/entities/Admin';
 import { Token } from '../objects/Token';
-import { RefreshToken } from '../../entities/RefreshToken';
-import {TokenProviderService} from "../../services/TokenProviderService";
+import { RefreshToken } from '../../shared/entities/RefreshToken';
+import {TokenProviderService} from "../../shared/services/TokenProviderService";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {AuthResponse} from "../response/AuthResponse";
 

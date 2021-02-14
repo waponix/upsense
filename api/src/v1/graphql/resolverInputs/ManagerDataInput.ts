@@ -1,5 +1,5 @@
 import {InputType, Field, Int} from 'type-graphql';
-import { Admin } from '../../entities/Admin';
+import { Admin } from '../../shared/entities/Admin';
 
 @InputType({ description: "Create admin" })
 export class CreateManagerInput implements Partial<Admin> {

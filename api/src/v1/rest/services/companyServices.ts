@@ -1,4 +1,4 @@
-import {Company} from '../../entities/Company';
+import {Company} from '../../shared/entities/Company';
 import {getRepository} from 'typeorm';
 
 export default class companyServices

@@ -1,6 +1,6 @@
 import {ObjectType, Field} from 'type-graphql'
 import {Response} from '../objects/Response'
-import {Admin} from "../../entities/Admin";
+import {Admin} from "../../shared/entities/Admin";
 
 @ObjectType()
 export class ManagerResponse extends Response

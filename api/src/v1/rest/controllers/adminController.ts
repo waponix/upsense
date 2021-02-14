@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import Controller from '../../../components/controller';
-import {Admin} from '../../entities/Admin';
+import {Admin} from '../../shared/entities/Admin';
 import AdminServices from '../services/adminServices';
 import adminValidator from '../validators/adminValidator';
 import {getRepository} from 'typeorm';

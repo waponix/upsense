@@ -1,5 +1,5 @@
-import {Admin} from "../../entities/Admin";
-import {BaseRepository, ListOptions} from "./BaseRepository";
+import {Admin} from "../../shared/entities/Admin";
+import {BaseRepository, ListOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
 import {CreateUserInput, UpdateUserInput} from "../resolverInputs/UserDataInput";
