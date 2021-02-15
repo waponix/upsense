@@ -1,12 +1,13 @@
-import http from 'http';
+import tls from 'tls';
+import net from 'net';
 import fs from 'fs';
 import aedes, {Client} from 'aedes';
 import { mqttConfig } from './config';
 
-// const OPTIONS = {
-//     key: fs.readFileSync(`${__dirname}/../../certificates/cert.key`),
-//     cert: fs.readFileSync(`${__dirname}/../../certificates/cert.pem`),
-// };
+const OPTIONS = {
+    key: fs.readFileSync(`${__dirname}/../../certificates/cert.key`),
+    cert: fs.readFileSync(`${__dirname}/../../certificates/cert.pem`),
+};
 
 export class Broker
 {
@@ -15,7 +16,7 @@ export class Broker
 
     constructor() {
         this.aedes = aedes();
-        this.server = http.createServer(this.aedes.handle);
+        this.server = net.createServer(this.aedes.handle);
     }
 
     listen(cb: CallableFunction = () => {})
@@ -23,7 +24,7 @@ export class Broker
         console.log(`Starting MQTT broker on port: ${mqttConfig.port}`);
 
         this.server.listen(mqttConfig.port, () => {
-            console.log(`MQTT broker now running at ${mqttConfig.protocol}://${mqttConfig.host}:${mqttConfig.port}`);
+            console.log(`MQTT broker now running at port ${mqttConfig.port}`);
             cb();
         });
 

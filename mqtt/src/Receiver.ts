@@ -33,6 +33,10 @@ export class Receiver {
             this.client.on('message', this.onMessage);
         });
 
+        this.client.on('disconnect', () => {
+            console.log('failed to connect');
+        })
+
         this.client.on('error', (err: any) => {
             console.log(`An error occurred. ${err}`);
         });
