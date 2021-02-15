@@ -18,7 +18,7 @@ export class AdminRepository extends BaseRepository
      * Get admin list
      * @param options
      */
-    async getList (options: ListOptions = {}) {
+    async getList (options: ListOptions = {}): Promise<Admin[]> {
         let parameters: any = {
             role: AdminRole.admin
         };
@@ -79,15 +79,15 @@ export class AdminRepository extends BaseRepository
      * Get single admin by id
      * @param id
      */
-    async findOneById (id: number) {
+    async findOneById (id: number): Promise<Admin | undefined> {
         return await this.manager.getRepository(Admin).findOne({where: { id }});
     }
 
-    async findOneByUsername (username: string) {
+    async findOneByUsername (username: string): Promise<Admin | undefined> {
         return await this.manager.getRepository(Admin).findOne({where: { username }});
     }
 
-    async findOneByEmail (email: string) {
+    async findOneByEmail (email: string): Promise<Admin | undefined> {
         return await this.manager.getRepository(Admin).findOne({where: { email }});
     }
 
@@ -95,7 +95,7 @@ export class AdminRepository extends BaseRepository
      * Create admin
      * @param data
      */
-    async create (data: any) {
+    async create (data: any): Promise<Admin> {
         const repository = await this.manager.getRepository(Admin);
         let admin: Admin = new Admin();
         admin.username = data.username;
@@ -115,7 +115,7 @@ export class AdminRepository extends BaseRepository
      * @param admin
      * @param data
      */
-    async update (admin: Admin, data: any) {
+    async update (admin: Admin, data: Partial<Admin>): Promise<boolean> {
         if (!!data.password) {
             admin.password = data.password;
             admin.hashPassword()
@@ -133,7 +133,7 @@ export class AdminRepository extends BaseRepository
      * Delete admin
      * @param admin
      */
-    async delete (admin: Admin) {
+    async delete (admin: Admin): Promise<boolean> {
         await this.manager.getRepository(Admin).remove(admin);
         return true;
     }

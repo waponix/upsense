@@ -1,12 +1,13 @@
 import {Admin} from '../../shared/entities/Admin';
-import {getRepository, Like} from 'typeorm';
+import {getConnection} from 'typeorm';
 import {paginationConfig} from "../../../config";
 import ApiFilter from '../filters/apiFilter';
+import {AdminRepository} from "../repositories/AdminRepository";
 
 export default class AdminServices
 {
     private user: any;
-    private adminRepository: any;
+    private adminRepository: AdminRepository;
 
     /**
      *
@@ -15,45 +16,44 @@ export default class AdminServices
      */
     constructor(user: any) {
         this.user = user;
-        this.adminRepository = getRepository(Admin);
+        this.adminRepository = new AdminRepository();
+        this.adminRepository.init(getConnection());
     }
 
-    async getAdminResourceList(filter: ApiFilter)
-    {
-        let admins: Admin[] = await this.adminRepository.find({}, filter.getArgs());
+    /**
+     *
+     * @param filter
+     */
+    async getList(filter: ApiFilter): Promise<Admin[]> {
+        const admins: Admin[] = await this.adminRepository.getList({});
 
         return admins;
     }
 
     /**
      *
-     * @param admin
+     * @param data
      */
-    async createAdminResource(data: any)
-    {
-        let admin: Admin = new Admin();
-
-        admin.username = data.username;
-        admin.password = data.password;
-        admin.firstName = data.firstName;
-        admin.lastName = data.lastName;
-        admin.email = data.email;
-        admin.mobileNumber = data.mobileNumber;
-        admin.role = 'ROLE_ADMIN'; // TODO: this should not be hardcoded
-
-        this.adminRepository.save(admin);
+    async create(data: Partial<Admin>): Promise<Admin> {
+        const admin: Admin = await this.adminRepository.create(data);
 
         return admin;
     }
 
     /**
-     * delete admin resource
+     *
+     * @param admin
+     * @param data
+     */
+    async update(admin: Admin, data: Partial<Admin>): Promise<boolean> {
+        return await this.adminRepository.update(admin, data);
+    }
+
+    /**
+     *
      * @param admin
      */
-    async deleteAdminResource(admin: Admin | Admin[])
-    {
-        this.adminRepository.remove(admin);
-
-        return this;
+    async delete(admin: Admin): Promise<boolean> {
+        return await this.adminRepository.delete(admin);
     }
 }
