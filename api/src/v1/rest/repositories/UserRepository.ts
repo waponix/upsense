@@ -1,8 +1,7 @@
-import {Admin} from "../../shared/entities/Admin";
+import {Admin as User} from "../../shared/entities/Admin";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
-import {CreateUserInput, UpdateUserInput} from "../resolverInputs/UserDataInput";
 
 export class UserRepository extends BaseRepository
 {
@@ -16,36 +15,38 @@ export class UserRepository extends BaseRepository
     ];
 
     /**
-     * Get user list
+     * Get manager list
      * @param options
      */
-    async getList (options: QueryOptions = {}) {
+    async getList (options: QueryOptions = {}): Promise<User[]> {
         let parameters: any = {
-            role: AdminRole.user
+            role: AdminRole.manager
         };
         let whereStatements = [
-            'admin.role = :role'
+            'manager.role = :role'
         ];
 
+        const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
+
         const query = await this.em
-            .getRepository(Admin)
-            .createQueryBuilder('admin')
-            .select('admin.id')
-            .addSelect('admin.username')
-            .addSelect('admin.firstName')
-            .addSelect('admin.lastName')
-            .addSelect('admin.email')
-            .addSelect('admin.mobileNumber')
-            .addSelect('admin.picture')
-            .addSelect('admin.createdAt')
-            .addSelect('admin.updatedAt')
-            .offset(options.page)
+            .getRepository(User)
+            .createQueryBuilder('manager')
+            .select('manager.id')
+            .addSelect('manager.username')
+            .addSelect('manager.firstName')
+            .addSelect('manager.lastName')
+            .addSelect('manager.email')
+            .addSelect('manager.mobileNumber')
+            .addSelect('manager.picture')
+            .addSelect('manager.createdAt')
+            .addSelect('manager.updatedAt')
+            .offset(offset)
             .limit(paginationConfig.limit);
 
         // create filters if provided
         if (options.filters !== undefined) {
             for (const [field, value] of Object.entries(options.filters)) {
-                whereStatements.push(`admin.${field} = :${field}`);
+                whereStatements.push(`user.${field} = :${field}`);
                 parameters[field] = value;
             }
         }
@@ -53,17 +54,17 @@ export class UserRepository extends BaseRepository
         // add sort and
         if (options.sort !== undefined) {
             for (const [field, value] of Object.entries(options.sort)) {
-                query.addOrderBy(`admin.${field}`, value)
+                query.addOrderBy(`user.${field}`, value)
             }
         }
 
-        // create search statment if find is provided
+        // create search statement if find is provided
         if (options.find !== undefined) {
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
 
             for (const field of this.searchFields) {
-                searchStatement.push(`a.${field} LIKE :find`);
+                searchStatement.push(`user.${field} LIKE :find`);
             }
 
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
@@ -80,25 +81,25 @@ export class UserRepository extends BaseRepository
      * Get single user by id
      * @param id
      */
-    async findOneById (id: number) {
-        return await this.em.getRepository(Admin).findOne({where: { id }});
+    async findOneById (id: number): Promise<User | undefined> {
+        return await this.em.getRepository(User).findOne({where: { id }});
     }
 
-    async findOneByUsername (username: string) {
-        return await this.em.getRepository(Admin).findOne({where: { username }});
+    async findOneByUsername (username: string): Promise<User | undefined> {
+        return await this.em.getRepository(User).findOne({where: { username }});
     }
 
-    async findOneByEmail (email: string) {
-        return await this.em.getRepository(Admin).findOne({where: { email }});
+    async findOneByEmail (email: string): Promise<User | undefined> {
+        return await this.em.getRepository(User).findOne({where: { email }});
     }
 
     /**
      * Create user
      * @param data
      */
-    async create (data: CreateUserInput) {
-        const repository = await this.em.getRepository(Admin);
-        let user: Admin = new Admin();
+    async create (data: any): Promise<User> {
+        const repository = await this.em.getRepository(User);
+        let user: User = new User();
         user.username = data.username;
         user.password = data.password;
         user.firstName = data.firstName;
@@ -106,7 +107,7 @@ export class UserRepository extends BaseRepository
         user.email = data.email;
         user.mobileNumber = data.mobileNumber;
         user.picture = data.picture;
-        user.role = AdminRole.manager;
+        user.role = AdminRole.user;
         await repository.save(user);
         return user;
     }
@@ -116,7 +117,7 @@ export class UserRepository extends BaseRepository
      * @param user
      * @param data
      */
-    async update (user: Admin, data: UpdateUserInput) {
+    async update (user: User, data: Partial<User>): Promise<boolean> {
         if (!!data.password) {
             user.password = data.password;
             user.hashPassword()
@@ -126,7 +127,7 @@ export class UserRepository extends BaseRepository
         user.email = data.email || user.email;
         user.picture = data.picture || user.picture;
         user.mobileNumber = data.mobileNumber || user.mobileNumber;
-        await this.em.getRepository(Admin).save(user);
+        await this.em.getRepository(User).save(user);
         return true;
     }
 
@@ -134,8 +135,8 @@ export class UserRepository extends BaseRepository
      * Delete user
      * @param user
      */
-    async delete (user: Admin) {
-        await this.em.getRepository(Admin).remove(user);
+    async delete (user: User): Promise<boolean> {
+        await this.em.getRepository(User).remove(user);
         return true;
     }
 }

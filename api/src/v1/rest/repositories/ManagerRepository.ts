@@ -28,7 +28,7 @@ export class ManagerRepository extends BaseRepository
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
-        const query = await this.manager
+        const query = await this.em
             .getRepository(Manager)
             .createQueryBuilder('manager')
             .select('manager.id')
@@ -82,15 +82,15 @@ export class ManagerRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number): Promise<Manager | undefined> {
-        return await this.manager.getRepository(Manager).findOne({where: { id }});
+        return await this.em.getRepository(Manager).findOne({where: { id }});
     }
 
     async findOneByUsername (username: string): Promise<Manager | undefined> {
-        return await this.manager.getRepository(Manager).findOne({where: { username }});
+        return await this.em.getRepository(Manager).findOne({where: { username }});
     }
 
     async findOneByEmail (email: string): Promise<Manager | undefined> {
-        return await this.manager.getRepository(Manager).findOne({where: { email }});
+        return await this.em.getRepository(Manager).findOne({where: { email }});
     }
 
     /**
@@ -98,7 +98,7 @@ export class ManagerRepository extends BaseRepository
      * @param data
      */
     async create (data: any): Promise<Manager> {
-        const repository = await this.manager.getRepository(Manager);
+        const repository = await this.em.getRepository(Manager);
         let manager: Manager = new Manager();
         manager.username = data.username;
         manager.password = data.password;
@@ -127,7 +127,7 @@ export class ManagerRepository extends BaseRepository
         manager.email = data.email || manager.email;
         manager.picture = data.picture || manager.picture;
         manager.mobileNumber = data.mobileNumber || manager.mobileNumber;
-        await this.manager.getRepository(Manager).save(manager);
+        await this.em.getRepository(Manager).save(manager);
         return true;
     }
 
@@ -136,7 +136,7 @@ export class ManagerRepository extends BaseRepository
      * @param manager
      */
     async delete (manager: Manager): Promise<boolean> {
-        await this.manager.getRepository(Manager).remove(manager);
+        await this.em.getRepository(Manager).remove(manager);
         return true;
     }
 }

@@ -16,7 +16,7 @@ export interface QueryOptions {
 export abstract class BaseRepository {
     protected connection!: Connection;
     public queryRunner!: QueryRunner;
-    public manager!: EntityManager;
+    public em!: EntityManager;
 
     /**
      * Initialize the repository
@@ -26,7 +26,7 @@ export abstract class BaseRepository {
     public async init () {
         this.connection = getConnection();
         this.queryRunner = await this.connection.createQueryRunner();
-        this.manager = await this.queryRunner.manager;
+        this.em = await this.queryRunner.manager;
 
         return this;
     }

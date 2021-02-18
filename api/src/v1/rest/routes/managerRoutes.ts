@@ -3,7 +3,7 @@ import Routes from '../../../components/routes';
 import Controller from '../controllers/managerController';
 import passport from "../../../components/security/passport";
 
-let routes = new Routes('/admins', Controller);
+let routes = new Routes('/managers', Controller);
 
 routes.registerRoutes((router: Router, controller: Controller) => {
     // register the routes here

@@ -27,7 +27,7 @@ export class ManagerRepository extends BaseRepository
             'admin.role = :role'
         ];
 
-        const query = await this.manager
+        const query = await this.em
             .getRepository(Admin)
             .createQueryBuilder('admin')
             .select('admin.id')
@@ -81,15 +81,15 @@ export class ManagerRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number) {
-        return await this.manager.getRepository(Admin).findOne({where: { id }});
+        return await this.em.getRepository(Admin).findOne({where: { id }});
     }
 
     async findOneByUsername (username: string) {
-        return await this.manager.getRepository(Admin).findOne({where: { username }});
+        return await this.em.getRepository(Admin).findOne({where: { username }});
     }
 
     async findOneByEmail (email: string) {
-        return await this.manager.getRepository(Admin).findOne({where: { email }});
+        return await this.em.getRepository(Admin).findOne({where: { email }});
     }
 
     /**
@@ -97,7 +97,7 @@ export class ManagerRepository extends BaseRepository
      * @param data
      */
     async create (data: CreateManagerInput) {
-        const repository = await this.manager.getRepository(Admin);
+        const repository = await this.em.getRepository(Admin);
         let manager: Admin = new Admin();
         manager.username = data.username;
         manager.password = data.password;
@@ -126,7 +126,7 @@ export class ManagerRepository extends BaseRepository
         manager.email = data.email || manager.email;
         manager.picture = data.picture || manager.picture;
         manager.mobileNumber = data.mobileNumber || manager.mobileNumber;
-        await this.manager.getRepository(Admin).save(manager);
+        await this.em.getRepository(Admin).save(manager);
         return true;
     }
 
@@ -135,7 +135,7 @@ export class ManagerRepository extends BaseRepository
      * @param manager
      */
     async delete (manager: Admin) {
-        await this.manager.getRepository(Admin).remove(manager);
+        await this.em.getRepository(Admin).remove(manager);
         return true;
     }
 }
