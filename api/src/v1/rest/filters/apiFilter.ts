@@ -1,13 +1,14 @@
 import {Request} from 'express';
 import {paginationConfig} from "../../../config";
+import {SortType} from "../../../components/types/SortOrderTypes";
 
 export default class ApiFilter
 {
-    search: string = '';
+    search?: string = '';
     offset: number = 1;
     limit: number = paginationConfig.limit;
     filter: any = {};
-    sort: any = [];
+    sort?: SortType;
     order: any = ['asc'];
 
     constructor(request: Request)

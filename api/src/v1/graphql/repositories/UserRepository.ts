@@ -1,5 +1,5 @@
 import {Admin} from "../../shared/entities/Admin";
-import {BaseRepository, ListOptions} from "../../shared/repositories/BaseRepository";
+import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
 import {CreateUserInput, UpdateUserInput} from "../resolverInputs/UserDataInput";
@@ -19,7 +19,7 @@ export class UserRepository extends BaseRepository
      * Get user list
      * @param options
      */
-    async getList (options: ListOptions = {}) {
+    async getList (options: QueryOptions = {}) {
         let parameters: any = {
             role: AdminRole.user
         };

@@ -6,6 +6,7 @@ import {getRepository, Repository} from "typeorm";
 import {ApiResponse} from "../objects/ApiResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {RefreshToken} from "../../shared/entities/RefreshToken";
+import {CommonMessages} from "../../../messages/messages";
 
 /**
  * The auth controller
@@ -26,7 +27,7 @@ export default class AuthController extends Controller
         let admin: Admin | undefined = await adminRepo.findOne({ where: {id: user.id}, relations: ['refreshToken'] });
 
         if (admin === undefined) {
-            apiResponse.message = 'Operation failed, something went wrong'
+            apiResponse.message = CommonMessages.SomethingWentWrong;
             apiResponse.status = Status.Error;
             response.status(400);
             return response.json(apiResponse);
@@ -61,7 +62,7 @@ export default class AuthController extends Controller
             return response.json(apiResponse);
         } catch {
             apiResponse.status = Status.Error;
-            apiResponse.message = 'Operation failed, something went wrong'
+            apiResponse.message = CommonMessages.SomethingWentWrong;
         }
     }
 

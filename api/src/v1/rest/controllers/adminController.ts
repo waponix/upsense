@@ -1,12 +1,12 @@
 import {Request, Response} from 'express';
 import Controller from '../../../components/controller';
 import {Admin} from '../../shared/entities/Admin';
-import AdminServices from '../services/adminServices';
-import adminValidator from '../validators/adminValidator';
+//@ts-ignore
+import AdminServices from "../services/AdminServices";
 import {getRepository} from 'typeorm';
-import ApiFilter from '../filters/apiFilter';
 import {ApiResponse} from "../objects/ApiResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
+import {ReturnableResponse} from "../objects/ReturnableResponse";
 
 /**
  * The auth controller
@@ -24,16 +24,28 @@ export default class AdminController extends Controller
      */
     async getAdminsAction(request: Request, response: Response)
     {
-        let adminFilter = new ApiFilter(request);
-        let adminServices = new AdminServices((<any>request).user);
-        let admins = await adminServices.getList(adminFilter);
-        let apiResponse = new ApiResponse();
-
-        apiResponse.result = admins;
+        const adminServices = new AdminServices((<any>request).user);
+        const data: ReturnableResponse = await adminServices.getList(request);
 
         return response
-            .status(200)
-            .json(apiResponse);
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
+    /**
+     * Get admins
+     *
+     * @param request
+     * @param response
+     */
+    async getAdminAction(request: Request, response: Response)
+    {
+        const adminServices = new AdminServices((<any>request).user);
+        const data: ReturnableResponse = await adminServices.getOne(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
     }
 
     /**
@@ -44,32 +56,28 @@ export default class AdminController extends Controller
      */
     async postAdminAction(request: Request, response: Response)
     {
-        let apiResponse = new ApiResponse();
         const adminServices = new AdminServices((<any>request).user);
-        const body = request.body;
+        const data: ReturnableResponse = await adminServices.create(request);
 
-        // do validation before proceed
-        let validation = adminValidator(body);
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
 
-        validation.checkAsync(async () => {
-            // success callback
-            const admin: Admin = await adminServices.create(body.admin);
+    /**
+     * Add admin
+     *
+     * @param request
+     * @param response
+     */
+    async putAdminAction(request: Request, response: Response)
+    {
+        const adminServices = new AdminServices((<any>request).user);
+        const data: ReturnableResponse = await adminServices.update(request);
 
-            apiResponse.result = admin;
-
-            return response
-                .status(200)
-                .json(apiResponse);
-        }, () => {
-            // fail callback
-            apiResponse.status = Status.BadRequest;
-            apiResponse.message = 'Operation failed, argument values incorrect';
-            apiResponse.error = validation.errors.all();
-
-            return response
-                .status(400)
-                .json(apiResponse);
-        });
+        return response
+            .status(data.statusCode)
+            .json(data.body);
     }
 
     /**
@@ -79,27 +87,12 @@ export default class AdminController extends Controller
      * @param response
      */
     async deleteAdminAction(request: Request, response: Response)
-    {
-        let apiResponse = new ApiResponse();
+    {``
         const adminServices = new AdminServices((<any>request).user);
-        const adminRepository = getRepository(Admin);
-        const {id}: any = request.params;
-
-        // get the admin to be deleted
-        let admin: Admin | undefined = await adminRepository.findOne({where: id});
-
-        if (!admin) {
-            apiResponse.status = Status.NotFound;
-            apiResponse.message = 'Operation failed, admin data not found';
-            return response
-                .status(404)
-                .json(apiResponse);
-        }
-
-        await adminServices.delete(admin);
+        const data: ReturnableResponse = await adminServices.delete(request);
 
         return response
-            .status(200)
-            .json(apiResponse);
+            .status(data.statusCode)
+            .json(data.body);
     }
 }

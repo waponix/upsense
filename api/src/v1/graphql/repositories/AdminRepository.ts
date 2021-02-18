@@ -1,5 +1,5 @@
 import {Admin} from "../../shared/entities/Admin";
-import {BaseRepository, ListOptions} from "../../shared/repositories/BaseRepository";
+import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
 import {CreateAdminInput, UpdateAdminInput} from "../resolverInputs/AdminDataInput";
@@ -19,7 +19,7 @@ export class AdminRepository extends BaseRepository
      * Get admin list
      * @param options
      */
-    async getList (options: ListOptions = {}) {
+    async getList (options: QueryOptions = {}) {
         let parameters: any = {
             role: AdminRole.admin
         };

@@ -28,6 +28,8 @@ services:
     image: influxdb:1.8.3
     ports:
       - 8086:8086
+    environment:
+      INFLUXDB_HTTP_LOG_ENABLED: 0
     volumes:
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
       - ./influxdb/storage:/var/lib/influxdb

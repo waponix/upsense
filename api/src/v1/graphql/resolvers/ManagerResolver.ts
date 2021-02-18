@@ -5,7 +5,6 @@ import {QueryArgs} from "../resolverArgs/QueryArgs";
 import {SortType} from "../../../components/types/SortOrderTypes";
 import {ManagerResponse, SingleManagerResponse} from "../response/ManagerResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {getConnection} from "typeorm";
 import {ManagerRepository} from "../repositories/MangerRepository";
 
 @Resolver()
@@ -15,7 +14,7 @@ export class ManagerResolver
 
     constructor() {
         this.repo = new ManagerRepository();
-        this.repo.init(getConnection());
+        this.repo.init();
     }
 
     @Authorized(['ROLE_ADMIN'])

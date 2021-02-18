@@ -4,7 +4,6 @@ import {AdminFilterInput, CreateAdminInput, UpdateAdminInput} from '../resolverI
 import {QueryArgs} from "../resolverArgs/QueryArgs";
 import {SortType} from "../../../components/types/SortOrderTypes";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {getConnection} from "typeorm";
 import {UserRepository} from "../repositories/UserRepository";
 import {SingleUserResponse, UserResponse} from "../response/UserResponse";
 import {CreateUserInput, UpdateUserInput, UserFilterInput} from "../resolverInputs/UserDataInput";
@@ -16,7 +15,7 @@ export class UserResolver
 
     constructor() {
         this.repo = new UserRepository();
-        this.repo.init(getConnection());
+        this.repo.init();
     }
 
     @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])

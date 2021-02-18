@@ -1,5 +1,5 @@
 import {Admin} from "../../shared/entities/Admin";
-import {BaseRepository, ListOptions} from "../../shared/repositories/BaseRepository";
+import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
 
@@ -18,13 +18,15 @@ export class AdminRepository extends BaseRepository
      * Get admin list
      * @param options
      */
-    async getList (options: ListOptions = {}): Promise<Admin[]> {
+    async getList (options: QueryOptions = {}): Promise<Admin[]> {
         let parameters: any = {
             role: AdminRole.admin
         };
         let whereStatements = [
             'admin.role = :role'
         ];
+
+        const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
         const query = await this.manager
             .getRepository(Admin)
@@ -38,7 +40,7 @@ export class AdminRepository extends BaseRepository
             .addSelect('admin.picture')
             .addSelect('admin.createdAt')
             .addSelect('admin.updatedAt')
-            .offset(options.page)
+            .offset(offset)
             .limit(paginationConfig.limit);
 
         // create filters if provided
@@ -62,7 +64,7 @@ export class AdminRepository extends BaseRepository
             let searchStatement = [];
 
             for (const field of this.searchFields) {
-                searchStatement.push(`a.${field} LIKE :find`);
+                searchStatement.push(`admin.${field} LIKE :find`);
             }
 
             whereStatements.push(`(${searchStatement.join(' OR ')})`);

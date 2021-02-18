@@ -6,7 +6,6 @@ import {QueryArgs} from "../resolverArgs/QueryArgs";
 import {SortType} from "../../../components/types/SortOrderTypes";
 import {AdminResponse, SingleAdminResponse} from "../response/AdminResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {getConnection} from "typeorm";
 
 @Resolver()
 export class AdminResolver
@@ -15,7 +14,7 @@ export class AdminResolver
 
     constructor() {
         this.repo = new AdminRepository();
-        this.repo.init(getConnection());
+        this.repo.init();
     }
 
     @Authorized('ROLE_ADMIN')

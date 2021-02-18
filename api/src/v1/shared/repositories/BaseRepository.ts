@@ -1,4 +1,4 @@
-import {Connection, EntityManager, QueryRunner, Repository} from "typeorm";
+import {Connection, EntityManager, getConnection, QueryRunner, Repository} from "typeorm";
 import {SortType} from "../../../components/types/SortOrderTypes";
 
 export interface ListQueryOptions {
@@ -6,7 +6,7 @@ export interface ListQueryOptions {
     fields?: string[];
 }
 
-export interface ListOptions {
+export interface QueryOptions {
     filters?: {},
     sort?: SortType,
     page?: number,
@@ -23,8 +23,8 @@ export abstract class BaseRepository {
      * Note: always call this function when injecting in the resolver
      * @param connection
      */
-    public async init (connection: Connection) {
-        this.connection = connection;
+    public async init () {
+        this.connection = getConnection();
         this.queryRunner = await this.connection.createQueryRunner();
         this.manager = await this.queryRunner.manager;
 

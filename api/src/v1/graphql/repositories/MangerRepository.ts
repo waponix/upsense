@@ -1,5 +1,5 @@
 import {Admin} from "../../shared/entities/Admin";
-import {BaseRepository, ListOptions} from "../../shared/repositories/BaseRepository";
+import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
 import {CreateManagerInput, UpdateManagerInput} from "../resolverInputs/ManagerDataInput";
@@ -19,7 +19,7 @@ export class ManagerRepository extends BaseRepository
      * Get manager list
      * @param options
      */
-    async getList (options: ListOptions = {}) {
+    async getList (options: QueryOptions = {}) {
         let parameters: any = {
             role: AdminRole.manager
         };
