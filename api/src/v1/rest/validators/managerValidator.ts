@@ -1,12 +1,12 @@
-import {Admin} from '../../shared/entities/Admin';
+import {Admin as Manager} from '../../shared/entities/Admin';
 import {getRepository} from 'typeorm';
 const Validator = require('validatorjs');
 
 Validator.registerAsync('username_available', async (username: string, attribute: any, req: any, passes: any) => {
-    const adminRepository = getRepository(Admin);
-    const admin: Admin | undefined = await adminRepository.findOne({where: {username}});
+    const managerRepository = getRepository(Manager);
+    const manager: Manager | undefined = await managerRepository.findOne({where: {username}});
 
-    if (!admin) {
+    if (!manager) {
         passes();
     } else {
         passes(false, 'Username has already been taken');
@@ -14,8 +14,8 @@ Validator.registerAsync('username_available', async (username: string, attribute
 });
 
 Validator.registerAsync('email_available', async (email: string, attribute: any, req: any, passes: any) => {
-    const adminRepository = getRepository(Admin);
-    const admin: Admin | undefined = await adminRepository.findOne({where: {email}});
+    const adminRepository = getRepository(Manager);
+    const admin: Manager | undefined = await adminRepository.findOne({where: {email}});
 
     if (!admin) {
         passes();
@@ -24,7 +24,7 @@ Validator.registerAsync('email_available', async (email: string, attribute: any,
     }
 });
 
-export const adminCreateValidator = (data: any) => {
+export const managerCreateValidator = (data: any) => {
     const validation =  new Validator(data, {
         username: 'required|string|max:50|username_available',
         password: 'required|string|max:100',
@@ -38,7 +38,7 @@ export const adminCreateValidator = (data: any) => {
     return validation;
 };
 
-export const adminUpdateValidator = (data: any, admin: Admin) => {
+export const managerUpdateValidator = (data: any, manager: Manager) => {
     let fields = {
         password: 'string|max:100',
         firstName: 'string|max:50',
@@ -48,7 +48,7 @@ export const adminUpdateValidator = (data: any, admin: Admin) => {
         picture: "string|url|max:255"
     };
 
-    if (data.email && data.email === admin.email) {
+    if (data.email && data.email === manager.email) {
         // only validate email if it is not the same with old email
         // @ts-ignore
         delete fields.email;

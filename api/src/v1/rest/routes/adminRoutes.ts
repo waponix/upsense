@@ -1,10 +1,8 @@
 import {Router} from 'express';
 import Routes from '../../../components/routes';
 import Controller from '../controllers/adminController';
-import {JwtAuth} from '../../../components/security/JwtAuth';
 import passport from "../../../components/security/passport";
 
-const jwtAuth = new JwtAuth();
 let routes = new Routes('/admins', Controller);
 
 routes.registerRoutes((router: Router, controller: Controller) => {

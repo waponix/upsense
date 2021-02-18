@@ -1,15 +1,11 @@
 import {Request, Response} from 'express';
 import Controller from '../../../components/controller';
-import {Admin} from '../../shared/entities/Admin';
 //@ts-ignore
 import AdminServices from "../services/AdminServices";
-import {getRepository} from 'typeorm';
-import {ApiResponse} from "../objects/ApiResponse";
-import {Status} from "../../../components/types/ResponseStatusTypes";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 
 /**
- * The auth controller
+ * The admin controller
  *
  * @param request
  * @param response

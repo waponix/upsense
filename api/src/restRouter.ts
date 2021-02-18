@@ -12,6 +12,7 @@ const restRouter: Router = express.Router();
 const routes: Routes[] = [
     require('./v1/rest/routes/authRoutes'),
     require('./v1/rest/routes/adminRoutes'),
+    require('./v1/rest/routes/managerRoutes'),
     require('./v1/rest/routes/companyRoutes')
 ];
 
