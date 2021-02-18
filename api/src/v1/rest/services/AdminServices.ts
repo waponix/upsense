@@ -5,7 +5,7 @@ import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {adminCreateValidator, adminUpdateValidator} from "../validators/adminValidator";
-import {AdminMessages, CommonMessages} from "../../../messages/messages";
+import {CommonMessages} from "../../../messages/messages";
 
 export default class AdminServices
 {
@@ -51,7 +51,7 @@ export default class AdminServices
 
         if (admin === undefined) {
             apiResponse.status = Status.NotFound;
-            apiResponse.message = AdminMessages.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Admin');
             statusCode = 404;
         }
 
@@ -89,7 +89,7 @@ export default class AdminServices
                     apiResponse.result = admin;
                 } catch {
                     apiResponse.status = Status.Error;
-                    apiResponse.message = AdminMessages.UnableToSave;
+                    apiResponse.message = CommonMessages.UnableToSave('Admin');
                     await this.adminRepository.queryRunner.rollbackTransaction();
                     statusCode = 500;
                 } finally {
@@ -125,7 +125,7 @@ export default class AdminServices
 
         if (admin === undefined) {
             apiResponse.status = Status.NotFound;
-            apiResponse.message = AdminMessages.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Admin');
             statusCode = 404;
 
             return new ReturnableResponse(statusCode, apiResponse);
@@ -150,7 +150,7 @@ export default class AdminServices
                 } catch {
                     await this.adminRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;
-                    apiResponse.message = AdminMessages.UnableToUpdate;
+                    apiResponse.message = CommonMessages.UnableToUpdate('Admin');
                     statusCode = 500;
                 } finally {
                     await this.adminRepository.queryRunner.release();
@@ -184,7 +184,7 @@ export default class AdminServices
 
         if (admin === undefined) {
             apiResponse.status = Status.NotFound;
-            apiResponse.message = AdminMessages.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Admin');
             statusCode = 404;
         }
 
@@ -198,7 +198,7 @@ export default class AdminServices
         } catch {
             await this.adminRepository.queryRunner.rollbackTransaction();
             apiResponse.status = Status.Error;
-            apiResponse.message = AdminMessages.UnableToDelete;
+            apiResponse.message = CommonMessages.UnableToDelete('Admin');
             statusCode = 500;
         } finally {
             await this.adminRepository.queryRunner.release();
