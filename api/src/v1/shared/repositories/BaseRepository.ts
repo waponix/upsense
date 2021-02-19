@@ -23,7 +23,7 @@ export abstract class BaseRepository {
      * Note: always call this function when injecting in the resolver
      * @param connection
      */
-    public async init () {
+    public async init (connection: Connection | null = null) {
         this.connection = getConnection();
         this.queryRunner = await this.connection.createQueryRunner();
         this.em = await this.queryRunner.manager;

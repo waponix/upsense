@@ -1,6 +1,5 @@
 import {Request, Response} from 'express';
 import Controller from '../../../components/controller';
-//@ts-ignore
 import AdminServices from "../services/AdminServices";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 

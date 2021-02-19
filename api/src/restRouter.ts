@@ -10,11 +10,11 @@ const restRouter: Router = express.Router();
 
 // add the imported routes here
 const routes: Routes[] = [
-    require('./v1/rest/routes/authRoutes'),
-    require('./v1/rest/routes/adminRoutes'),
-    require('./v1/rest/routes/managerRoutes'),
-    require('./v1/rest/routes/userRoutes'),
-    require('./v1/rest/routes/companyRoutes')
+    require('./v1/rest/routes/AuthRoutes'),
+    require('./v1/rest/routes/AdminRoutes'),
+    require('./v1/rest/routes/ManagerRoutes'),
+    require('./v1/rest/routes/UserRoutes'),
+    require('./v1/rest/routes/CompanyRoutes')
 ];
 
 // register v1 apis

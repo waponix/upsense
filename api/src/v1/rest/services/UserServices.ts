@@ -4,7 +4,7 @@ import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {userCreateValidator, userUpdateValidator} from "../validators/userValidator";
+import {userCreateValidator, userUpdateValidator} from "../validators/UserValidator";
 import {CommonMessages} from "../../../messages/messages";
 
 export default class UserServices

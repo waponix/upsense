@@ -4,7 +4,7 @@ import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {adminCreateValidator, adminUpdateValidator} from "../validators/adminValidator";
+import {adminCreateValidator, adminUpdateValidator} from "../validators/AdminValidator";
 import {CommonMessages} from "../../../messages/messages";
 
 export default class AdminServices

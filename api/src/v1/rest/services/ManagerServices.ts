@@ -4,7 +4,7 @@ import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {managerCreateValidator, managerUpdateValidator} from "../validators/managerValidator";
+import {managerCreateValidator, managerUpdateValidator} from "../validators/ManagerValidator";
 import {CommonMessages} from "../../../messages/messages";
 
 export default class ManagerServices
@@ -68,6 +68,7 @@ export default class ManagerServices
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
         const {data} = request.body;
+        await this.managerRepository.init();
 
         // do validation before proceed
         let validation = managerCreateValidator(data);
@@ -75,8 +76,6 @@ export default class ManagerServices
         return new Promise(resolve => {
             validation.checkAsync(async () => {
                 // success callback
-                await this.managerRepository.init();
-
                 await this.managerRepository.queryRunner.startTransaction();
 
                 try {

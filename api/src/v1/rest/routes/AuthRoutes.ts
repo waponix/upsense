@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import Routes from '../../../components/routes';
-import Controller from '../controllers/authController';
+import Controller from '../controllers/AuthController';
 import passport from '../../../components/security/passport';
 import {JwtAuth} from "../../../components/security/JwtAuth";
 

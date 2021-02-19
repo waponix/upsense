@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import Routes from '../../../components/routes';
-import Controller from '../controllers/managerController';
+import Controller from '../controllers/ManagerController';
 import passport from "../../../components/security/passport";
 
 let routes = new Routes('/managers', Controller);
