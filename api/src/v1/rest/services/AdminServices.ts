@@ -30,9 +30,7 @@ export default class AdminServices
         const {query} = request.body;
 
         await this.adminRepository.init();
-        const admins: Admin[] = await this.adminRepository.getList(query);
-
-        apiResponse.result = admins;
+        apiResponse.result = await this.adminRepository.getList(query);
 
         return new ReturnableResponse(200, apiResponse);
     }
@@ -53,9 +51,9 @@ export default class AdminServices
             apiResponse.status = Status.NotFound;
             apiResponse.message = CommonMessages.NotFound('Admin');
             statusCode = 404;
+        } else {
+            apiResponse.result = admin;
         }
-
-        apiResponse.result = admin;
 
         return new ReturnableResponse(statusCode, apiResponse);
     }

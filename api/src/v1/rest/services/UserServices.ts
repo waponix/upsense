@@ -30,9 +30,7 @@ export default class UserServices
         const {query} = request.body;
 
         await this.userRepository.init();
-        const users: User[] = await this.userRepository.getList(query);
-
-        apiResponse.result = users;
+        apiResponse.result = await this.userRepository.getList(query);
 
         return new ReturnableResponse(200, apiResponse);
     }
@@ -53,9 +51,9 @@ export default class UserServices
             apiResponse.status = Status.NotFound;
             apiResponse.message = CommonMessages.NotFound('User');
             statusCode = 404;
+        } else {
+            apiResponse.result = user;
         }
-
-        apiResponse.result = user;
 
         return new ReturnableResponse(statusCode, apiResponse);
     }

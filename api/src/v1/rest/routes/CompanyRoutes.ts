@@ -8,7 +8,8 @@ let routes = new Routes('/companies', Controller);
 routes.registerRoutes((router: Router, controller: Controller) => {
     // register the routes here
     router
-        // .get('/', jwtAuth.required, controller.getCompaniesAction)
+        .get('/', passport.authenticate('jwt', {session: false, optional: false}), controller.getCompaniesAction)
+        .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), controller.getCompanyAction)
         .post('/', passport.authenticate('jwt', {session: false, optional: false}), controller.postCompanyAction);
 });
 

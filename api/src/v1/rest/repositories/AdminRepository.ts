@@ -5,7 +5,7 @@ import {AdminRole} from "../../../components/types/AdminRoleTypes";
 
 export class AdminRepository extends BaseRepository
 {
-    private searchFields: string[] = [
+    private searchableFields: string[] = [
         'id',
         'username',
         'firstName',
@@ -63,7 +63,7 @@ export class AdminRepository extends BaseRepository
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
 
-            for (const field of this.searchFields) {
+            for (const field of this.searchableFields) {
                 searchStatement.push(`admin.${field} LIKE :find`);
             }
 

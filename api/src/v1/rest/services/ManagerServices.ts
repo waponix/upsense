@@ -30,9 +30,7 @@ export default class ManagerServices
         const {query} = request.body;
 
         await this.managerRepository.init();
-        const managers: Manager[] = await this.managerRepository.getList(query);
-
-        apiResponse.result = managers;
+        apiResponse.result = await this.managerRepository.getList(query);
 
         return new ReturnableResponse(200, apiResponse);
     }
@@ -53,9 +51,9 @@ export default class ManagerServices
             apiResponse.status = Status.NotFound;
             apiResponse.message = CommonMessages.NotFound('Manager');
             statusCode = 404;
+        } else {
+            apiResponse.result = manager;
         }
-
-        apiResponse.result = manager;
 
         return new ReturnableResponse(statusCode, apiResponse);
     }

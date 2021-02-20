@@ -1,5 +1,4 @@
 import {Company} from '../../shared/entities/Company';
-import {QueryOptions} from "../../shared/repositories/BaseRepository";
 import {Request} from "express";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {ApiResponse} from "../objects/ApiResponse";
@@ -18,11 +17,46 @@ export default class companyServices
         this.companyRepository = new CompanyRepository();
     }
 
-    async getList(query: QueryOptions)
+    /**
+     *
+     * @param request
+     */
+    async getList(request: Request): Promise<ReturnableResponse>
     {
-        return await this.companyRepository.find({}, {take: 20});
+        let apiResponse: ApiResponse = new ApiResponse();
+        const {query} = request.body;
+
+        await this.companyRepository.init();
+        apiResponse.result = await this.companyRepository.getList(query);
+
+        return new ReturnableResponse(200, apiResponse);
     }
 
+    async getOne(request: Request): Promise<ReturnableResponse>
+    {
+        let statusCode: number = 200;
+        let apiResponse: ApiResponse = new ApiResponse();
+
+        const {id} = request.params;
+
+        await this.companyRepository.init();
+        const company: Company | undefined = await this.companyRepository.findOneById(parseInt(id));
+
+        if (company === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Company');
+            statusCode = 404;
+        } else {
+            apiResponse.result = company;
+        }
+
+        return new ReturnableResponse(statusCode, apiResponse);
+    }
+
+    /**
+     *
+     * @param request
+     */
     async create(request: Request): Promise<ReturnableResponse>
     {
         let apiResponse: ApiResponse = new ApiResponse();
