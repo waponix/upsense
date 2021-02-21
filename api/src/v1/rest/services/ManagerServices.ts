@@ -4,7 +4,7 @@ import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {managerCreateValidator, managerUpdateValidator} from "../validators/ManagerValidator";
+import {managerCreateValidation, managerUpdateValidation} from "../validators/ManagerValidator";
 import {CommonMessages} from "../../../messages/messages";
 
 export default class ManagerServices
@@ -69,7 +69,7 @@ export default class ManagerServices
         await this.managerRepository.init();
 
         // do validation before proceed
-        let validation = managerCreateValidator(data);
+        let validation = managerCreateValidation(data);
 
         return new Promise(resolve => {
             validation.checkAsync(async () => {
@@ -129,7 +129,7 @@ export default class ManagerServices
         }
 
         // do validation before proceed
-        let validation = managerUpdateValidator(data, manager);
+        let validation = managerUpdateValidation(data, manager);
 
         return new Promise(resolve => {
             validation.checkAsync(async () => {

@@ -24,8 +24,8 @@ Validator.registerAsync('email_available', async (email: string, attribute: any,
     }
 });
 
-export const adminCreateValidator = (data: any) => {
-    const validation =  new Validator(data, {
+export const adminCreateValidation = (data: any) => {
+    return new Validator(data, {
         username: 'required|string|max:50|username_available',
         password: 'required|string|max:100',
         firstName: 'required|string|max:50',
@@ -34,11 +34,9 @@ export const adminCreateValidator = (data: any) => {
         mobileNumber: 'max:20',
         picture: "string|url|max:255"
     });
-
-    return validation;
 };
 
-export const adminUpdateValidator = (data: any, admin: Admin) => {
+export const adminUpdateValidation = (data: any, admin: Admin) => {
     let fields = {
         password: 'string|max:100',
         firstName: 'string|max:50',
@@ -50,11 +48,8 @@ export const adminUpdateValidator = (data: any, admin: Admin) => {
 
     if (data.email && data.email === admin.email) {
         // only validate email if it is not the same with old email
-        // @ts-ignore
-        delete fields.email;
+        fields.email.replace('|email_available', '');
     }
 
-    const validation =  new Validator(data, fields);
-
-    return validation;
+    return new Validator(data, fields);
 };

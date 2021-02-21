@@ -4,7 +4,7 @@ import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {adminCreateValidator, adminUpdateValidator} from "../validators/AdminValidator";
+import {adminCreateValidation, adminUpdateValidation} from "../validators/AdminValidator";
 import {CommonMessages} from "../../../messages/messages";
 
 export default class AdminServices
@@ -68,7 +68,7 @@ export default class AdminServices
         const {data} = request.body;
 
         // do validation before proceed
-        let validation = adminCreateValidator(data);
+        let validation = adminCreateValidation(data);
 
         return new Promise(resolve => {
             validation.checkAsync(async () => {
@@ -130,7 +130,7 @@ export default class AdminServices
         }
 
         // do validation before proceed
-        let validation = adminUpdateValidator(data, admin);
+        let validation = adminUpdateValidation(data, admin);
 
         return new Promise(resolve => {
             validation.checkAsync(async () => {

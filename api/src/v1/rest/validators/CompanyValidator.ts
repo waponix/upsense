@@ -13,10 +13,14 @@ Validator.registerAsync('company_name_available', async (name: string, attribute
     }
 });
 
-export const createCompanyValidator = (data: any) => {
-    let validation =  new Validator(data, {
+export const companyCreateValidation = (data: Partial<Company>) => {
+    return new Validator(data, {
         name: 'required|string|max:150|company_name_available',
     });
-
-    return validation;
 };
+
+export const companyUpdateValidation = (data: Partial<Company>, company: Company) => {
+    return new Validator(data, {
+        name: 'string|max:150|company_name_available',
+    })
+}

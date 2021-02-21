@@ -4,7 +4,7 @@ import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {userCreateValidator, userUpdateValidator} from "../validators/UserValidator";
+import {userCreateValidation, userUpdateValidation} from "../validators/UserValidator";
 import {CommonMessages} from "../../../messages/messages";
 
 export default class UserServices
@@ -68,7 +68,7 @@ export default class UserServices
         const {data} = request.body;
 
         // do validation before proceed
-        let validation = userCreateValidator(data);
+        let validation = userCreateValidation(data);
 
         return new Promise(resolve => {
             validation.checkAsync(async () => {
@@ -130,7 +130,7 @@ export default class UserServices
         }
 
         // do validation before proceed
-        let validation = userUpdateValidator(data, user);
+        let validation = userUpdateValidation(data, user);
 
         return new Promise(resolve => {
             validation.checkAsync(async () => {

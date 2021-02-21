@@ -4,7 +4,7 @@ import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {ApiResponse} from "../objects/ApiResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {CommonMessages} from "../../../messages/messages";
-import {createCompanyValidator} from "../validators/CompanyValidator";
+import {companyCreateValidation} from "../validators/CompanyValidator";
 import {CompanyRepository} from "../repositories/CompanyRepository";
 
 export default class companyServices
@@ -63,7 +63,7 @@ export default class companyServices
         let statusCode: number = 200;
 
         const {data} = request.body;
-        const validation = createCompanyValidator(data);
+        const validation = companyCreateValidation(data);
 
         return new Promise(resolve => {
             validation.checkAsync(async () => {
@@ -96,5 +96,13 @@ export default class companyServices
                 resolve(new ReturnableResponse(statusCode, apiResponse));
             });
         });
+    }
+
+    async update(request: Request): Promise<ReturnableResponse>
+    {
+        let apiResponse: ApiResponse = new ApiResponse();
+        let statusCode: number = 200;
+
+        return new ReturnableResponse(statusCode, apiResponse);
     }
 }
