@@ -14,7 +14,7 @@ export default class companyServices
 
     constructor(user: any) {
         this.user = user;
-        this.companyRepository = new CompanyRepository();
+        this.companyRepository = new CompanyRepository(Company);
     }
 
     /**

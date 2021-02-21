@@ -23,8 +23,7 @@ export class CompanyRepository extends BaseRepository
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
-        const query = await this.em
-            .getRepository(Company)
+        const query = await this
             .createQueryBuilder('company')
             .select('company.id')
             .addSelect('company.name')
@@ -82,7 +81,6 @@ export class CompanyRepository extends BaseRepository
      */
     async create(data: any): Promise<Company>
     {
-        const companyRepository: Repository<Company> = await this.em.getRepository(Company);
         const branchRepository: Repository<Branch> = await this.em.getRepository(Branch);
 
         let company: Company = new Company();
@@ -95,7 +93,7 @@ export class CompanyRepository extends BaseRepository
         company.branch = branch;
         branch.company = company;
 
-        await companyRepository.save(company);
+        await this.repository.save(company);
         await branchRepository.save(branch);
 
         return company;
@@ -108,11 +106,9 @@ export class CompanyRepository extends BaseRepository
      */
     async update(company: Company, data: Partial<Company>): Promise<boolean>
     {
-        const companyRepository = await this.em.getRepository(Company);
-
         company.name = data.name || company.name;
 
-        await companyRepository.save(company);
+        await this.repository.save(company);
 
         return true;
     }

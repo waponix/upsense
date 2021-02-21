@@ -28,8 +28,7 @@ export class UserRepository extends BaseRepository
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
-        const query = await this.em
-            .getRepository(User)
+        const query = await this
             .createQueryBuilder('manager')
             .select('manager.id')
             .addSelect('manager.username')
@@ -82,15 +81,15 @@ export class UserRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number): Promise<User | undefined> {
-        return await this.em.getRepository(User).findOne({where: { id }});
+        return await this.repository.findOne({where: { id }});
     }
 
     async findOneByUsername (username: string): Promise<User | undefined> {
-        return await this.em.getRepository(User).findOne({where: { username }});
+        return await this.repository.findOne({where: { username }});
     }
 
     async findOneByEmail (email: string): Promise<User | undefined> {
-        return await this.em.getRepository(User).findOne({where: { email }});
+        return await this.repository.findOne({where: { email }});
     }
 
     /**
@@ -98,7 +97,7 @@ export class UserRepository extends BaseRepository
      * @param data
      */
     async create (data: any): Promise<User> {
-        const repository = await this.em.getRepository(User);
+        const repository = await this.repository;
         let user: User = new User();
         user.username = data.username;
         user.password = data.password;
@@ -127,7 +126,7 @@ export class UserRepository extends BaseRepository
         user.email = data.email || user.email;
         user.picture = data.picture || user.picture;
         user.mobileNumber = data.mobileNumber || user.mobileNumber;
-        await this.em.getRepository(User).save(user);
+        await this.repository.save(user);
         return true;
     }
 
@@ -136,7 +135,7 @@ export class UserRepository extends BaseRepository
      * @param user
      */
     async delete (user: User): Promise<boolean> {
-        await this.em.getRepository(User).remove(user);
+        await this.repository.remove(user);
         return true;
     }
 }

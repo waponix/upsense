@@ -18,7 +18,7 @@ export default class UserServices
      */
     constructor(user: any) {
         this.user = user;
-        this.userRepository = new UserRepository();
+        this.userRepository = new UserRepository(User);
     }
 
     /**

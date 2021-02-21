@@ -14,7 +14,7 @@ export class UserResolver
     private repo: UserRepository;
 
     constructor() {
-        this.repo = new UserRepository();
+        this.repo = new UserRepository(Admin);
         this.repo.init();
     }
 

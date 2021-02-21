@@ -28,8 +28,7 @@ export class AdminRepository extends BaseRepository
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
-        const query = await this.em
-            .getRepository(Admin)
+        const query = await this
             .createQueryBuilder('admin')
             .select('admin.id')
             .addSelect('admin.username')
@@ -82,15 +81,15 @@ export class AdminRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number): Promise<Admin | undefined> {
-        return await this.em.getRepository(Admin).findOne({where: { id }});
+        return await this.repository.findOne({where: { id }});
     }
 
     async findOneByUsername (username: string): Promise<Admin | undefined> {
-        return await this.em.getRepository(Admin).findOne({where: { username }});
+        return await this.repository.findOne({where: { username }});
     }
 
     async findOneByEmail (email: string): Promise<Admin | undefined> {
-        return await this.em.getRepository(Admin).findOne({where: { email }});
+        return await this.repository.findOne({where: { email }});
     }
 
     /**
@@ -98,7 +97,6 @@ export class AdminRepository extends BaseRepository
      * @param data
      */
     async create (data: any): Promise<Admin> {
-        const repository = await this.em.getRepository(Admin);
         let admin: Admin = new Admin();
         admin.username = data.username;
         admin.password = data.password;
@@ -108,7 +106,7 @@ export class AdminRepository extends BaseRepository
         admin.mobileNumber = data.mobileNumber;
         admin.picture = data.picture;
         admin.role = AdminRole.admin;
-        await repository.save(admin);
+        await this.repository.save(admin);
         return admin;
     }
 
@@ -127,7 +125,7 @@ export class AdminRepository extends BaseRepository
         admin.email = data.email || admin.email;
         admin.picture = data.picture || admin.picture;
         admin.mobileNumber = data.mobileNumber || admin.mobileNumber;
-        await this.em.getRepository(Admin).save(admin);
+        await this.repository.save(admin);
         return true;
     }
 
@@ -136,7 +134,7 @@ export class AdminRepository extends BaseRepository
      * @param admin
      */
     async delete (admin: Admin): Promise<boolean> {
-        await this.em.getRepository(Admin).remove(admin);
+        await this.repository.remove(admin);
         return true;
     }
 }

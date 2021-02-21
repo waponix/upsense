@@ -13,7 +13,7 @@ export class AdminResolver
     private repo: AdminRepository;
 
     constructor() {
-        this.repo = new AdminRepository();
+        this.repo = new AdminRepository(Admin);
         this.repo.init();
     }
 

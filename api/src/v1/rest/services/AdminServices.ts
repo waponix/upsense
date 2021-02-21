@@ -18,7 +18,7 @@ export default class AdminServices
      */
     constructor(user: any) {
         this.user = user;
-        this.adminRepository = new AdminRepository();
+        this.adminRepository = new AdminRepository(Admin);
     }
 
     /**

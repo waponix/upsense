@@ -8,12 +8,11 @@ export class BranchRepository extends BaseRepository {
 
     async createDefault(): Promise<Branch>
     {
-        const repository: Repository<Branch> = await this.em.getRepository(Branch);
         let branch: Branch = new Branch();
 
         branch.name = defaultName;
 
-        repository.save(branch);
+        await this.repository.save(branch);
 
         return branch;
     }

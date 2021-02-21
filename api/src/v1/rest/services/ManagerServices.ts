@@ -18,7 +18,7 @@ export default class ManagerServices
      */
     constructor(user: any) {
         this.user = user;
-        this.managerRepository = new ManagerRepository();
+        this.managerRepository = new ManagerRepository(Manager);
     }
 
     /**
