@@ -1,1 +1,1 @@
-import {Request, Response} from 'express';import {Connection, Repository} from 'typeorm';export abstract class Controller{}export default Controller;
+import {Request} from 'express';export abstract class Controller{    getUser (request: Request)    {        //@ts-ignore        return request.user;    }}export default Controller;

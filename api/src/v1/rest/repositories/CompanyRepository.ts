@@ -13,6 +13,10 @@ export class CompanyRepository extends BaseRepository
         'name'
     ];
 
+    /**
+     *
+     * @param options
+     */
     async getList (options: QueryOptions = {}): Promise<Company[]> {
         let parameters: any = {};
         let whereStatements: any = [];
@@ -63,11 +67,19 @@ export class CompanyRepository extends BaseRepository
         return await query.getMany();
     }
 
+    /**
+     *
+     * @param id
+     */
     async findOneById (id: number): Promise<Company | undefined>
     {
         return await this.em.getRepository(Company).findOne({where: { id }});
     }
 
+    /**
+     *
+     * @param data
+     */
     async create(data: any): Promise<Company>
     {
         const companyRepository: Repository<Company> = await this.em.getRepository(Company);
@@ -87,5 +99,28 @@ export class CompanyRepository extends BaseRepository
         await branchRepository.save(branch);
 
         return company;
+    }
+
+    /**
+     *
+     * @param company
+     * @param data
+     */
+    async update(company: Company, data: Partial<Company>): Promise<boolean>
+    {
+        const companyRepository = await this.em.getRepository(Company);
+
+        company.name = data.name || company.name;
+
+        await companyRepository.save(company);
+
+        return true;
+    }
+
+    async delete(company: Company): Promise<boolean>
+    {
+        const companyRepository = await this.em.getRepository(Company);
+        companyRepository.remove(company);
+        return true;
     }
 }

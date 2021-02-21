@@ -82,7 +82,7 @@ export default class AdminController extends Controller
      * @param response
      */
     async deleteAdminAction(request: Request, response: Response)
-    {``
+    {
         const adminServices = new AdminServices((<any>request).user);
         const data: ReturnableResponse = await adminServices.delete(request);
 

@@ -8,7 +8,7 @@ export default class CompanyController extends Controller
 {
     async getCompaniesAction (request: Request, response: Response)
     {
-        const companyServices = new CompanyServices((<any>request).user);
+        const companyServices = new CompanyServices(this.getUser(request));
         const data: ReturnableResponse = await companyServices.getList(request);
 
         response
@@ -18,9 +18,7 @@ export default class CompanyController extends Controller
 
     async getCompanyAction (request: Request, response: Response)
     {
-        //@ts-ignore
-        const {user} = request;
-        const companyServices = new CompanyServices(user);
+        const companyServices = new CompanyServices(this.getUser(request));
         const data: ReturnableResponse = await companyServices.getOne(request);
 
         return response
@@ -30,8 +28,28 @@ export default class CompanyController extends Controller
 
     async postCompanyAction (request: Request, response: Response)
     {
-        const companyServices: CompanyServices = new CompanyServices((<any>request).user);
+        const companyServices: CompanyServices = new CompanyServices(this.getUser(request));
         const data: ReturnableResponse = await companyServices.create(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
+    async putCompanyAction (request: Request, response: Response)
+    {
+        const companyServices: CompanyServices = new CompanyServices(this.getUser(request));
+        const data: ReturnableResponse = await companyServices.update(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
+    async deleteCompanyAction (request: Request, response: Response)
+    {
+        const companyServices: CompanyServices = new CompanyServices(this.getUser(request));
+        const data: ReturnableResponse = await companyServices.delete(request);
 
         return response
             .status(data.statusCode)

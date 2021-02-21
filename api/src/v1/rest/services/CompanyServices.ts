@@ -4,7 +4,7 @@ import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {ApiResponse} from "../objects/ApiResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {CommonMessages} from "../../../messages/messages";
-import {companyCreateValidation} from "../validators/CompanyValidator";
+import {companyCreateValidation, companyUpdateValidation} from "../validators/CompanyValidator";
 import {CompanyRepository} from "../repositories/CompanyRepository";
 
 export default class companyServices
@@ -98,10 +98,88 @@ export default class companyServices
         });
     }
 
-    async update(request: Request): Promise<ReturnableResponse>
+    /**
+     *
+     * @param request
+     */
+    async update (request: Request): Promise<ReturnableResponse>
     {
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
+        const {id} = request.params;
+        const {data} = request.body;
+
+        await this.companyRepository.init();
+        let company: Company | undefined = this.companyRepository.findOneById(parseInt(id));
+
+        if (company === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Company');
+            statusCode = 404;
+
+            return new ReturnableResponse(statusCode, apiResponse);
+        }
+
+        let validation = companyUpdateValidation(data, company);
+
+        return new Promise(resolve => {
+            validation.checkAsync(async () => {
+                await this.companyRepository.queryRunner.startTransaction();
+                try {
+                    await this.companyRepository.update(company, data);
+                    await this.companyRepository.queryRunner.commitTransaction();
+                } catch {
+                    await this.companyRepository.queryRunner.rollbackTransaction();
+                    apiResponse.status = Status.Error;
+                    apiResponse.message = CommonMessages.UnableToUpdate('Company');
+                    statusCode = 500;
+                } finally {
+                    await this.companyRepository.queryRunner.release();
+                }
+
+                resolve(new ReturnableResponse(statusCode, apiResponse));
+            }, () => {
+                // fail callback
+                apiResponse.status = Status.BadRequest;
+                apiResponse.message = CommonMessages.ArgumentValuesIncorrect;
+                apiResponse.error = validation.errors.all();
+                statusCode = 400;
+
+                resolve(new ReturnableResponse(statusCode, apiResponse));
+            });
+        });
+    }
+
+    /**
+     *
+     * @param request
+     */
+    async delete(request: Request): Promise<ReturnableResponse>
+    {
+        let apiResponse: ApiResponse = new ApiResponse();
+        let statusCode: number = 200;
+
+        await this.companyRepository.init();
+        const {id} = request.params;
+        const company: Company | undefined = await this.companyRepository.findOneById(parseInt(id));
+
+        if (company === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Company');
+            statusCode = 404;
+        }
+
+        await this.companyRepository.queryRunner().startTransaction();
+        try {
+            await this.companyRepository.delete(company);
+        } catch {
+            await this.companyRepository.queryRunner.rollbackTransaction();
+            apiResponse.status = Status.Error;
+            apiResponse.message = CommonMessages.UnableToDelete('Company');
+            statusCode = 500;
+        } finally {
+            await this.companyRepository.queryRunner.release();
+        }
 
         return new ReturnableResponse(statusCode, apiResponse);
     }

@@ -83,7 +83,7 @@ export default class UserController extends Controller
      * @param response
      */
     async deleteUserAction(request: Request, response: Response)
-    {``
+    {
         const userServices = new UserServices((<any>request).user);
         const data: ReturnableResponse = await userServices.delete(request);
 

@@ -83,7 +83,7 @@ export default class ManagerController extends Controller
      * @param response
      */
     async deleteManagerAction(request: Request, response: Response)
-    {``
+    {
         const managerServices = new ManagerServices((<any>request).user);
         const data: ReturnableResponse = await managerServices.delete(request);
 

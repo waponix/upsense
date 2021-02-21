@@ -10,7 +10,9 @@ routes.registerRoutes((router: Router, controller: Controller) => {
     router
         .get('/', passport.authenticate('jwt', {session: false, optional: false}), controller.getCompaniesAction)
         .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), controller.getCompanyAction)
-        .post('/', passport.authenticate('jwt', {session: false, optional: false}), controller.postCompanyAction);
+        .post('/', passport.authenticate('jwt', {session: false, optional: false}), controller.postCompanyAction)
+        .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), controller.putCompanyAction)
+        .delete('/:id', passport.authenticate('jwt', {session: false, optional: false}), controller.deleteCompanyAction);
 });
 
 module.exports = routes;
