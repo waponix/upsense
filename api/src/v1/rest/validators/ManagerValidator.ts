@@ -1,5 +1,6 @@
 import {Admin as Manager} from '../../shared/entities/Admin';
 import {getRepository} from 'typeorm';
+import ValidationRules from "../objects/ValidationRules";
 const Validator = require('validatorjs');
 
 Validator.registerAsync('username_available', async (username: string, attribute: any, req: any, passes: any) => {
@@ -24,32 +25,27 @@ Validator.registerAsync('email_available', async (email: string, attribute: any,
     }
 });
 
+const rules = new ValidationRules({
+    username: ['required', 'string', 'max:50', 'username_available'],
+    password: ['required', 'string', 'max:100'],
+    firstName: ['required', 'string', 'max:50'],
+    lastName: ['string', 'max:50'],
+    email: ['required', 'email', 'email_available'],
+    mobileNumber: ['max:20'],
+    picture: ['string', 'url', 'max:255']
+})
+
 export const managerCreateValidation = (data: any) => {
-    return new Validator(data, {
-        username: 'required|string|max:50|username_available',
-        password: 'required|string|max:100',
-        firstName: 'required|string|max:50',
-        lastName: 'required|string|max:50',
-        email: 'required|email|email_available',
-        mobileNumber: 'max:20',
-        picture: "string|url|max:255"
-    });
+    return new Validator(data, rules.fields);
 };
 
 export const managerUpdateValidation = (data: any, manager: Manager) => {
-    let fields = {
-        password: 'string|max:100',
-        firstName: 'string|max:50',
-        lastName: 'string|max:50',
-        email: 'email|email_available',
-        mobileNumber: 'max:20',
-        picture: "string|url|max:255"
-    };
+    rules.removeField('username');
 
     if (data.email && data.email === manager.email) {
         // only validate email if it is not the same with old email
-        fields.email.replace('|eamil_available', '');
+        rules.fields.removeRuleFromEmailField('email_available');
     }
 
-    return new Validator(data, fields);
+    return new Validator(data, rules.fields);
 };

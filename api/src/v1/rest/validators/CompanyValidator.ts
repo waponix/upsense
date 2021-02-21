@@ -1,5 +1,6 @@
 import {Company} from '../../shared/entities/Company';
 import {getRepository} from 'typeorm';
+import ValidationRules from "../objects/ValidationRules";
 const Validator = require('validatorjs');
 
 Validator.registerAsync('company_name_available', async (name: string, attribute: any, req: any, passes: any) => {
@@ -13,14 +14,18 @@ Validator.registerAsync('company_name_available', async (name: string, attribute
     }
 });
 
+const rules = new ValidationRules({
+    name: ['required', 'max:150', 'company_name_available']
+});
+
 export const companyCreateValidation = (data: Partial<Company>) => {
-    return new Validator(data, {
-        name: 'required|string|max:150|company_name_available',
-    });
+    return new Validator(data, rules.fields);
 };
 
 export const companyUpdateValidation = (data: Partial<Company>, company: Company) => {
-    return new Validator(data, {
-        name: 'string|max:150|company_name_available',
-    })
+    if (data.name === company.name) {
+        rules.fields.removeRuleFromNameField('company_name_available');
+    }
+
+    return new Validator(data, rules.fields);
 }
