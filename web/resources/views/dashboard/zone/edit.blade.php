@@ -10,7 +10,7 @@
                     <div class="card-header">
                       <i class="fa fa-align-justify"></i> {{ __('Edit') }}: {{ $zone->name }}</div>
                     <div class="card-body">
-                        <form method="POST" action="/zones/{{ $zone->id }}">
+                        <form method="POST" action="/zones/{{ $zone->zone_id }}">
                             @csrf
                             @method('PUT')
                             <div class="form-group row">
@@ -22,8 +22,9 @@
 
                             <div class="form-group row">
                                 <div class="col">
-                                    <label>Company</label>
-                                    <select class="form-control" name="status_id">
+                                    <label>Assign to Company: </label>
+
+                                    <select class="form-control" name="company_id">
                                         @foreach($companies as $company)
                                             @if( $company->company_id == $zone->company_id )
                                                 <option value="{{ $company->company_id }}" selected="true">{{ $company->name }}</option>

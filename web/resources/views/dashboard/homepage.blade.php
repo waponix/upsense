@@ -324,12 +324,13 @@
                                     </div>
                                 </div>
                             </div>
+                            @foreach($sensors as $sensor)
                             <div class="progress-group">
                                 <div class="progress-group-header align-items-end">
                                     {{--                              <svg class="c-icon progress-group-icon">--}}
                                     {{--                                <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-globe-alt"></use>--}}
                                     {{--                              </svg>--}}
-                                    <div>Sensor 1</div>
+                                    <div>{{$sensor->description}}</div>
                                     <div class="ml-auto font-weight-bold mr-2">120</div>
                                     <div class="text-muted small">(56%)</div>
                                 </div>
@@ -340,54 +341,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="progress-group">
-                                <div class="progress-group-header align-items-end">
-                                    {{--                              <svg class="c-icon progress-group-icon">--}}
-                                    {{--                                <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-facebook"></use>--}}
-                                    {{--                              </svg>--}}
-                                    <div>Sensor 2</div>
-                                    <div class="ml-auto font-weight-bold mr-2">51.223</div>
-                                    <div class="text-muted small">(15%)</div>
-                                </div>
-                                <div class="progress-group-bars">
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 15%"
-                                             aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="progress-group">
-                                <div class="progress-group-header align-items-end">
-                                    {{--                              <svg class="c-icon progress-group-icon">--}}
-                                    {{--                                <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-twitter"></use>--}}
-                                    {{--                              </svg>--}}
-                                    <div>Sensor 3</div>
-                                    <div class="ml-auto font-weight-bold mr-2">37.564</div>
-                                    <div class="text-muted small">(11%)</div>
-                                </div>
-                                <div class="progress-group-bars">
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 11%"
-                                             aria-valuenow="11" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="progress-group">
-                                <div class="progress-group-header align-items-end">
-                                    {{--                              <svg class="c-icon progress-group-icon">--}}
-                                    {{--                                <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-linkedin"></use>--}}
-                                    {{--                              </svg>--}}
-                                    <div>Sensor 4</div>
-                                    <div class="ml-auto font-weight-bold mr-2">27.319</div>
-                                    <div class="text-muted small">(8%)</div>
-                                </div>
-                                <div class="progress-group-bars">
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 8%"
-                                             aria-valuenow="8" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
+                                @endforeach
                         </div>
                         <!-- /.col-->
                         <div class="col-sm-6">
