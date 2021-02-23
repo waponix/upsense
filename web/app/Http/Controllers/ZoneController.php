@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Zone;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -40,7 +41,8 @@ class ZoneController extends Controller
      */
     public function create()
     {
-        return view('dashboard.zone.create');
+        $companies = Company::all();
+        return view('dashboard.zone.create', compact('companies'));
     }
 
     /**
@@ -51,9 +53,9 @@ class ZoneController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|min:1|max:64'
-        ]);
+//        $validatedData = $request->validate([
+//            'name' => 'required|min:1|max:64'
+//        ]);
 
         $zone = new Zone();
         $zone->name = $request->input('name');
@@ -61,7 +63,7 @@ class ZoneController extends Controller
         $zone->save();
 
         $request->session()->flash('message', 'Successfully created zone');
-        return redirect()->route('dashboard.zone.index');
+        return redirect()->route('zones.index');
     }
 
     /**
@@ -85,8 +87,9 @@ class ZoneController extends Controller
     public function edit($id)
     {
         $zone = Zone::find($id);
+        $companies = Company::all();
 
-        return view('dashboard.zone.edit', ['zone' => $zone]);
+        return view('dashboard.zone.edit', ['zone' => $zone, 'companies' => $companies]);
     }
 
     /**
@@ -98,16 +101,16 @@ class ZoneController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|min:1|max:64',
-        ]);
+//        $validatedData = $request->validate([
+//            'name' => 'required|min:1|max:64',
+//        ]);
         $zone = Zone::find($id);
         $zone->name = $request->input('name');
         $zone->company_id = $request->input('company_id');
         $zone->save();
 
         $request->session()->flash('message', 'Successfully edited zone');
-        return redirect()->route('dashboard.zone.index');
+        return redirect()->route('zones.index');
     }
 
     /**
@@ -122,6 +125,6 @@ class ZoneController extends Controller
         if ($zone) {
             $zone->delete();
         }
-        return redirect()->route('dashboard.zone.index');
+        return redirect()->route('zones.index');
     }
 }
