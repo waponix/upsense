@@ -40,7 +40,7 @@ class UsersSeeder extends Seeder
 
         /*  insert users   */
         $user = User::create([
-            'username' => 'admin',
+//            'username' => 'admin',
             'image' => '1.jpg',
             'first_name' => 'admin',
             'last_name' => 'admin',
@@ -57,7 +57,7 @@ class UsersSeeder extends Seeder
         for ($i = 0; $i < $numberOfUsers; $i++) {
 
             $user = User::create([
-                'username' => Str::random(8),
+//                'username' => Str::random(8),
                 'image' => $imgNum++ . '.jpg',
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,

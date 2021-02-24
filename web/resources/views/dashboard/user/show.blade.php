@@ -2,32 +2,47 @@
 
 @section('content')
 
-        <div class="container-fluid">
-          <div class="animated fadeIn">
+    <div class="container-fluid">
+        <div class="animated fadeIn">
             <div class="row">
-              <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
-                <div class="card">
-                    <div class="card-header">
-                      <i class="fa fa-align-justify"></i> {{ $user->first_name . ' ' . $user->last_name }}</div>
-                    <div class="card-body">
+                <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
+                    <div class="card">
+                        <h4 class="card-header">
+                            <i class="cil-user"></i> {{ __('View User') }}
+                        </h4>
+                        <div class="card-body">
+                            <div class="">
 
-                        <div class="c-avatar">
-                            <img class="c-avatar-img"
-                                 src="{{ url('/assets/img/avatars/' . $user->image) }}"
-                                 alt="{{$user->email}}"/>
+                                <div class="c-avatar c-avatar-xl border-primary mb-3">
+                                    <img class="c-avatar-img"
+                                         src="{{ url('/assets/img/avatars/' . $user->image) }}"
+                                         alt="{{$user->email}}"/>
+                                </div>
+
+                                <div><strong>First Name:</strong> {{ $user->first_name }}</div>
+                                <div><strong>Last Name:</strong> {{ $user->last_name }}</div>
+                                <div><strong>Mobile Number:</strong> {{ $user->mobile }}</div>
+                                <div><strong>Roles:</strong> {{ $user->menuroles }}</div>
+                                <div><strong>E-mail:</strong> {{ $user->email }}</div>
+                                <div>
+                                    <strong>Zones:</strong> @foreach($user->zones as $zone)   {{ $zone->name }} @endforeach
+                                </div>
+                                <div>
+                                    <strong>Companies:</strong> @foreach($user->zones as $zone)   {{ $zone->company->name }} @endforeach
+                                </div>
+                            </div>
+                            <br>
+                            <hr>
+                            <a href="{{ url('/users/' . $user->user_id . '/edit') }}"
+                               class="btn btn-block btn-primary">{{ __('Edit User') }}</a>
+                            <a href="{{ route('users.index') }}"
+                               class="btn btn-block btn-light">{{ __('Return') }}</a>
                         </div>
-                        <h4>First Name: {{ $user->first_name }}</h4>
-                        <h4>Last Name: {{ $user->last_name }}</h4>
-                        <h4>Mobile Number: {{ $user->mobile }}</h4>
-                        <h4>Roles: {{ $user->menuroles }}</h4>
-                        <h4>E-mail: {{ $user->email }}</h4>
-                        <a href="{{ route('users.index') }}" class="btn btn-block btn-primary">{{ __('Return') }}</a>
                     </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
+    </div>
 
 @endsection
 
