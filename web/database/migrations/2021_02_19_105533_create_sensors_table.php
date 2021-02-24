@@ -23,7 +23,7 @@ class CreateSensorsTable extends Migration
             $table->string('battery_status')->default(0);
             $table->string('is_connected')->default(0);
             $table->string('type');
-            $table->string('last_seen');
+            $table->string('last_seen')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

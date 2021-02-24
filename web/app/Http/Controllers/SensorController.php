@@ -44,8 +44,9 @@ class SensorController extends Controller
     {
 
         $hubs = Hub::all();
+        $zones = Zone::all();
 
-        return view('dashboard.sensor.create', compact('hubs'));
+        return view('dashboard.sensor.create', compact('hubs'), compact('zones'));
     }
 
     /**
@@ -66,15 +67,11 @@ class SensorController extends Controller
 //            'type' => 'max:64',
 //            'imei' => 'max:64',
 //        ]);
-
         $sensor = new Sensor();
         $sensor->serial = $request->input('serial');
-        $sensor->hw_version = $request->input('hw_version');
-        $sensor->sw_version = $request->input('sw_version');
-        $sensor->fw_version = $request->input('fw_version');
+        $sensor->description = $request->input('description');
         $sensor->type = $request->input('type');
-        $sensor->imei = $request->input('imei');
-        $sensor->zone_id = $request->input('zone_id');
+        $sensor->hub_id = $request->input('hub_id');
         $sensor->save();
 
 
@@ -129,12 +126,9 @@ class SensorController extends Controller
 
         $sensor = Sensor::find($id);
         $sensor->serial = $request->input('serial');
-        $sensor->hw_version = $request->input('hw_version');
-        $sensor->sw_version = $request->input('sw_version');
-        $sensor->fw_version = $request->input('fw_version');
+        $sensor->description = $request->input('description');
         $sensor->type = $request->input('type');
-        $sensor->imei = $request->input('imei');
-        $sensor->zone_id = $request->input('zone_id');
+        $sensor->hub_id = $request->input('hub_id');
         $sensor->save();
 
         $request->session()->flash('message', 'Successfully edited sensor');

@@ -23,9 +23,9 @@ class CreateHubsTable extends Migration
             $table->tinyInteger('is_connected')->default(0);
             $table->string('signal_strength')->default(0);
             $table->string('battery_status')->default(0);
-            $table->dateTime('last_seen');
-            $table->string('min_temp');
-            $table->string('max_temp');
+            $table->dateTime('last_seen')->nullable();
+            $table->string('min_temp')->default(0);
+            $table->string('max_temp')->default(0);
             $table->string('type');
             $table->string('imei');
             $table->foreignId('zone_id');

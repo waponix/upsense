@@ -7,9 +7,13 @@
             <div class="row">
                 <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
                     <div class="card">
-                        <div class="card-header"><i class="cil-tablet"></i>{{ __('Hubs') }}</div>
+                        <div class="card-header">
+                            <h4>
+                                {{ __('Add Hub') }}
+                            </h4>
+                        </div>
                         <div class="card-body">
-                            <form method="POST" action="{{ route('zones.store') }}">
+                            <form method="POST" action="{{ route('hubs.store') }}">
                                 @csrf
                                 <div class="form-group row">
                                     <div class="col">
@@ -84,8 +88,8 @@
                                     </div>
                                 </div>
                                 <button class="btn btn-block btn-success" type="submit">{{ __('Add') }}</button>
-                                <a href="{{ route('zones.index') }}"
-                                   class="btn btn-block btn-primary">{{ __('Return') }}</a>
+                                <a href="{{ route('hubs.index') }}"
+                                   class="btn btn-block btn-light">{{ __('Return') }}</a>
                             </form>
                         </div>
                     </div>
