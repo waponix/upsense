@@ -1,4 +1,6 @@
-import {BaseRepository} from "../../shared/repositories/BaseRepository";
+const baseRepositoryPath = "../../shared/repositories/BaseRepository";
+
+const {BaseRepository} = require(baseRepositoryPath);
 import {Branch} from "../../shared/entities/Branch";
 import {Repository} from "typeorm";
 

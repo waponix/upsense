@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import Routes from './components/routes';
+import Routes from './components/Routes';
 import path from 'path';
 
 const restRouter: Router = express.Router();

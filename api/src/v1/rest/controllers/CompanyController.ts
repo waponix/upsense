@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import Controller from '../../../components/controller';
+import Controller from '../../../components/Controller';
 import CompanyServices from '../services/CompanyServices';
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 

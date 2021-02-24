@@ -26,7 +26,6 @@ export default class companyServices
         let apiResponse: ApiResponse = new ApiResponse();
         const {query} = request.body;
 
-        await this.companyRepository.init();
         apiResponse.result = await this.companyRepository.getList(query);
 
         return new ReturnableResponse(200, apiResponse);

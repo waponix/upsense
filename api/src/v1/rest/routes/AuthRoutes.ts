@@ -1,7 +1,7 @@
 import {Router} from 'express';
-import Routes from '../../../components/routes';
+import Routes from '../../../components/Routes';
 import Controller from '../controllers/AuthController';
-import passport from '../../../components/security/passport';
+import passport from '../../../components/security/Passport';
 import {JwtAuth} from "../../../components/security/JwtAuth";
 
 let routes = new Routes('/auth', Controller);

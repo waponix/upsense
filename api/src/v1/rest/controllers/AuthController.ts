@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import Controller from '../../../components/controller';
+import Controller from '../../../components/Controller';
 import {TokenProviderService} from "../../shared/services/TokenProviderService";
 import {Admin} from "../../shared/entities/Admin";
 import {getRepository, Repository} from "typeorm";

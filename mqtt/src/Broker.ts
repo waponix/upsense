@@ -16,7 +16,7 @@ export class Broker
 
     constructor() {
         this.aedes = aedes();
-        this.server = net.createServer(this.aedes.handle);
+        this.server = tls.createServer(this.aedes.handle);
     }
 
     listen(cb: CallableFunction = () => {})

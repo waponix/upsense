@@ -14,16 +14,29 @@ export interface QueryOptions {
     find?: string,
 }
 
+interface BaseEntityOptions
+{
+    connection: Connection;
+    queryRunner: QueryRunner;
+
+}
+
 export abstract class BaseRepository {
     protected connection!: Connection;
     public queryRunner!: QueryRunner;
     public em!: EntityManager;
     protected repository!: Repository<any>;
     private entity: any;
+    private initialized: boolean = false;
 
     constructor(entity: any)
     {
         this.entity = entity;
+    }
+
+    static async initialize()
+    {
+
     }
 
     /**
@@ -37,6 +50,8 @@ export abstract class BaseRepository {
         this.queryRunner = await this.connection.createQueryRunner();
         this.em = await this.queryRunner.manager;
         this.repository = await this.em.getRepository(this.entity);
+
+        this.initialized = true
 
         return this;
     }
