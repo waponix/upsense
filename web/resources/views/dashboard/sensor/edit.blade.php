@@ -8,7 +8,10 @@
                 <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
                     <div class="card">
                         <div class="card-header">
-                            <i class="fa fa-tablet"></i> {{ __('Edit Sensor') }}: {{ $sensor->serial }}</div>
+                            <h4>
+                                 {{ __('Edit Sensor') }}
+                            </h4>
+                        </div>
                         <div class="card-body">
                             <form method="POST" action="/sensors/{{ $sensor->sensor_id }}">
                                 @csrf
@@ -31,7 +34,7 @@
                                 <div class="form-group row">
                                     <div class="col">
                                         <label>Assign to Hub</label>
-                                        <select class="form-control" name="zone_id">
+                                        <select class="form-control" name="hub_id">
                                             @foreach($hubs as $hub)
                                                 @if( $hub->hub_id == $hub->hub_id )
                                                     <option value="{{ $hub->hub_id }}"

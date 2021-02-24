@@ -8,7 +8,10 @@
                 <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
                     <div class="card">
                         <div class="card-header">
-                            <i class="fa fa-tablet"></i> {{ __('Edit Hub') }}: {{ $hub->serial }}</div>
+                            <h4>
+                                <i class="fa fa-edit"></i> {{ __('Edit Hub') }}
+                            </h4>
+                        </div>
                         <div class="card-body">
                             <form method="POST" action="/hubs/{{ $hub->hub_id }}">
                                 @csrf
@@ -23,22 +26,25 @@
                                 <div class="form-group row">
                                     <div class="col">
                                         <label>Hardware Version</label>
-                                        <input class="form-control" type="text" placeholder="{{ __('Hardware Version') }}"
-                                               name="hw_version" value="{{ $hub->hw_version }}"  autofocus>
+                                        <input class="form-control" type="text"
+                                               placeholder="{{ __('Hardware Version') }}"
+                                               name="hw_version" value="{{ $hub->hw_version }}" autofocus>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col">
                                         <label>Software Version</label>
-                                        <input class="form-control" type="text" placeholder="{{ __('Software Version') }}"
-                                               name="sw_version" value="{{ $hub->sw_version }}"  autofocus>
+                                        <input class="form-control" type="text"
+                                               placeholder="{{ __('Software Version') }}"
+                                               name="sw_version" value="{{ $hub->sw_version }}" autofocus>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col">
                                         <label>Firmware Version</label>
-                                        <input class="form-control" type="text" placeholder="{{ __('Firmware Version') }}"
-                                               name="fw_version" value="{{ $hub->fw_version }}"  autofocus>
+                                        <input class="form-control" type="text"
+                                               placeholder="{{ __('Firmware Version') }}"
+                                               name="fw_version" value="{{ $hub->fw_version }}" autofocus>
                                     </div>
                                 </div>
 

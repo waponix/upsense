@@ -15,7 +15,9 @@
                     @endif
                     <div class="card">
                         <div class="card-header">
-                            <h4><i class="fa fa-align-justify"></i>{{ __('Zones') }}</h4>
+                            <h4>
+                             <i class="cil-location-pin"></i> {{ __('Zones') }}
+                            </h4>
                         </div>
                         <div class="card-body">
                             <div class="col-lg-12 col-md-12">
@@ -35,8 +37,8 @@
                                     <tbody>
                                     @foreach($zones as $zone)
                                         <tr>
-                                            <td><strong>{{ $zone->name }}</strong></td>
-                                            <td><strong>{{ $zone->company->name }}</strong></td>
+                                            <td>{{ $zone->name }}</td>
+                                            <td>{{ $zone->company->name }}</td>
                                             <td>
                                                 <a href="{{ url('/zones/' . $zone->zone_id) }}"
                                                    class="btn btn-block btn-primary">View</a>

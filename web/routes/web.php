@@ -12,6 +12,13 @@
 */
 
 Route::group(['middleware' => ['get.menu']], function () {
+//    Route::get('/profile', function () {
+//        return view('dashboard.user.profile');
+//    });
+    Route::get('/profile', 'UsersController@profile')->name('user.profile');
+    Route::get('/profile/edit', 'UsersController@profileEdit')->name('user.profile.edit');
+
+
 //    Route::get('/', function () {           return view('dashboard.homepage'); });
     Route::get('/', 'HomeController@index')->name('dashboard.homepage.index');
 //    Route::get('/', [

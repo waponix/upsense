@@ -8,19 +8,18 @@
                 <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
                     <div class="card">
                         <h4 class="card-header">
-                            <i class="cil-user"></i> {{ __('Edit User') }}
+                            <i class="cil-user"></i> {{ __('Edit') }} Profile
                         </h4>
                         <div class="card-body">
                             <br>
-                            <form method="POST" action="/users/{{ $user->user_id }}">
+                            <form method="POST" action="/users/{{ $currentAuthenticatedUser->user_id }}">
                                 @csrf
                                 @method('PUT')
-
                                 <div class="input-group mb-3">
                                     <div class="c-avatar c-avatar-xl border-primary mb-3">
                                         <img class="c-avatar-img"
-                                             src="{{ url('/assets/img/avatars/' . $user->image) }}"
-                                             alt="{{$user->email}}"/>
+                                             src="{{ url('/assets/img/avatars/' . $currentAuthenticatedUser->image) }}"
+                                             alt="{{$currentAuthenticatedUser->email}}"/>
                                     </div>
                                 </div>
                                 <div class="input-group mb-3">
@@ -32,7 +31,8 @@
                                     </span>
                                     </div>
                                     <input class="form-control" type="text" placeholder="{{ __('First Name') }}"
-                                           name="first_name" value="{{ $user->first_name }}" required autofocus>
+                                           name="first_name" value="{{ $currentAuthenticatedUser->first_name }}"
+                                           required autofocus>
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -43,14 +43,14 @@
                                         </span>
                                     </div>
                                     <input class="form-control" type="text" placeholder="{{ __('Last Name') }}"
-                                           name="last_name" value="{{ $user->last_name }}">
+                                           name="last_name" value="{{ $currentAuthenticatedUser->last_name }}">
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">@</span>
                                     </div>
                                     <input class="form-control" type="email" placeholder="{{ __('E-Mail Address') }}"
-                                           name="email" value="{{ $user->email }}" required>
+                                           name="email" value="{{ $currentAuthenticatedUser->email }}" required>
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -59,7 +59,7 @@
                                       </svg></span>
                                     </div>
                                     <input class="form-control" type="text" placeholder="{{ __('Mobile') }}"
-                                           name="mobile" value="{{ $user->mobile }}" required>
+                                           name="mobile" value="{{ $currentAuthenticatedUser->mobile }}" required>
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -68,7 +68,7 @@
                                       </svg></span>
                                     </div>
                                     <input class="form-control" type="text" placeholder="{{ __('Roles') }}"
-                                           name="menuroles" value="{{ $user->menuroles }}" required>
+                                           name="menuroles" value="{{ $currentAuthenticatedUser->menuroles }}" required>
                                 </div>
 
                                 <div class="form-group row">
@@ -76,7 +76,7 @@
                                         <label>Assign to Zone</label>
                                         <select class="form-control" name="zone_id">
                                             @foreach($zones as $zone)
-                                                @if( $zone->zone_id == $user->zone_id )
+                                                @if( $zone->zone_id == $zone->zone_id )
                                                     <option value="{{ $zone->zone_id }}"
                                                             selected="true">{{ $zone->name }}</option>
                                                 @else

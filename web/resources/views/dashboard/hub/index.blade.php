@@ -15,7 +15,9 @@
                     @endif
                     <div class="card">
                         <div class="card-header">
-                            <h4><i class="fa fa-align-justify"></i>{{ __('Hubs') }}</h4>
+                            <h4>
+                                <i class="cil-tablet"></i> {{ __('Hubs') }}
+                            </h4>
                         </div>
                         <div class="card-body">
                             <div class="col-lg-12 col-md-12">

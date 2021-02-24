@@ -73,7 +73,6 @@ $ php artisan serve
 ```
 
 Open your browser with address: [localhost:8000](localhost:8000) (change localhost with server ip)  
-Click "Login" on sidebar menu and log in with credentials:
 
 * E-mail: _admin@admin.com_
 * Password: _password_

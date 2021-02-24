@@ -7,13 +7,16 @@
             <div class="row">
                 <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
                     <div class="card">
-                        <div class="card-header"><i class="cil-blur-circular"></i>{{ __('Add Zone') }}</div>
+                        <div class="card-header">
+                            <h4><i class="cil-blur-circular"></i>{{ __('Add Zone') }}</h4>
+                        </div>
                         <div class="card-body">
                             <form method="POST" action="{{ route('zones.store') }}">
                                 @csrf
                                 <div class="form-group row">
                                     <label>Zone name:</label>
-                                    <input class="form-control" type="text" placeholder="{{ __('Zone Name') }}" name="name"
+                                    <input class="form-control" type="text" placeholder="{{ __('Zone Name') }}"
+                                           name="name"
                                            required autofocus>
                                 </div>
 

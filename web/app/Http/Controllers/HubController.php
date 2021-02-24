@@ -70,6 +70,8 @@ class HubController extends Controller
         $hub->hw_version = $request->input('hw_version');
         $hub->sw_version = $request->input('sw_version');
         $hub->fw_version = $request->input('fw_version');
+        $hub->min_temp = $request->input('min_temp');
+        $hub->max_temp = $request->input('max_temp');
         $hub->type = $request->input('type');
         $hub->imei = $request->input('imei');
         $hub->zone_id = $request->input('zone_id');
@@ -132,6 +134,8 @@ class HubController extends Controller
         $hub->fw_version = $request->input('fw_version');
         $hub->type = $request->input('type');
         $hub->imei = $request->input('imei');
+        $hub->min_temp = $request->input('min_temp');
+        $hub->max_temp = $request->input('max_temp');
         $hub->zone_id = $request->input('zone_id');
         $hub->save();
 

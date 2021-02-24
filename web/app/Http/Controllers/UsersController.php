@@ -45,7 +45,8 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('dashboard.user.create');
+        $zones = Zone::all();
+        return view('dashboard.user.create', compact('zones' ));
     }
 
     /**
@@ -67,6 +68,7 @@ class UsersController extends Controller
         $user = new User();
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
+        $user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
         $user->email = $request->input('email');
         $user->mobile = $request->input('mobile');
         $user->menuroles = $request->input('menuroles');
@@ -150,4 +152,25 @@ class UsersController extends Controller
 
         return redirect()->route('users.index');
     }
+
+    /**
+     *
+     * @return Application|Factory|View
+     */
+    public function profile()
+    {
+        return view('dashboard.user.profile');
+    }
+
+
+    /**
+     *
+     * @return Application|Factory|View
+     */
+    public function profileEdit()
+    {
+        $zones = Zone::all();
+        return view('dashboard.user.profileEdit', compact('zones' ));
+    }
+
 }

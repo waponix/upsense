@@ -16,10 +16,9 @@
                     @endif
                     <div class="card">
                         <div class="card-header">
-                            <h4><i class="fa fa-align-justify"></i>{{ __('Company') }}</div></h4>
+                            <h4><i class="cil-building"></i> {{ __('Company') }}</div></h4>
                         <div class="card-body">
                             <div class="col-lg-12 col-md-12">
-
                                 <a class="btn btn-md btn-primary" href="{{ route('company.create') }}"><i
                                         class="cil-plus"></i> {{__('Add Company') }}</a>
                                 <hr>
@@ -36,7 +35,7 @@
                                     <tbody>
                                     @foreach($companies as $company)
                                         <tr>
-                                            <td><strong>{{ $company->name }}</strong></td>
+                                            <td>{{ $company->name }}</td>
 
                                             <td>
                                                 <a href="{{ url('/company/' . $company->company_id) }}"
