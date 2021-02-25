@@ -14,4 +14,7 @@ export class SensorPayload
 
     @Field(() => Float)
     timestamp: number = 0;
+
+    @Field(() => String)
+    serial: string = '';
 }

@@ -13,8 +13,8 @@ export class SensorDataReceiver
             host: mqttConfig.host,
             port: mqttConfig.port,
             protocol: mqttConfig.protocol,
-            username: mqttConfig.username,
-            password: mqttConfig.password,
+            // username: mqttConfig.username,
+            // password: mqttConfig.password,
             rejectUnauthorized: false,
             reconnectPeriod: 1000
         });

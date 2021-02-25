@@ -5,7 +5,7 @@ import {AdminResolver} from "../resolvers/AdminResolver";
 export const AdminEndpoints = (app: any) => {
     return new Endpoint({
         app,
-        path: '/api/v1/graphql/admin',
+        path: '/v1/graphql/admin',
         resolvers: [AdminResolver],
         jwtAuthEnabled: true,
         authChecker: ApiAuthChecker

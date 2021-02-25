@@ -12,14 +12,14 @@ export class SensorResolver
     }
     @Subscription(() => SensorPayload, {
         subscribe: () => {
-            return sensorDataReceiver.pubSub.asyncIterator('sensor/+/temperature/reading');
+            return sensorDataReceiver.pubSub.asyncIterator('sensors/+/reading');
         }})
     reading (
-        @Root() { temperature, timestamp }: SensorPayload
+        @Root() { temperature, humidity }: SensorPayload
     ) {
         let reading = new SensorPayload();
         reading.temperature = temperature;
-        reading.timestamp = timestamp;
+        reading.humidity = humidity;
         return reading;
     }
 }

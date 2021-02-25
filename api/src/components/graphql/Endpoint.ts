@@ -10,6 +10,7 @@ interface EndpointOptions
     jwtAuthEnabled?: boolean;
     authChecker?: AuthChecker<any, any>;
     resolvers: NonEmptyArray<Function> | NonEmptyArray<string>;
+    subscriptionServer?: any;
     app: any;
 }
 
@@ -22,6 +23,8 @@ export class Endpoint
     app!: any;
     server!: any;
     jwt: JwtAuth;
+    schema!: any;
+    subscriptionServer: any = false;
 
     constructor(options: EndpointOptions) {
         this.jwt = new JwtAuth();
@@ -32,6 +35,8 @@ export class Endpoint
 
         this.authChecker = options.authChecker || this.authChecker;
         this.jwtAuthEnabled = options.jwtAuthEnabled || this.jwtAuthEnabled;
+
+        this.subscriptionServer = options.subscriptionServer || false;
     }
 
     async init()
@@ -47,19 +52,25 @@ export class Endpoint
             this.app.use(this.jwt.optional);
         }
 
-        const schema = await buildSchema({
+        this.schema = await buildSchema({
             resolvers: this.resolvers,
             authChecker: this.authChecker
         });
 
         this.server = new ApolloServer({
-            schema,
+            schema: this.schema,
             context: (args: any) => {
+                if (!args.req) {
+                    return {user: null};
+                }
                 const { user } = args.req.user || { user: null };
                 return { user };
             }
         });
 
+        if (this.subscriptionServer !== false) {
+            this.server.installSubscriptionHandlers(this.subscriptionServer);
+        }
         this.server.applyMiddleware({app: this.app, path: this.path});
 
         return this;

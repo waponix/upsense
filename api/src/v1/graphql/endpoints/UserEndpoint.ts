@@ -5,7 +5,7 @@ import {UserResolver} from "../resolvers/UserResolver";
 export const UserEndpoints = (app: any) => {
     return new Endpoint({
         app,
-        path: '/api/v1/graphql/user',
+        path: '/v1/graphql/user',
         resolvers: [UserResolver],
         jwtAuthEnabled: true,
         authChecker: ApiAuthChecker

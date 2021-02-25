@@ -22,7 +22,7 @@ do {
     let route = routes.shift();
 
     if (route !== undefined) {
-        restRouter.use(path.posix.join('/api/v1', route.getPath()), route.getRouter());
+        restRouter.use(path.posix.join('/v1', route.getPath()), route.getRouter());
     }
 } while(routes.length > 0);
 

@@ -19,7 +19,8 @@ import {AdminEndpoints} from "./v1/graphql/endpoints/AdminEndpoints";
 import {ManagerEndpoints} from "./v1/graphql/endpoints/ManagerEndpoints";
 import {UserEndpoints} from "./v1/graphql/endpoints/UserEndpoint";
 
-// import { SensorResolver } from './v1/resolvers/SensorResolver';
+import { SensorResolver } from './v1/graphql/resolvers/SensorResolver';
+import {SubscriptionEndpoints} from "./v1/graphql/endpoints/SubscriptionEndpoints";
 
 class App
 {
@@ -62,69 +63,23 @@ class App
             await AdminEndpoints(this.app).init();
             await ManagerEndpoints(this.app).init();
             await UserEndpoints(this.app).init();
+            await SubscriptionEndpoints(this.app, this.httpServer).init()
+            //
+            // new SubscriptionServer({
+            //     execute,
+            //     subscribe,
+            //     schema: subscriptionEndpoint.schema,
+            // }, {
+            //     server: this.httpServer,
+            //     path: '/'
+            // });
 
             // register rest endpoints
             this.registerRoutes(restRouter);
-            // await this.initWebsocketServer();
         } catch (e) {
             console.log(`Server failed to start: ${e}`)
         }
     }
-
-/*    private async initWebsocketServer()
-    {
-        const schema = await buildSchema({
-            resolvers: [
-                SensorResolver
-            ],
-            authChecker: () => true
-        });
-        this.websocketServer = new SubscriptionServer({
-            execute,
-            subscribe,
-            schema,
-        }, {
-            server: this.httpServer,
-            path: '/subscriptions'
-        });
-    }*/
-
-  /*  private async initApiAuthServer()
-    {
-        this.app.use(
-            '/api/v1/graphql/auth',
-            this.jwt.optional
-        );
-
-        const schema = await buildSchema({
-            resolvers: [
-                AuthResolver
-            ],
-            authChecker: () => true
-        });
-
-        this.apiAuthServer = new ApolloServer({ schema });
-        this.apiAuthServer.applyMiddleware({ app: this.app, path: '/api/v1/graphql/auth'});
-    }
-
-    private async initApiServer()
-    {
-        this.app.use(
-            '/api/v1/graphql',
-            this.jwt.required,
-            this.jwt.authenticationErrorHandler,
-        );
-
-        this.apiServer = new ApolloServer({
-            schema,
-            context: (args: any) => {
-                const { user } = args.req.user || { user: null };
-                return { user };
-            }
-        });
-        this.apiServer.applyMiddleware({ app: this.app, path: '/api/v1/graphql' });
-    }*/
-
     /**
      * Register the rest api routes
      * @param routes

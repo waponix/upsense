@@ -5,7 +5,7 @@ import {ManagerResolver} from "../resolvers/ManagerResolver";
 export const ManagerEndpoints = (app: any) => {
     return new Endpoint({
         app,
-        path: '/api/v1/graphql/manager',
+        path: '/v1/graphql/manager',
         resolvers: [ManagerResolver],
         jwtAuthEnabled: true,
         authChecker: ApiAuthChecker
