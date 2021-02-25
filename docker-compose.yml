@@ -42,6 +42,7 @@ services:
     image: upsense_broker:latest
     ports:
       - 1883:1883
+      - 1884:1884
     volumes: # Use this when in development
       - ./mqtt:/var/www/mqtt_broker
     links:

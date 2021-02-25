@@ -1,7 +1,8 @@
-import tls from 'tls';
+// import tls from 'tls';
 import net from 'net';
-import fs from 'fs';
-import aedes, {Client} from 'aedes';
+const ws = require('websocket-stream');
+import http from 'http';
+import aedes from 'aedes';
 import { mqttConfig } from './config';
 
 // const OPTIONS = {
@@ -12,21 +13,26 @@ import { mqttConfig } from './config';
 export class Broker
 {
     aedes: any;
-    server: any;
+    mqttServer: any;
+    wsServer: any;
+    httpServer: any;
 
     constructor() {
         this.aedes = aedes();
-        this.server = net.createServer(this.aedes.handle);
+        this.mqttServer = net.createServer(this.aedes.handle);
+        this.httpServer = http.createServer();
+        this.wsServer = ws.createServer({server: this.httpServer}, this.aedes.handle);
     }
 
-    listen(cb: CallableFunction = () => {})
+    async listen(cb: CallableFunction = () => {})
     {
-        console.log(`Starting MQTT broker on port: ${mqttConfig.port}`);
+        await this.mqttServer.listen(mqttConfig.port);
+        console.log(`MQTT Broker Server now running at port ${mqttConfig.port}`);
 
-        this.server.listen(mqttConfig.port, () => {
-            console.log(`MQTT broker now running at port ${mqttConfig.port}`);
-            cb();
-        });
+        await this.httpServer.listen(mqttConfig.wsPort);
+        console.log(`WS Broker Server now running at port ${mqttConfig.wsPort}`);
+
+        cb();
 
         return this;
     }

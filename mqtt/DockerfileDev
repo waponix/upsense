@@ -1,6 +1,7 @@
 FROM node:14.15.4-slim
 
 EXPOSE 1883
+EXPOSE 1884
 
 WORKDIR /var/www
 
