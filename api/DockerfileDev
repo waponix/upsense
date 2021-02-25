@@ -16,5 +16,4 @@ COPY ./api /var/www/api
 
 WORKDIR /var/www/api
 
-RUN npm run build
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

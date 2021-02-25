@@ -20,5 +20,4 @@ COPY ./mqtt/ /var/www/mqtt_broker
 
 WORKDIR /var/www/mqtt_broker
 
-RUN npm run build
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

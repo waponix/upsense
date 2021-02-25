@@ -13,16 +13,17 @@ services:
 
   api:
     build:
-      dockerfile: ./api/Dockerfile
+      dockerfile: ./api/DockerfileDev
       context: ./
-    image: upsense-api-dev:latest
+    image: upsense_api:latest
     ports:
       - 8443:8443
-    volumes: # Remove this if going to build for production
+    volumes: # Use this when in development
       - ./api:/var/www/api
     links:
       - mariadb:mysql
       - influxdb
+      - broker
 
   influxdb:
     image: influxdb:1.8.3
@@ -34,14 +35,14 @@ services:
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
       - ./influxdb/storage:/var/lib/influxdb
 
-  mqtt-broker:
+  broker:
     build:
-      dockerfile: ./mqtt/Dockerfile
+      dockerfile: ./mqtt/DockerfileDev
       context: ./
-    image: upsense-mqtt-broker-dev:latest
+    image: upsense_broker:latest
     ports:
       - 1883:1883
-    volumes: # Remove this if going to build for production
+    volumes: # Use this when in development
       - ./mqtt:/var/www/mqtt_broker
     links:
       - influxdb
