@@ -151,7 +151,7 @@ class MenusTableSeeder extends Seeder
         $this->insertTitle('manager,admin', 'Management');
         $this->beginDropdown('manager,admin', 'Maintenance', 'cil-settings');
         $this->insertLink('manager,admin', 'Users', '/users', 'cil-user');
-        $this->insertLink('manager,admin', 'Roles', '/roles', 'cil-user');
+//        $this->insertLink('manager,admin', 'Roles', '/roles', 'cil-user');
         $this->insertLink('manager,admin', 'Zones', '/zones', 'cil-location-pin');
 //        $this->insertLink('manager,admin', 'Branch', '/branch', 'cil-vector');
         $this->insertLink('manager,admin', 'Company', '/company', 'cil-globe');
@@ -171,7 +171,7 @@ class MenusTableSeeder extends Seeder
 //        $this->insertLink('admin', 'Bread Setup', '/bread');
         $this->endDropdown();
 
-        $this->insertLink('user,manager,admin', 'Logout', '/logout', 'cil-account-logout');
+//        $this->insertLink('user,manager,admin', 'Logout', '/logout', 'cil-account-logout');
 
 
 //        /* Create top menu */

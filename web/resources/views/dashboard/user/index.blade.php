@@ -23,7 +23,7 @@
                                 <a class="btn btn-md btn-primary" href="{{ route('users.create') }}"><i
                                         class="cil-plus"></i> {{__('Add User') }}</a>
                                 <hr>
-                                <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                <table class="table table-responsive table-hover table-outline mb-0">
                                     <thead>
                                     <tr>
                                         <th></th>

@@ -5,9 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 use App\Models\User;
-use App\Models\RoleHierarchy;
 
 class UsersSeeder extends Seeder
 {
@@ -21,22 +19,22 @@ class UsersSeeder extends Seeder
         $numberOfUsers = 10;
         $faker = Faker::create();
 
-        /* Create roles */
-        $adminRole = Role::create(['name' => 'admin']);
-        RoleHierarchy::create([
-            'role_id' => $adminRole->id,
-            'hierarchy' => 1,
-        ]);
-        $managerRole = Role::create(['name' => 'manager']);
-        RoleHierarchy::create([
-            'role_id' => $managerRole->id,
-            'hierarchy' => 2,
-        ]);
-        $userRole = Role::create(['name' => 'user']);
-        RoleHierarchy::create([
-            'role_id' => $userRole->id,
-            'hierarchy' => 3,
-        ]);
+//        /* Create roles */
+//        $adminRole = Role::create(['name' => 'admin']);
+//        RoleHierarchy::create([
+//            'role_id' => $adminRole->id,
+//            'hierarchy' => 1,
+//        ]);
+//        $managerRole = Role::create(['name' => 'manager']);
+//        RoleHierarchy::create([
+//            'role_id' => $managerRole->id,
+//            'hierarchy' => 2,
+//        ]);
+//        $userRole = Role::create(['name' => 'user']);
+//        RoleHierarchy::create([
+//            'role_id' => $userRole->id,
+//            'hierarchy' => 3,
+//        ]);
 
         /*  insert users   */
         $user = User::create([
@@ -48,11 +46,12 @@ class UsersSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'menuroles' => 'user,manager,admin',
+//            'menuroles' => 'user,manager,admin',
+            'role' => 'admin',
             'zone_id' => 1
         ]);
 
-        $user->assignRole(['user', 'manager', 'admin']);
+//        $user->assignRole(['user', 'manager', 'admin']);
         $imgNum = 2;
         for ($i = 0; $i < $numberOfUsers; $i++) {
 
@@ -65,11 +64,12 @@ class UsersSeeder extends Seeder
                 'email' => $faker->unique()->safeEmail(),
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
                 'remember_token' => Str::random(10),
-                'menuroles' => 'user',
+//                'menuroles' => 'user',
+                'role' => 'user',
                 'zone_id' => rand(1, 5),
             ]);
 
-            $user->assignRole('user');
+//            $user->assignRole('user');
         }
     }
 }

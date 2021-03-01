@@ -25,7 +25,7 @@
                                 <a class="btn btn-md btn-primary" href="{{ route('hubs.create') }}"><i
                                         class="cil-plus"></i> {{__('Add Hub') }}</a>
                                 <hr>
-                                <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                <table class="table table-responsive table-hover table-outline mb-0">
                                     <thead>
                                     <tr>
                                         <th>Serial Number</th>
@@ -33,10 +33,10 @@
                                         <th>HW Version</th>
                                         <th>SW Version</th>
                                         <th>FW Version</th>
-                                        <th>Min Temp</th>
-                                        <th>Max Temp</th>
-                                        <th>Status</th>
-                                        <th>Last Seen</th>
+                                        <th>Min Allowed Temp</th>
+                                        <th>Max Allowed Temp</th>
+{{--                                        <th>Status</th>--}}
+{{--                                        <th>Last Seen</th>--}}
                                         <th>Type</th>
                                         <th>IMEI</th>
                                         <th>Zone</th>
@@ -56,8 +56,8 @@
                                             <td>{{ $hub->fw_version }}</td>
                                             <td>{{ $hub->min_temp }}</td>
                                             <td>{{ $hub->max_temp }}</td>
-                                            <td>{{ $hub->is_connected }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($hub->last_seen)->diffForHumans([ 'parts' => 2 ]) }}</td>
+{{--                                            <td>{{ $hub->is_connected }}</td>--}}
+{{--                                            <td>{{ \Carbon\Carbon::parse($hub->last_seen)->diffForHumans([ 'parts' => 2 ]) }}</td>--}}
                                             <td>{{ $hub->type }}</td>
                                             <td>{{ $hub->imei }}</td>
                                             <td>{{ $hub->zone->name }}</td>

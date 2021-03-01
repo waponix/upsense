@@ -13,10 +13,18 @@ class Sensor extends Model
     protected $primaryKey = 'sensor_id';
 
     /**
-     * The hub that belong to the zone.
+     * The sensor that belong to the hub.
      */
     public function hub()
     {
         return $this->belongsTo(Hub::class, 'hub_id');
+    }
+
+    /**
+     * The logs that belong to the sensor.
+     */
+    public function logs()
+    {
+        return $this->hasMany(Log::class, 'sensor_id');
     }
 }

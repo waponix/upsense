@@ -12,7 +12,7 @@
                         </h4>
                         <div class="card-body">
                             <br>
-                            <form method="POST" action="/users/{{ $user->user_id }}">
+                            <form method="POST" action="{{route('users.update', $user->user_id) }}">
                                 @csrf
                                 @method('PUT')
 
@@ -61,14 +61,27 @@
                                     <input class="form-control" type="text" placeholder="{{ __('Mobile') }}"
                                            name="mobile" value="{{ $user->mobile }}" required>
                                 </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
+                                <div class="form-group row">
+                                    <div class="col">
+                                        <label>Assign Role</label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
                                         <span class="input-group-text">          <svg class="c-icon c-icon-sm">
                                           <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-user"></use>
                                       </svg></span>
+                                            </div>
+                                            <select class="form-control" name="role">
+                                                @foreach($roles as $role)
+                                                    @if($role == $user->role)
+                                                        <option value="{{ $role }}"
+                                                                selected="true">{{ $role }}</option>
+                                                    @else
+                                                        <option value="{{ $role }}">{{ $role }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                    <input class="form-control" type="text" placeholder="{{ __('Roles') }}"
-                                           name="menuroles" value="{{ $user->menuroles }}" required>
                                 </div>
 
                                 <div class="form-group row">

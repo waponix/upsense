@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\NonUserRole;
 use App\Models\Zone;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -13,6 +14,12 @@ use App\Models\User;
 class UsersController extends Controller
 {
 
+    const ROLES = [
+        'user',
+        'manager',
+        'admin'
+    ];
+
     /**
      * Create a new controller instance.
      *
@@ -20,9 +27,9 @@ class UsersController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('admin');
-        $this->middleware('manager');
+//        $this->middleware('auth');
+//        $this->middleware('admin');
+//        $this->middleware('manager');
     }
 
     /**
@@ -46,7 +53,8 @@ class UsersController extends Controller
     public function create()
     {
         $zones = Zone::all();
-        return view('dashboard.user.create', compact('zones' ));
+        $roles = self::ROLES;
+        return view('dashboard.user.create', compact('zones', $roles));
     }
 
     /**
@@ -71,7 +79,7 @@ class UsersController extends Controller
         $user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
         $user->email = $request->input('email');
         $user->mobile = $request->input('mobile');
-        $user->menuroles = $request->input('menuroles');
+        $user->role = $request->input('role');
         $user->zone_id = $request->input('zone_id');
 
         $user->save();
@@ -102,7 +110,9 @@ class UsersController extends Controller
     {
         $user = User::find($id);
         $zones = Zone::all();
-        return view('dashboard.user.edit', compact('user' ), compact('zones' ));
+        $roles = self::ROLES;
+
+        return view('dashboard.user.edit', compact('user', 'zones', 'roles'));
     }
 
     /**
@@ -173,4 +183,33 @@ class UsersController extends Controller
         return view('dashboard.user.profileEdit', compact('zones' ));
     }
 
+    /**
+     * Update profile
+     *
+     * @param Request $request
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function profileUpdate(Request $request, $id)
+    {
+//        $val = $request->validate([
+//            'first_name' => 'required|min:1|max:255',
+//            'last_name' => 'max:255',
+//            'email' => 'required|email|max:255',
+//            'mobile' => 'required|integer|max:20'
+//        ]);
+//        dd($val);
+
+        $user = User::find($id);
+
+        $user->first_name = $request->input('first_name');
+        $user->last_name = $request->input('last_name');
+        $user->email = $request->input('email');
+        $user->mobile = $request->input('mobile');
+        $user->menuroles = $request->input('menuroles');
+        $user->save();
+
+        $request->session()->flash('message', 'Successfully updated user');
+        return redirect()->route('users.index');
+    }
 }

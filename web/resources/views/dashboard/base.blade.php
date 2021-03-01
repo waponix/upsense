@@ -34,7 +34,8 @@
 
 <body class="c-app">
 <div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
-    @include('dashboard.shared.nav-builder')
+    @include('dashboard.shared.nav-left')
+    {{--    @include('dashboard.shared.nav-builder')--}}
     @include('dashboard.shared.header')
 
     <div class="c-body">

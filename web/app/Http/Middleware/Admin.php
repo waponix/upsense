@@ -11,15 +11,20 @@ class Admin
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param \Closure $next
+     * @param Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        $roles = explode(',', $request->user()->menuroles);
-        if (!in_array('admin', $roles)) {
+//        $roles = explode(',', $request->user()->menuroles);
+//        if (!in_array('admin', $roles)) {
+//            return abort(401);
+//        }
+
+        if ($request->user()->role !== 'admin') {
             return abort(401);
         }
+
         return $next($request);
     }
 }

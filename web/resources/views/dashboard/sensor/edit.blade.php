@@ -9,11 +9,11 @@
                     <div class="card">
                         <div class="card-header">
                             <h4>
-                                 {{ __('Edit Sensor') }}
+                                {{ __('Edit Sensor') }}
                             </h4>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="/sensors/{{ $sensor->sensor_id }}">
+                            <form method="POST" action="{{route('sensors.update', $sensor->sensor_id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group row">
@@ -57,7 +57,7 @@
 
                                 <button class="btn btn-block btn-success" type="submit">{{ __('Save') }}</button>
                                 <a href="{{ route('sensors.index') }}"
-                                   class="btn btn-block btn-primary">{{ __('Return') }}</a>
+                                   class="btn btn-block btn-light">{{ __('Return') }}</a>
                             </form>
                         </div>
                     </div>
