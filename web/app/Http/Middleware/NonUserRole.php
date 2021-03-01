@@ -4,26 +4,25 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class Manager
+class NonUserRole
 {
     /**
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param \Closure $next
+     * @param Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-//        $roles = explode(',', $request->user()->menuroles);
-//        if (!in_array('manager', $roles)) {
-//            return abort(401);
-//        }
-
-        if ($request->user()->role !== 'manager') {
+        if (Auth::check()) {
+            $userRole = Auth::user()->role;
+            if ($userRole != 'user') {
+                return $next($request);
+            }
             return abort(401);
         }
-        return $next($request);
     }
 }

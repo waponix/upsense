@@ -22,9 +22,10 @@
                         <div class="card-body">
                             <div class="col-lg-12 col-md-12">
                                 <a class="btn btn-md btn-primary" href="{{ route('zones.create') }}"><i
-                                        class="cil-plus"></i> {{__('Add Zone') }}</a>
+                                        class="cil-plus"></i> {{__('Add Zone') }}
+                                </a>
                                 <hr>
-                                <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                <table class="table table-responsive-sm table-sm table-hover table-outline mb-0">
                                     <thead>
                                     <tr>
                                         <th>Zone</th>

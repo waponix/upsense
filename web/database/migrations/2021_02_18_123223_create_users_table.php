@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('menuroles');
+            $table->enum('role', array('user', 'manager', 'admin'))->default('user');
             $table->foreignId('zone_id');
             $table->rememberToken();
             $table->timestamps();

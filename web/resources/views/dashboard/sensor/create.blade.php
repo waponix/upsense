@@ -49,8 +49,8 @@
                                     </div>
                                 </div>
                                 <button class="btn btn-block btn-success" type="submit">{{ __('Add') }}</button>
-                                <a href="{{ route('zones.index') }}"
-                                   class="btn btn-block btn-primary">{{ __('Return') }}</a>
+                                <a href="{{ route('sensors.index') }}"
+                                   class="btn btn-block btn-light">{{ __('Return') }}</a>
                             </form>
                         </div>
                     </div>

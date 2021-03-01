@@ -11,7 +11,7 @@
                             {{ __('Edit Zone') }}
                         </h4>
                         <div class="card-body">
-                            <form method="POST" action="/zones/{{ $zone->zone_id }}">
+                            <form method="POST" action="{{ route('zones.update', $zone->zone_id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group row">

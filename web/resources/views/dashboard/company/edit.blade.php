@@ -8,10 +8,12 @@
                 <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
                     <div class="card">
                         <div class="card-header">
-                            <h4><i class="fa fa-align-justify"></i> {{ __('Edit Company') }}</div>
-                        </h4>
+                            <h4>
+                                <i class="fa fa-align-justify"></i> {{ __('Edit Company') }}
+                            </h4>
+                        </div>
                         <div class="card-body">
-                            <form method="POST" action="/company/{{ $company->company_id }}">
+                            <form method="POST" action="{{route('company.update', $company->company_id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="input-group mb-3">

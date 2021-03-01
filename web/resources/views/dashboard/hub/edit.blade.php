@@ -13,7 +13,7 @@
                             </h4>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="/hubs/{{ $hub->hub_id }}">
+                            <form method="POST" action="{{route('hubs.update', $hub->hub_id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group row">
@@ -96,7 +96,7 @@
 
                                 <button class="btn btn-block btn-success" type="submit">{{ __('Save') }}</button>
                                 <a href="{{ route('hubs.index') }}"
-                                   class="btn btn-block btn-primary">{{ __('Return') }}</a>
+                                   class="btn btn-block btn-light">{{ __('Return') }}</a>
                             </form>
                         </div>
                     </div>

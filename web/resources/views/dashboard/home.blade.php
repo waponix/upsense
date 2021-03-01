@@ -151,6 +151,8 @@
                                 <th>Serial</th>
                                 <th>Hub</th>
                                 <th>Current Temp</th>
+                                <th>Max Temp</th>
+                                <th>Min Temp</th>
                                 <th>Allowed Range</th>
                                 <th>Zone</th>
                                 <th>Company</th>
@@ -182,8 +184,15 @@
                                     <td class="sensor-temp">
                                         <strong>{{$sensor->current_temp}}°C</strong>
                                     </td>
+                                    <td class="max-temp text-warning">
+                                        <strong>{{$sensor->logs->max->max_temp}}°C</strong>
+                                    </td>
+                                    <td class="min-temp text-info">
+                                        <strong>{{$sensor->logs->min->min_temp}}°C</strong>
+                                    </td>
                                     <td>
-                                        <strong>({{$sensor->hub->min_temp}} <span
+                                        <strong>(<span
+                                                class="text-info">{{$sensor->hub->min_temp}}</span> <span
                                                 class="text-warning">{{$sensor->hub->max_temp}}</span>)°C</strong>
                                     </td>
                                     <td>
@@ -325,23 +334,23 @@
                                 </div>
                             </div>
                             @foreach($sensors as $sensor)
-                            <div class="progress-group">
-                                <div class="progress-group-header align-items-end">
-                                    {{--                              <svg class="c-icon progress-group-icon">--}}
-                                    {{--                                <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-globe-alt"></use>--}}
-                                    {{--                              </svg>--}}
-                                    <div>{{$sensor->description}}</div>
-                                    <div class="ml-auto font-weight-bold mr-2">120</div>
-                                    <div class="text-muted small">(56%)</div>
-                                </div>
-                                <div class="progress-group-bars">
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 56%"
-                                             aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-group">
+                                    <div class="progress-group-header align-items-end">
+                                        {{--                              <svg class="c-icon progress-group-icon">--}}
+                                        {{--                                <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-globe-alt"></use>--}}
+                                        {{--                              </svg>--}}
+                                        <div>{{$sensor->description}}</div>
+                                        <div class="ml-auto font-weight-bold mr-2">120</div>
+                                        <div class="text-muted small">(56%)</div>
+                                    </div>
+                                    <div class="progress-group-bars">
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar bg-info" role="progressbar" style="width: 56%"
+                                                 aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                                @endforeach
+                            @endforeach
                         </div>
                         <!-- /.col-->
                         <div class="col-sm-6">

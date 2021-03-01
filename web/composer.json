@@ -14,8 +14,6 @@
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/tinker": "^2.3.0",
-        "spatie/laravel-medialibrary": "^8.7.2",
-        "spatie/laravel-permission": "^3.17",
         "laravel/ui": "^3.0"
     },
     "require-dev": {

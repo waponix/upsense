@@ -23,10 +23,10 @@
                                         class="cil-plus"></i> {{__('Add Company') }}</a>
                                 <hr>
 
-                                <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                <table id="company-table" class="table table-responsive table-hover table-outline mb-0">
                                     <thead>
                                     <tr>
-                                        <th>Company Name</th>
+                                        <th class="col-lg-8 col-md-6">Company Name</th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -36,7 +36,6 @@
                                     @foreach($companies as $company)
                                         <tr>
                                             <td>{{ $company->name }}</td>
-
                                             <td>
                                                 <a href="{{ url('/company/' . $company->company_id) }}"
                                                    class="btn btn-block btn-primary">View</a>

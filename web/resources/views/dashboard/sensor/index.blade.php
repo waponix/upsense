@@ -23,14 +23,14 @@
                                 <a class="btn btn-md btn-primary" href="{{ route('sensors.create') }}"><i
                                         class="cil-plus"></i> {{__('Add Sensor') }}</a>
                                 <hr>
-                                <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                <table class="table table-responsive-md table-hover table-outline mb-0">
                                     <thead>
                                     <tr>
                                         <th>Serial Number</th>
                                         <th>Description</th>
-                                        <th>Current Temp</th>
-                                        <th>Status</th>
-                                        <th>Last Seen</th>
+{{--                                        <th>Current Temp</th>--}}
+{{--                                        <th>Status</th>--}}
+{{--                                        <th>Last Seen</th>--}}
                                         <th>Type</th>
                                         <th>Zone</th>
                                         <th>Company</th>
@@ -44,24 +44,24 @@
                                         <tr>
                                             <td><strong>{{ $sensor->serial }}</strong></td>
                                             <td>{{ $sensor->description }}</td>
-                                            <td>{{ $sensor->current_temp }}</td>
-                                            <td>
-                                                <strong>
-                                                    @if($sensor->is_connected)
-                                                        <svg class="c-icon c-icon-xl">
-                                                            <use
-                                                                xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-link"></use>
-                                                        </svg>
+{{--                                            <td>{{ $sensor->current_temp }}</td>--}}
+{{--                                            <td>--}}
+{{--                                                <strong>--}}
+{{--                                                    @if($sensor->is_connected)--}}
+{{--                                                        <svg class="c-icon c-icon-xl">--}}
+{{--                                                            <use--}}
+{{--                                                                xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-link"></use>--}}
+{{--                                                        </svg>--}}
 
-                                                    @else
-                                                        <svg class="c-icon c-icon-xl blink-danger">
-                                                            <use
-                                                                xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-link-broken"></use>
-                                                        </svg>
-                                                    @endif
-                                                </strong>
-                                            </td>
-                                            <td>{{ \Carbon\Carbon::parse($sensor->last_seen)->diffForHumans([ 'parts' => 2 ]) }}</td>
+{{--                                                    @else--}}
+{{--                                                        <svg class="c-icon c-icon-xl blink-danger">--}}
+{{--                                                            <use--}}
+{{--                                                                xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-link-broken"></use>--}}
+{{--                                                        </svg>--}}
+{{--                                                    @endif--}}
+{{--                                                </strong>--}}
+{{--                                            </td>--}}
+{{--                                            <td>{{ \Carbon\Carbon::parse($sensor->last_seen)->diffForHumans([ 'parts' => 2 ]) }}</td>--}}
                                             <td>{{ $sensor->type }}</td>
                                             <td>{{ $sensor->hub->zone->name }}</td>
                                             <td>{{ $sensor->hub->zone->company->name }}</td>

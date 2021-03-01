@@ -35,7 +35,7 @@
                             <hr>
                             <a href="{{ route('user.profile.edit') }}"
                                class="btn btn-block btn-primary">{{ __('Edit Profile') }}</a>
-                            <a href="{{ route('dashboard.homepage.index') }}"
+                            <a href="{{ route('dashboard.home.index') }}"
                                class="btn btn-block btn-light">{{ __('Return') }}</a>
                         </div>
                     </div>
