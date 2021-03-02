@@ -10,6 +10,7 @@ services:
       MYSQL_DATABASE: upsense
     volumes:
       - ./mysql/default.sql:/docker-entrypoint-initdb.d/default.sql
+    restart: unless-stopped
 
   api:
     build:
@@ -18,12 +19,13 @@ services:
     image: upsense_api:latest
     ports:
       - 8443:8443
-    volumes: # Use this when in development
-      - ./api:/var/www/api
+#    volumes: # Use this when in development
+#      - ./api:/var/www/api
     links:
       - mariadb:mysql
       - influxdb
       - broker
+    restart: unless-stopped
 
   influxdb:
     image: influxdb:1.8.3
@@ -34,6 +36,7 @@ services:
     volumes:
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
       - ./influxdb/storage:/var/lib/influxdb
+    restart: unless-stopped
 
   broker:
     build:
@@ -43,7 +46,8 @@ services:
     ports:
       - 1883:1883
       - 1884:1884
-    volumes: # Use this when in development
-      - ./mqtt:/var/www/mqtt_broker
+#    volumes: # Use this when in development
+#      - ./mqtt:/var/www/mqtt_broker
     links:
       - influxdb
+    restart: unless-stopped
