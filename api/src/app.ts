@@ -58,12 +58,14 @@ class App
 
             console.log(`API Server running at port ${appConfig.port}`);
 
+            this.registerRoutes(restRouter);
+
             // Add GraphQL endpoints here
             await AuthEndpoints(this.app).init();
             await AdminEndpoints(this.app).init();
             await ManagerEndpoints(this.app).init();
             await UserEndpoints(this.app).init();
-            await SubscriptionEndpoints(this.app, this.httpServer).init()
+            await SubscriptionEndpoints(this.app, this.httpServer).init();
             //
             // new SubscriptionServer({
             //     execute,
@@ -75,7 +77,6 @@ class App
             // });
 
             // register rest endpoints
-            this.registerRoutes(restRouter);
         } catch (e) {
             console.log(`Server failed to start: ${e}`)
         }
