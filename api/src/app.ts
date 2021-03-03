@@ -40,6 +40,7 @@ class App
         this.app = express();
         this.httpServer = createServer(this.app);
         this.app.use(
+            '/',
             cors(), // enable cross-origin
             bodyParser.json(), // support application/json type post data
             bodyParser.urlencoded({ extended: true }), //support application/x-www-form-urlencoded post data)
