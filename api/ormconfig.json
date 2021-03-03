@@ -1,1 +1,1 @@
-{  "type": "mariadb",  "host": "mariadb",  "port": 3306,  "username": "root",  "password": "admin123",  "database": "upsense",  "entities": [    "src/*/shared/entities/*.js",    "src/*/shared/entities/*.ts"  ],  "synchronize": true,  "logging": false}
+{  "type": "mariadb",  "host": "mariadb",  "port": 3306,  "username": "root",  "password": "admin123",  "database": "upsense",  "entities": [    "dist/*/shared/entities/*.js"  ],  "synchronize": true,  "logging": false}

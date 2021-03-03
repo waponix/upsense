@@ -1,1 +1,1 @@
-import {createConnection} from 'typeorm';export default createConnection();
+import {createConnection} from 'typeorm';export const initConnection = async () => {    try {        await createConnection();    } catch (e:any) {        console.log(`Database connection failed: ${e.message}`);    }}

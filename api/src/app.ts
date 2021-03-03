@@ -3,7 +3,6 @@ import express, {Router} from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import restRouter from "./restRouter";
-import { createConnection } from 'typeorm';
 import { buildSchema } from 'type-graphql';
 import { appConfig } from './config';
 import { JwtAuth } from './components/security/JwtAuth';
@@ -12,6 +11,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { execute, subscribe } from 'graphql';
 import { createServer } from 'http';
+import {initConnection} from './components/Connection';
 
 // Import Graphql Endpoints
 import {AuthEndpoints} from "./v1/graphql/endpoints/AuthEndpoints";
@@ -24,7 +24,6 @@ import {SubscriptionEndpoints} from "./v1/graphql/endpoints/SubscriptionEndpoint
 
 class App
 {
-    connection: any;
     app: any;
     httpServer: any;
     jwt: any;
@@ -38,12 +37,6 @@ class App
 
     private async initServer()
     {
-        try {
-            this.connection = await createConnection();
-        } catch (e:any) {
-            console.log(`Database connection failed: ${e.message}`);
-        }
-
         this.app = express();
         this.httpServer = createServer(this.app);
         this.app.use(
@@ -55,6 +48,8 @@ class App
         try {
             // listen to the configured port number
             await this.httpServer.listen(appConfig.port);
+
+            initConnection();
 
             console.log(`API Server running at port ${appConfig.port}`);
 
