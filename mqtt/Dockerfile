@@ -15,11 +15,11 @@ RUN mkdir mqtt_broker
 
 COPY ./mqtt/package.json /var/www/mqtt_broker
 
-RUN cd /var/www/mqtt_broker && npm install
-
 COPY ./mqtt/ /var/www/mqtt_broker
 
 WORKDIR /var/www/mqtt_broker
+
+RUN npm install
 
 RUN npm run build
 CMD ["npm", "start"]

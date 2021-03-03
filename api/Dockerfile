@@ -10,11 +10,11 @@ RUN mkdir api
 
 COPY ./api/package.json /var/www/api
 
-RUN cd /var/www/api && npm install
-
 COPY ./api /var/www/api
 
 WORKDIR /var/www/api
+
+RUN npm install
 
 RUN npm run build
 CMD ["npm", "start"]
