@@ -82,8 +82,8 @@ export class AuthResolver
         }
 
         // generate a new refresh token
-        token.refreshToken = await this.tokenService.generateRefreshToken(refreshToken.admin);
-        token.accessToken = this.tokenService.generateAccessToken(refreshToken.admin);
+        token.refreshToken = await this.tokenService.generateRefreshToken(refreshToken.user);
+        token.accessToken = this.tokenService.generateAccessToken(refreshToken.user);
         response.result = token;
 
         return token;

@@ -1,4 +1,4 @@
-import {User as User} from '../../shared/entities/User';
+import {User} from '../../shared/entities/User';
 import {UserRepository} from "../repositories/UserRepository";
 import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";

@@ -12,6 +12,6 @@ export class RefreshToken extends BaseEntity
     token!: string;
 
     @OneToOne(() => User, admin => admin.refreshToken, {onDelete: 'CASCADE', cascade: ['insert', 'update']})
-    @JoinColumn({name: 'admin_id'})
-    admin!: User
+    @JoinColumn({name: 'user_id'})
+    user!: User
 }

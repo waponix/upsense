@@ -1,4 +1,4 @@
-import {User as User} from '../../shared/entities/User';
+import {User} from '../../shared/entities/User';
 import {getRepository} from 'typeorm';
 import ValidationRules from "../objects/ValidationRules";
 const Validator = require('validatorjs');
