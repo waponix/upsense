@@ -1,5 +1,5 @@
 import {Resolver, Query, Mutation, Authorized, Arg, Args} from 'type-graphql';
-import { Admin } from '../../shared/entities/Admin';
+import { User } from '../../shared/entities/User';
 import {ManagerFilterInput, CreateManagerInput, UpdateManagerInput} from '../resolverInputs/ManagerDataInput';
 import {QueryArgs} from "../resolverArgs/QueryArgs";
 import {SortType} from "../../../components/types/SortOrderTypes";
@@ -13,7 +13,7 @@ export class ManagerResolver
     private repo: ManagerRepository;
 
     constructor() {
-        this.repo = new ManagerRepository(Admin);
+        this.repo = new ManagerRepository(User);
         this.repo.init();
     }
 
@@ -37,7 +37,7 @@ export class ManagerResolver
         let response: SingleManagerResponse = new SingleManagerResponse();
 
         try {
-            let manager: Admin | undefined = await this.repo.findOneById(id);
+            let manager: User | undefined = await this.repo.findOneById(id);
 
             if (manager === undefined) {
                 response.status = Status.NotFound;
@@ -57,7 +57,7 @@ export class ManagerResolver
     @Mutation(() => SingleManagerResponse)
     async createManager(@Arg("data") data: CreateManagerInput) {
         let response: SingleManagerResponse = new SingleManagerResponse();
-        let manager: Admin | undefined = await this.repo.findOneByUsername(data.username);
+        let manager: User | undefined = await this.repo.findOneByUsername(data.username);
 
         if (manager !== undefined) {
             response.status = Status.Error;
@@ -76,7 +76,7 @@ export class ManagerResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let manager: Admin = await this.repo.create(data);
+            let manager: User = await this.repo.create(data);
             response.result = manager;
             await this.repo.queryRunner.commitTransaction();
         } catch {
@@ -95,7 +95,7 @@ export class ManagerResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let manager: Admin | undefined = await this.repo.findOneById( id );
+            let manager: User | undefined = await this.repo.findOneById( id );
 
             if (manager === undefined) {
                 response.status = Status.NotFound;
@@ -124,7 +124,7 @@ export class ManagerResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let manager: Admin | undefined = await this.repo.findOneById( id );
+            let manager: User | undefined = await this.repo.findOneById( id );
 
             if (manager === undefined) {
                 response.status = Status.NotFound;

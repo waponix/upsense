@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 import Controller from '../../../components/Controller';
 import {TokenProviderService} from "../../shared/services/TokenProviderService";
-import {Admin} from "../../shared/entities/Admin";
+import {User} from "../../shared/entities/User";
 import {getRepository, Repository} from "typeorm";
 import {ApiResponse} from "../objects/ApiResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
@@ -23,8 +23,8 @@ export default class AuthController extends Controller
 
         const {user} = (<any>request);
 
-        const adminRepo: Repository<Admin> = getRepository(Admin);
-        let admin: Admin | undefined = await adminRepo.findOne({ where: {id: user.id}, relations: ['refreshToken'] });
+        const adminRepo: Repository<User> = getRepository(User);
+        let admin: User | undefined = await adminRepo.findOne({ where: {id: user.id}, relations: ['refreshToken'] });
 
         if (admin === undefined) {
             apiResponse.message = CommonMessages.SomethingWentWrong;

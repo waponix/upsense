@@ -1,4 +1,4 @@
-import {Admin} from "../../shared/entities/Admin";
+import {User} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
@@ -28,7 +28,7 @@ export class AdminRepository extends BaseRepository
         ];
 
         const query = await this.em
-            .getRepository(Admin)
+            .getRepository(User)
             .createQueryBuilder('admin')
             .select('admin.id')
             .addSelect('admin.username')
@@ -81,15 +81,15 @@ export class AdminRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number) {
-        return await this.em.getRepository(Admin).findOne({where: { id }});
+        return await this.em.getRepository(User).findOne({where: { id }});
     }
 
     async findOneByUsername (username: string) {
-        return await this.em.getRepository(Admin).findOne({where: { username }});
+        return await this.em.getRepository(User).findOne({where: { username }});
     }
 
     async findOneByEmail (email: string) {
-        return await this.em.getRepository(Admin).findOne({where: { email }});
+        return await this.em.getRepository(User).findOne({where: { email }});
     }
 
     /**
@@ -97,8 +97,8 @@ export class AdminRepository extends BaseRepository
      * @param data
      */
     async create (data: CreateAdminInput) {
-        const repository = await this.em.getRepository(Admin);
-        let admin: Admin = new Admin();
+        const repository = await this.em.getRepository(User);
+        let admin: User = new User();
         admin.username = data.username;
         admin.password = data.password;
         admin.firstName = data.firstName;
@@ -116,7 +116,7 @@ export class AdminRepository extends BaseRepository
      * @param admin
      * @param data
      */
-    async update (admin: Admin, data: UpdateAdminInput) {
+    async update (admin: User, data: UpdateAdminInput) {
         if (!!data.password) {
             admin.password = data.password;
             admin.hashPassword()
@@ -126,7 +126,7 @@ export class AdminRepository extends BaseRepository
         admin.email = data.email || admin.email;
         admin.picture = data.picture || admin.picture;
         admin.mobileNumber = data.mobileNumber || admin.mobileNumber;
-        await this.em.getRepository(Admin).save(admin);
+        await this.em.getRepository(User).save(admin);
         return true;
     }
 
@@ -134,8 +134,8 @@ export class AdminRepository extends BaseRepository
      * Delete admin
      * @param admin
      */
-    async delete (admin: Admin) {
-        await this.em.getRepository(Admin).remove(admin);
+    async delete (admin: User) {
+        await this.em.getRepository(User).remove(admin);
         return true;
     }
 }

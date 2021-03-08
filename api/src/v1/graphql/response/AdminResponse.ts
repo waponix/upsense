@@ -1,17 +1,17 @@
 import {ObjectType, Field} from 'type-graphql'
 import {Response} from '../objects/Response'
-import {Admin} from "../../shared/entities/Admin";
+import {User} from "../../shared/entities/User";
 
 @ObjectType()
 export class AdminResponse extends Response
 {
-    @Field(() => [Admin], { nullable: true })
-    result?: Admin[];
+    @Field(() => [User], { nullable: true })
+    result?: User[];
 }
 
 @ObjectType()
 export class SingleAdminResponse extends Response
 {
-    @Field(() => Admin, { nullable: true })
-    result?: Admin;
+    @Field(() => User, { nullable: true })
+    result?: User;
 }

@@ -1,4 +1,4 @@
-import {Admin as Manager} from '../../shared/entities/Admin';
+import {User as Manager} from '../../shared/entities/User';
 import {ManagerRepository} from "../repositories/ManagerRepository";
 import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
@@ -49,7 +49,7 @@ export default class ManagerServices
 
         if (manager === undefined) {
             apiResponse.status = Status.NotFound;
-            apiResponse.message = CommonMessages.NotFound('Manager');
+            apiResponse.message = CommonMessages.NotFound('User');
             statusCode = 404;
         } else {
             apiResponse.result = manager;
@@ -86,7 +86,7 @@ export default class ManagerServices
                     apiResponse.result = manager;
                 } catch {
                     apiResponse.status = Status.Error;
-                    apiResponse.message = CommonMessages.UnableToSave('Manager');
+                    apiResponse.message = CommonMessages.UnableToSave('User');
                     await this.managerRepository.queryRunner.rollbackTransaction();
                     statusCode = 500;
                 } finally {
@@ -122,7 +122,7 @@ export default class ManagerServices
 
         if (manager === undefined) {
             apiResponse.status = Status.NotFound;
-            apiResponse.message = CommonMessages.NotFound('Manager');
+            apiResponse.message = CommonMessages.NotFound('User');
             statusCode = 404;
 
             return new ReturnableResponse(statusCode, apiResponse);
@@ -147,7 +147,7 @@ export default class ManagerServices
                 } catch {
                     await this.managerRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;
-                    apiResponse.message = CommonMessages.UnableToUpdate('Manager');
+                    apiResponse.message = CommonMessages.UnableToUpdate('User');
                     statusCode = 500;
                 } finally {
                     await this.managerRepository.queryRunner.release();
@@ -181,7 +181,7 @@ export default class ManagerServices
 
         if (manager === undefined) {
             apiResponse.status = Status.NotFound;
-            apiResponse.message = CommonMessages.NotFound('Manager');
+            apiResponse.message = CommonMessages.NotFound('User');
             statusCode = 404;
         }
 
@@ -195,7 +195,7 @@ export default class ManagerServices
         } catch {
             await this.managerRepository.queryRunner.rollbackTransaction();
             apiResponse.status = Status.Error;
-            apiResponse.message = CommonMessages.UnableToDelete('Manager');
+            apiResponse.message = CommonMessages.UnableToDelete('User');
             statusCode = 500;
         } finally {
             await this.managerRepository.queryRunner.release();

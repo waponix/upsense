@@ -76,7 +76,7 @@ export default class AdminController extends Controller
     }
 
     /**
-     * Delete Admin
+     * Delete User
      *
      * @param request
      * @param response

@@ -1,4 +1,4 @@
-import {Admin} from "../../shared/entities/Admin";
+import {User as Admin} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";

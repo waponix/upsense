@@ -1,5 +1,5 @@
 import {Resolver, Query, Mutation, Authorized, Arg, Args} from 'type-graphql';
-import { Admin } from '../../shared/entities/Admin';
+import { User } from '../../shared/entities/User';
 import {AdminFilterInput, CreateAdminInput, UpdateAdminInput} from '../resolverInputs/AdminDataInput';
 import {QueryArgs} from "../resolverArgs/QueryArgs";
 import {SortType} from "../../../components/types/SortOrderTypes";
@@ -14,7 +14,7 @@ export class UserResolver
     private repo: UserRepository;
 
     constructor() {
-        this.repo = new UserRepository(Admin);
+        this.repo = new UserRepository(User);
         this.repo.init();
     }
 
@@ -38,7 +38,7 @@ export class UserResolver
         let response: SingleUserResponse = new SingleUserResponse();
 
         try {
-            let user: Admin | undefined = await this.repo.findOneById(id);
+            let user: User | undefined = await this.repo.findOneById(id);
 
             if (user === undefined) {
                 response.status = Status.NotFound;
@@ -58,7 +58,7 @@ export class UserResolver
     @Mutation(() => SingleUserResponse)
     async createUser(@Arg("data") data: CreateUserInput) {
         let response: SingleUserResponse = new SingleUserResponse();
-        let user: Admin | undefined = await this.repo.findOneByUsername(data.username);
+        let user: User | undefined = await this.repo.findOneByUsername(data.username);
 
         if (user !== undefined) {
             response.status = Status.Error;
@@ -77,7 +77,7 @@ export class UserResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let user: Admin = await this.repo.create(data);
+            let user: User = await this.repo.create(data);
             response.result = user;
             await this.repo.queryRunner.commitTransaction();
         } catch {
@@ -96,7 +96,7 @@ export class UserResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let user: Admin | undefined = await this.repo.findOneById( id );
+            let user: User | undefined = await this.repo.findOneById( id );
 
             if (user === undefined) {
                 response.status = Status.NotFound;
@@ -125,7 +125,7 @@ export class UserResolver
 
         await this.repo.queryRunner.startTransaction();
         try {
-            let user: Admin | undefined = await this.repo.findOneById( id );
+            let user: User | undefined = await this.repo.findOneById( id );
 
             if (user === undefined) {
                 response.status = Status.NotFound;

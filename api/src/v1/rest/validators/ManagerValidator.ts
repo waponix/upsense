@@ -1,4 +1,4 @@
-import {Admin as Manager} from '../../shared/entities/Admin';
+import {User as Manager} from '../../shared/entities/User';
 import {getRepository} from 'typeorm';
 import ValidationRules from "../objects/ValidationRules";
 const Validator = require('validatorjs');

@@ -1,4 +1,4 @@
-import {Admin} from "../../shared/entities/Admin";
+import {User} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
@@ -28,7 +28,7 @@ export class UserRepository extends BaseRepository
         ];
 
         const query = await this.em
-            .getRepository(Admin)
+            .getRepository(User)
             .createQueryBuilder('admin')
             .select('admin.id')
             .addSelect('admin.username')
@@ -81,15 +81,15 @@ export class UserRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number) {
-        return await this.em.getRepository(Admin).findOne({where: { id }});
+        return await this.em.getRepository(User).findOne({where: { id }});
     }
 
     async findOneByUsername (username: string) {
-        return await this.em.getRepository(Admin).findOne({where: { username }});
+        return await this.em.getRepository(User).findOne({where: { username }});
     }
 
     async findOneByEmail (email: string) {
-        return await this.em.getRepository(Admin).findOne({where: { email }});
+        return await this.em.getRepository(User).findOne({where: { email }});
     }
 
     /**
@@ -97,8 +97,8 @@ export class UserRepository extends BaseRepository
      * @param data
      */
     async create (data: CreateUserInput) {
-        const repository = await this.em.getRepository(Admin);
-        let user: Admin = new Admin();
+        const repository = await this.em.getRepository(User);
+        let user: User = new User();
         user.username = data.username;
         user.password = data.password;
         user.firstName = data.firstName;
@@ -116,7 +116,7 @@ export class UserRepository extends BaseRepository
      * @param user
      * @param data
      */
-    async update (user: Admin, data: UpdateUserInput) {
+    async update (user: User, data: UpdateUserInput) {
         if (!!data.password) {
             user.password = data.password;
             user.hashPassword()
@@ -126,7 +126,7 @@ export class UserRepository extends BaseRepository
         user.email = data.email || user.email;
         user.picture = data.picture || user.picture;
         user.mobileNumber = data.mobileNumber || user.mobileNumber;
-        await this.em.getRepository(Admin).save(user);
+        await this.em.getRepository(User).save(user);
         return true;
     }
 
@@ -134,8 +134,8 @@ export class UserRepository extends BaseRepository
      * Delete user
      * @param user
      */
-    async delete (user: Admin) {
-        await this.em.getRepository(Admin).remove(user);
+    async delete (user: User) {
+        await this.em.getRepository(User).remove(user);
         return true;
     }
 }

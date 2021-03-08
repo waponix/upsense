@@ -1,4 +1,4 @@
-import {Admin} from "../../v1/shared/entities/Admin";
+import {User} from "../../v1/shared/entities/User";
 import {getRepository, Repository} from "typeorm";
 import {jwtConfig} from "../../config";
 const {BasicStrategy} = require('passport-http');
@@ -9,9 +9,9 @@ let passport = require('passport');
 // digest authentication for requesting jwt token
 passport.use(new BasicStrategy(
     async (username: any, password: any, done: any) => {
-        let adminRepository: Repository<Admin> = getRepository(Admin);
+        let adminRepository: Repository<User> = getRepository(User);
 
-        let admin: Admin | undefined = await adminRepository.findOne({username});
+        let admin: User | undefined = await adminRepository.findOne({username});
 
         if (!admin || !admin.validatePassword(password)) {
             return done(null, false);
@@ -33,8 +33,8 @@ passport.use(new JwtStrategy(
     async (token: any, done: any) => {
         const {user: {id}} = token;
 
-        const adminRepo: Repository<Admin> = getRepository(Admin);
-        const admin: Admin | undefined = await adminRepo.findOne({where: {id}});
+        const adminRepo: Repository<User> = getRepository(User);
+        const admin: User | undefined = await adminRepo.findOne({where: {id}});
 
         if (admin) {
             return done(null, admin);

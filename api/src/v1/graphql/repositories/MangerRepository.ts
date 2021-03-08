@@ -1,4 +1,4 @@
-import {Admin} from "../../shared/entities/Admin";
+import {User} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {AdminRole} from "../../../components/types/AdminRoleTypes";
@@ -28,7 +28,7 @@ export class ManagerRepository extends BaseRepository
         ];
 
         const query = await this.em
-            .getRepository(Admin)
+            .getRepository(User)
             .createQueryBuilder('admin')
             .select('admin.id')
             .addSelect('admin.username')
@@ -81,15 +81,15 @@ export class ManagerRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number) {
-        return await this.em.getRepository(Admin).findOne({where: { id }});
+        return await this.em.getRepository(User).findOne({where: { id }});
     }
 
     async findOneByUsername (username: string) {
-        return await this.em.getRepository(Admin).findOne({where: { username }});
+        return await this.em.getRepository(User).findOne({where: { username }});
     }
 
     async findOneByEmail (email: string) {
-        return await this.em.getRepository(Admin).findOne({where: { email }});
+        return await this.em.getRepository(User).findOne({where: { email }});
     }
 
     /**
@@ -97,8 +97,8 @@ export class ManagerRepository extends BaseRepository
      * @param data
      */
     async create (data: CreateManagerInput) {
-        const repository = await this.em.getRepository(Admin);
-        let manager: Admin = new Admin();
+        const repository = await this.em.getRepository(User);
+        let manager: User = new User();
         manager.username = data.username;
         manager.password = data.password;
         manager.firstName = data.firstName;
@@ -116,7 +116,7 @@ export class ManagerRepository extends BaseRepository
      * @param manager
      * @param data
      */
-    async update (manager: Admin, data: UpdateManagerInput) {
+    async update (manager: User, data: UpdateManagerInput) {
         if (!!data.password) {
             manager.password = data.password;
             manager.hashPassword()
@@ -126,7 +126,7 @@ export class ManagerRepository extends BaseRepository
         manager.email = data.email || manager.email;
         manager.picture = data.picture || manager.picture;
         manager.mobileNumber = data.mobileNumber || manager.mobileNumber;
-        await this.em.getRepository(Admin).save(manager);
+        await this.em.getRepository(User).save(manager);
         return true;
     }
 
@@ -134,8 +134,8 @@ export class ManagerRepository extends BaseRepository
      * Delete manager
      * @param manager
      */
-    async delete (manager: Admin) {
-        await this.em.getRepository(Admin).remove(manager);
+    async delete (manager: User) {
+        await this.em.getRepository(User).remove(manager);
         return true;
     }
 }

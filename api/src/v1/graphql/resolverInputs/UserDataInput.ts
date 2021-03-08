@@ -1,8 +1,8 @@
 import {InputType, Field, Int} from 'type-graphql';
-import { Admin } from '../../shared/entities/Admin';
+import { User } from '../../shared/entities/User';
 
 @InputType({ description: "Create admin" })
-export class CreateUserInput implements Partial<Admin> {
+export class CreateUserInput implements Partial<User> {
     @Field(type => String,{ nullable: false })
     username!: string;
 
@@ -26,7 +26,7 @@ export class CreateUserInput implements Partial<Admin> {
 }
 
 @InputType({ description: "Modify admin" })
-export class UpdateUserInput implements Partial<Admin> {
+export class UpdateUserInput implements Partial<User> {
     @Field(type => String,{ nullable: true })
     username?: string;
 
@@ -50,7 +50,7 @@ export class UpdateUserInput implements Partial<Admin> {
 }
 
 @InputType({ description: "Filters available for admin get list" })
-export class UserFilterInput implements Partial<Admin> {
+export class UserFilterInput implements Partial<User> {
     @Field(type => String,{ nullable: true })
     username?: string;
 

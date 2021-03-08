@@ -1,6 +1,6 @@
 import { Arg, Query, Mutation, Resolver } from 'type-graphql';
 import {getRepository, Repository} from 'typeorm';
-import { Admin } from '../../shared/entities/Admin';
+import { User } from '../../shared/entities/User';
 import { Token } from '../objects/Token';
 import { RefreshToken } from '../../shared/entities/RefreshToken';
 import {TokenProviderService} from "../../shared/services/TokenProviderService";
@@ -10,14 +10,14 @@ import {AuthResponse} from "../response/AuthResponse";
 @Resolver()
 export class AuthResolver
 {
-    adminRepo: Repository<Admin>;
+    adminRepo: Repository<User>;
     tokenRepo: Repository<RefreshToken>;
     tokenService: TokenProviderService;
 
     constructor() {
         // dependency injection
         this.tokenRepo = getRepository(RefreshToken);
-        this.adminRepo = getRepository(Admin);
+        this.adminRepo = getRepository(User);
         this.tokenService = new TokenProviderService();
     }
 
@@ -32,7 +32,7 @@ export class AuthResolver
         @Arg('password', {nullable: false}) password : string
     ) {
         // validate credential
-        let admin: Admin | undefined = await this.adminRepo.findOne({ where: {username}, relations: ['refreshToken'] });
+        let admin: User | undefined = await this.adminRepo.findOne({ where: {username}, relations: ['refreshToken'] });
         let token = new Token();
         let response = new AuthResponse();
 
