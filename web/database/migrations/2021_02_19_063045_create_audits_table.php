@@ -15,6 +15,9 @@ class CreateAuditsTable extends Migration
     {
         Schema::create('audits', function (Blueprint $table) {
             $table->id();
+            $table->string('operation_info');
+            $table->string('operation_type');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }

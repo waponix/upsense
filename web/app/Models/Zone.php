@@ -12,7 +12,6 @@ class Zone extends Model
     use HasFactory;
     use SoftDeletes;
     use Timestamp;
-    protected $primaryKey = 'zone_id';
 
 
     /**

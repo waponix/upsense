@@ -14,15 +14,15 @@ class CreateHubsTable extends Migration
     public function up()
     {
         Schema::create('hubs', function (Blueprint $table) {
-            $table->increments('hub_id');
+            $table->increments('id');
             $table->string('serial');
 //            $table->string('description');
             $table->string('hw_version');
             $table->string('sw_version');
             $table->string('fw_version');
             $table->tinyInteger('is_connected')->default(0);
-            $table->string('signal_strength')->default(0);
-            $table->string('battery_status')->default(0);
+            $table->mediumInteger('signal_strength')->default(0);
+            $table->mediumInteger('battery_status')->default(0);
             $table->dateTime('last_seen')->nullable();
             $table->string('min_temp')->default(0);
             $table->string('max_temp')->default(0);

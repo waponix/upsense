@@ -13,7 +13,7 @@
                             </h4>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="{{route('sensors.update', $sensor->sensor_id) }}">
+                            <form method="POST" action="{{route('sensors.update', $sensor->id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group row">
@@ -36,11 +36,11 @@
                                         <label>Assign to Hub</label>
                                         <select class="form-control" name="hub_id">
                                             @foreach($hubs as $hub)
-                                                @if( $hub->hub_id == $hub->hub_id )
-                                                    <option value="{{ $hub->hub_id }}"
+                                                @if( $hub->id == $sensor->hub_id )
+                                                    <option value="{{ $hub->id }}"
                                                             selected="true">{{ $hub->serial }}</option>
                                                 @else
-                                                    <option value="{{ $hub->hub_id }}">{{ $hub->serial }}</option>
+                                                    <option value="{{ $hub->id }}">{{ $hub->serial }}</option>
                                                 @endif
                                             @endforeach
                                         </select>

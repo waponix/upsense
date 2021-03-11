@@ -16,6 +16,7 @@
                             <div class="form-group row">
                                 <label class="col-md-3 col-form-label"><strong>Serial:</strong></label>
                                 <p class="form-control-static">
+                                    {{dd($sensor)}}
                                     {{ $sensor->serial }}
                                 </p>
                             </div>

@@ -11,7 +11,7 @@
                             {{ __('Edit Zone') }}
                         </h4>
                         <div class="card-body">
-                            <form method="POST" action="{{ route('zones.update', $zone->zone_id) }}">
+                            <form method="POST" action="{{ route('zones.update', $zone->id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group row">
@@ -28,12 +28,12 @@
 
                                         <select class="form-control" name="company_id">
                                             @foreach($companies as $company)
-                                                @if( $company->company_id == $zone->company_id )
-                                                    <option value="{{ $company->company_id }}"
+                                                @if( $company->id == $zone->company_id )
+                                                    <option value="{{ $company->id }}"
                                                             selected="true">{{ $company->name }}</option>
                                                 @else
                                                     <option
-                                                        value="{{ $company->company_id }}">{{ $company->name }}</option>
+                                                        value="{{ $company->id }}">{{ $company->name }}</option>
                                                 @endif
                                             @endforeach
                                         </select>

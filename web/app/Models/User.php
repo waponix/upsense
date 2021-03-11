@@ -13,7 +13,6 @@ class User extends Authenticatable
     use SoftDeletes;
     use HasFactory;
 
-    protected $primaryKey = 'user_id';
     protected $table = 'users';
 
     /**
@@ -38,16 +37,13 @@ class User extends Authenticatable
         'deleted_at'
     ];
 
-    protected $attributes = [
-        'menuroles' => 'user',
-    ];
 
     /**
      * The zones that belong to the user.
      */
     public function zones()
     {
-        return $this->belongsToMany(Zone::class, 'zone_users', 'user_id', 'zone_id');
+        return $this->belongsToMany(Zone::class, 'zone_users');
     }
 
 }

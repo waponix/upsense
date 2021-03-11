@@ -14,11 +14,11 @@ class CreateLogsTable extends Migration
     public function up()
     {
         Schema::create('logs', function (Blueprint $table) {
-            $table->increments('log_id');
+            $table->increments('id');
             $table->foreignId('sensor_id');
-            $table->integer('duration');
-            $table->string('min_temp')->default(0);
-            $table->string('max_temp')->default(0);
+            $table->mediumInteger('duration');
+            $table->mediumInteger('min_temp')->default(0);
+            $table->mediumInteger('max_temp')->default(0);
             $table->dateTime('alert_datetime')->nullable();
             $table->timestamps();
         });

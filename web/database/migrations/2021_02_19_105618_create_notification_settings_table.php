@@ -15,6 +15,11 @@ class CreateNotificationSettingsTable extends Migration
     {
         Schema::create('notification_settings', function (Blueprint $table) {
             $table->id();
+            $table->enum('type', array('email', 'sms', 'push_notifications'))->default('email');
+            $table->time('trigger_time');
+            $table->time('repeat_time');
+            $table->smallInteger('max_repeat');
+            $table->foreignId('zone_id');
             $table->timestamps();
         });
     }

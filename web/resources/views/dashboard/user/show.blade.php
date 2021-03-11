@@ -33,7 +33,7 @@
                             </div>
                             <br>
                             <hr>
-                            <a href="{{ url('/users/' . $user->user_id . '/edit') }}"
+                            <a href="{{ url('/users/' . $user->id . '/edit') }}"
                                class="btn btn-block btn-primary">{{ __('Edit User') }}</a>
                             <a href="{{ route('users.index') }}"
                                class="btn btn-block btn-light">{{ __('Return') }}</a>

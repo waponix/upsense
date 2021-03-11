@@ -35,7 +35,7 @@
                                         <label>Assign to Hub</label>
                                         <select class="form-control" name="hub_id">
                                             @foreach($hubs as $hub)
-                                                <option value="{{ $hub->hub_id }}">{{ $hub->serial }}</option>
+                                                <option value="{{ $hub->id }}">{{ $hub->serial }}</option>
                                             @endforeach
                                         </select>
                                     </div>

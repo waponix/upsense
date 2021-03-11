@@ -10,14 +10,13 @@ class Sensor extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $primaryKey = 'sensor_id';
 
     /**
      * The sensor that belong to the hub.
      */
     public function hub()
     {
-        return $this->belongsTo(Hub::class, 'hub_id');
+        return $this->belongsTo(Hub::class);
     }
 
     /**

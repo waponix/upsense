@@ -15,6 +15,10 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('log_id');
+            $table->string('notification_type');
+            $table->foreignId('admin_id');
+            $table->smallInteger('retries');
             $table->timestamps();
         });
     }

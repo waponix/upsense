@@ -10,7 +10,6 @@ class Company extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $primaryKey = 'company_id';
 
     /**
      * Get the Zones that belongs to company.

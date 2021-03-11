@@ -61,16 +61,16 @@
                                             <td>{{ $user->created_at }}</td>
                                             <td>{{ $user->updated_at }}</td>
                                             <td>
-                                                <a href="{{ url('/users/' . $user->user_id) }}"
+                                                <a href="{{ url('/users/' . $user->id) }}"
                                                    class="btn btn-block btn-primary">View</a>
                                             </td>
                                             <td>
-                                                <a href="{{ url('/users/' . $user->user_id . '/edit') }}"
+                                                <a href="{{ url('/users/' . $user->id . '/edit') }}"
                                                    class="btn btn-block btn-primary">Edit</a>
                                             </td>
                                             <td>
-                                                @if($me->user_id !== $user->user_id )
-                                                    <form action="{{ route('users.destroy', $user->user_id ) }}"
+                                                @if($me->id !== $user->id )
+                                                    <form action="{{ route('users.destroy', $user->id ) }}"
                                                           method="POST">
                                                         @method('DELETE')
                                                         @csrf

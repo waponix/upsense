@@ -37,15 +37,15 @@
                                         <tr>
                                             <td>{{ $company->name }}</td>
                                             <td>
-                                                <a href="{{ url('/company/' . $company->company_id) }}"
+                                                <a href="{{ url('/company/' . $company->id) }}"
                                                    class="btn btn-block btn-primary">View</a>
                                             </td>
                                             <td>
-                                                <a href="{{ url('/company/' . $company->company_id . '/edit') }}"
+                                                <a href="{{ url('/company/' . $company->id . '/edit') }}"
                                                    class="btn btn-block btn-primary">Edit</a>
                                             </td>
                                             <td>
-                                                <form action="{{ route('company.destroy', $company->company_id ) }}"
+                                                <form action="{{ route('company.destroy', $company->id ) }}"
                                                       method="POST">
                                                     @method('DELETE')
                                                     @csrf

@@ -14,7 +14,7 @@ class CreateZonesTable extends Migration
     public function up()
     {
         Schema::create('zones', function (Blueprint $table) {
-            $table->increments('zone_id')->unsigned();
+            $table->increments('id')->unsigned();
             $table->string('name');
             $table->foreignId('company_id')->unsigned();
             $table->timestamps();

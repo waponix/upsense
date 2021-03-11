@@ -55,7 +55,7 @@
                                     @foreach($sensors as $sensor)
                                         <tr>
                                             <td>
-                                                <strong><a href="#" onclick="loadSensorModal({{$sensor->sensor_id}})">{{$sensor->description}}</a></strong>
+                                                <strong><a href="#" onclick="loadSensorModal({{$sensor->id}})">{{$sensor->description}}</a></strong>
                                             </td>
                                             <td>
                                                 {{$sensor->serial}}

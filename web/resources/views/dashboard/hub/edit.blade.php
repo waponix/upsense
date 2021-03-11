@@ -13,7 +13,7 @@
                             </h4>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="{{route('hubs.update', $hub->hub_id) }}">
+                            <form method="POST" action="{{route('hubs.update', $hub->id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group row">
@@ -68,11 +68,11 @@
                                         <label>Assign to Zone</label>
                                         <select class="form-control" name="zone_id">
                                             @foreach($zones as $zone)
-                                                @if( $zone->zone_id == $zone->zone_id )
-                                                    <option value="{{ $zone->zone_id }}"
+                                                @if( $zone->id == $hub->zone_id )
+                                                    <option value="{{ $zone->id }}"
                                                             selected="true">{{ $zone->name }}</option>
                                                 @else
-                                                    <option value="{{ $zone->zone_id }}">{{ $zone->name }}</option>
+                                                    <option value="{{ $zone->id }}">{{ $zone->name }}</option>
                                                 @endif
                                             @endforeach
                                         </select>

@@ -13,7 +13,7 @@
                             </h4>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="{{route('company.update', $company->company_id) }}">
+                            <form method="POST" action="{{route('company.update', $company->id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="input-group mb-3">

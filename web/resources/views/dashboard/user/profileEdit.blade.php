@@ -12,7 +12,7 @@
                         </h4>
                         <div class="card-body">
                             <br>
-                            <form method="POST" action="/users/{{ $currentAuthenticatedUser->user_id }}">
+                            <form method="POST" action="/users/{{ $currentAuthenticatedUser->id }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="input-group mb-3">
@@ -76,11 +76,11 @@
                                         <label>Assign to Zone</label>
                                         <select class="form-control" name="zone_id">
                                             @foreach($zones as $zone)
-                                                @if( $zone->zone_id == $zone->zone_id )
-                                                    <option value="{{ $zone->zone_id }}"
+                                                @if( $zone->id == $user->zone_id )
+                                                    <option value="{{ $zone->id }}"
                                                             selected="true">{{ $zone->name }}</option>
                                                 @else
-                                                    <option value="{{ $zone->zone_id }}">{{ $zone->name }}</option>
+                                                    <option value="{{ $zone->id }}">{{ $zone->name }}</option>
                                                 @endif
                                             @endforeach
                                         </select>

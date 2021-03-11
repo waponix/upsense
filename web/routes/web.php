@@ -11,7 +11,10 @@
 |
 */
 
-Auth::routes();
+//Auth::routes();
+Route::get('/login', 'LoginController@index')->name('login');
+Route::post('/login', 'LoginController@authenticate')->name('authenticate');
+Route::post('/logout', 'LoginController@logout')->name('logout');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index')->name('dashboard.home.index');

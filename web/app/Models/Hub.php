@@ -10,14 +10,13 @@ class Hub extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $primaryKey = 'hub_id';
 
     /**
      * The hub that belong to the zone.
      */
     public function zone()
     {
-        return $this->belongsTo(Zone::class, 'zone_id');
+        return $this->belongsTo(Zone::class);
     }
     /**
      * Get the Sensors that belongs to hub.

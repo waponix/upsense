@@ -41,15 +41,15 @@
                                             <td>{{ $zone->name }}</td>
                                             <td>{{ $zone->company->name }}</td>
                                             <td>
-                                                <a href="{{ url('/zones/' . $zone->zone_id) }}"
+                                                <a href="{{ url('/zones/' . $zone->id) }}"
                                                    class="btn btn-block btn-primary">View</a>
                                             </td>
                                             <td>
-                                                <a href="{{ url('/zones/' . $zone->zone_id . '/edit') }}"
+                                                <a href="{{ url('/zones/' . $zone->id . '/edit') }}"
                                                    class="btn btn-block btn-primary">Edit</a>
                                             </td>
                                             <td>
-                                                <form action="{{ route('zones.destroy', $zone->zone_id ) }}"
+                                                <form action="{{ route('zones.destroy', $zone->id ) }}"
                                                       method="POST">
                                                     @method('DELETE')
                                                     @csrf

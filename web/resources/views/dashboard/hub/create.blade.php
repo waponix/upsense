@@ -67,7 +67,7 @@
                                         <label>Assign to Zone</label>
                                         <select class="form-control" name="zone_id">
                                             @foreach($zones as $zone)
-                                                <option value="{{ $zone->zone_id }}">{{ $zone->name }}</option>
+                                                <option value="{{ $zone->id }}">{{ $zone->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

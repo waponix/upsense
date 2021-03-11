@@ -26,7 +26,7 @@
 
                                         <select class="form-control" name="company_id">
                                             @foreach($companies as $company)
-                                                <option value="{{ $company->company_id }}">{{ $company->name }}</option>
+                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
