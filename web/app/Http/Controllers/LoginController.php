@@ -46,10 +46,15 @@ class LoginController extends Controller
      */
     public function authenticate(Request $request)
     {
-        $res = Http::withBasicAuth($request->get('email'), $request->get('password'))->post('http://38c24650bab8.ngrok.io/v1/auth/login');
-
+        $res = Http::withBasicAuth($request->get('email'), $request->get('password'))
+            ->post(env('JWT_ISSUER') . '/auth/login');
         if ($res->successful()) {
-            $decoded = JWT\JWT::decode(JWT\JWT::jsonDecode($res->body())->result->accessToken, '49asg84va1as5298f$#48afv521', array('HS256'));
+            $accessToken = JWT\JWT::jsonDecode($res->body())->result->accessToken;
+            $decoded = JWT\JWT::decode(
+                $accessToken,
+                env('JWT_SECRET'),
+                [env('JWT_ALGORITHM')]
+            );
 
             $user = new User();
             $user->id = $decoded->user->id;
@@ -58,8 +63,10 @@ class LoginController extends Controller
             $user->first_name = $decoded->user->firstName;
             $user->last_name = $decoded->user->lastName;
             $user->role = $decoded->user->role;
+
             Auth::login($user);
 
+            $request->session()->put('accessToken', $accessToken);
             $request->session()->regenerate();
 
             return redirect()->intended('/');
@@ -79,6 +86,7 @@ class LoginController extends Controller
     {
         Auth::logout();
         Session::flush();
+
         return redirect()->intended('/login');
     }
 }
