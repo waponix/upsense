@@ -6,7 +6,8 @@
   "password": "admin123",
   "database": "upsense",
   "entities": [
-    "dist/*/shared/entities/*.js"
+    "dist/*/shared/entities/*.js",
+    "src/*/shared/entities/*.ts"
   ],
   "synchronize": true,
   "logging": false

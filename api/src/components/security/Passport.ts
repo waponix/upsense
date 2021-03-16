@@ -9,15 +9,20 @@ let passport = require('passport');
 // digest authentication for requesting jwt token
 passport.use(new BasicStrategy(
     async (username: any, password: any, done: any) => {
-        let adminRepository: Repository<User> = getRepository(User);
+        let userRepository: Repository<User> = getRepository(User);
 
-        let admin: User | undefined = await adminRepository.findOne({username});
+        // try to look for user via username
+        let user: User | undefined = await userRepository.findOne({where: {username}});
 
-        if (!admin || !admin.validatePassword(password)) {
+        if (user === undefined) { // if no record found via username, try with email
+            user = await userRepository.findOne({where: {email: username}});
+        }
+
+        if (!user || !user.validatePassword(password)) {
             return done(null, false);
         }
 
-        return done(null, admin);
+        return done(null, user);
     }
 ));
 
@@ -33,11 +38,11 @@ passport.use(new JwtStrategy(
     async (token: any, done: any) => {
         const {user: {id}} = token;
 
-        const adminRepo: Repository<User> = getRepository(User);
-        const admin: User | undefined = await adminRepo.findOne({where: {id}});
+        const userRepo: Repository<User> = getRepository(User);
+        const user: User | undefined = await userRepo.findOne({where: {id}});
 
-        if (admin) {
-            return done(null, admin);
+        if (user) {
+            return done(null, user);
         }
 
         done(null, false);

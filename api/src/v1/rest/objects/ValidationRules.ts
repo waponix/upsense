@@ -54,7 +54,7 @@ export default class validationRules
 
                 return this.fields;
             };
-        }
+        };
 
         const _removeRule = (field: string) => {
             return (rule: string) => {
@@ -78,17 +78,21 @@ export default class validationRules
             }
         }
 
-        Object.defineProperty(this.fields, field, {get: _fieldGetter(field), enumerable: true})
-        Object.defineProperty(this.fields, `addRuleTo${field.charAt(0).toUpperCase()}${field.slice(1)}Field`, {value: _addRule(field), enumerable: false});
-        Object.defineProperty(this.fields, `removeRuleFrom${field.charAt(0).toUpperCase()}${field.slice(1)}Field`, {value: _removeRule(field), enumerable: false});
-        Object.defineProperty(this.fields, `changeRuleOf${field.charAt(0).toUpperCase()}${field.slice(1)}Field`, {value: _changeRule(field), enumerable: false});
+        Object.defineProperty(this.fields, field, {get: _fieldGetter(field), enumerable: true, configurable: true})
+        Object.defineProperty(this.fields, `addRuleTo${field.charAt(0).toUpperCase()}${field.slice(1)}Field`, {value: _addRule(field), enumerable: false, configurable: true});
+        Object.defineProperty(this.fields, `removeRuleFrom${field.charAt(0).toUpperCase()}${field.slice(1)}Field`, {value: _removeRule(field), enumerable: false, configurable: true});
+        Object.defineProperty(this.fields, `changeRuleOf${field.charAt(0).toUpperCase()}${field.slice(1)}Field`, {value: _changeRule(field), enumerable: false, configurable: true});
     }
 
     private _removeFieldProperties(field: string)
     {
+        //@ts-ignore
         delete this.fields[field];
+        //@ts-ignore
         delete this.fields[`addRuleTo${field.charAt(0).toUpperCase()}${field.slice(1)}Field`];
+        //@ts-ignore
         delete this.fields[`removeRuleFrom${field.charAt(0).toUpperCase()}${field.slice(1)}Field`];
+        //@ts-ignore
         delete this.fields[`changeRuleOf${field.charAt(0).toUpperCase()}${field.slice(1)}Field`];
     }
 }

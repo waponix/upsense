@@ -41,6 +41,10 @@ export const managerCreateValidation = (data: any) => {
 
 export const managerUpdateValidation = (data: any, manager: Manager) => {
     rules.removeField('username');
+    rules.fields
+        .removeRuleFromPasswordField('required')
+        .removeRuleFromFirstNameField('required')
+        .removeRuleFromEmailField('required');
 
     if (data.email && data.email === manager.email) {
         // only validate email if it is not the same with old email
