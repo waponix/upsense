@@ -28,6 +28,8 @@ export default class companyServices
 
         apiResponse.result = await this.companyRepository.getList(query);
 
+        await this.companyRepository.queryRunner.release();
+
         return new ReturnableResponse(200, apiResponse);
     }
 
@@ -48,6 +50,8 @@ export default class companyServices
         } else {
             apiResponse.result = company;
         }
+
+        await this.companyRepository.queryRunner.release();
 
         return new ReturnableResponse(statusCode, apiResponse);
     }

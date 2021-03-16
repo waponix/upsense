@@ -32,6 +32,8 @@ export default class UserServices
         await this.userRepository.init();
         apiResponse.result = await this.userRepository.getList(query);
 
+        await this.userRepository.queryRunner.release();
+
         return new ReturnableResponse(200, apiResponse);
     }
 
@@ -54,6 +56,8 @@ export default class UserServices
         } else {
             apiResponse.result = user;
         }
+
+        await this.userRepository.queryRunner.release();
 
         return new ReturnableResponse(statusCode, apiResponse);
     }

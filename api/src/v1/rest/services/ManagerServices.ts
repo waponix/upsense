@@ -32,6 +32,8 @@ export default class ManagerServices
         await this.managerRepository.init();
         apiResponse.result = await this.managerRepository.getList(query);
 
+        await this.managerRepository.queryRunner.release();
+
         return new ReturnableResponse(200, apiResponse);
     }
 
@@ -54,6 +56,8 @@ export default class ManagerServices
         } else {
             apiResponse.result = manager;
         }
+
+        await this.managerRepository.queryRunner.release();
 
         return new ReturnableResponse(statusCode, apiResponse);
     }

@@ -86,13 +86,9 @@ export default class validationRules
 
     private _removeFieldProperties(field: string)
     {
-        //@ts-ignore
         delete this.fields[field];
-        //@ts-ignore
         delete this.fields[`addRuleTo${field.charAt(0).toUpperCase()}${field.slice(1)}Field`];
-        //@ts-ignore
         delete this.fields[`removeRuleFrom${field.charAt(0).toUpperCase()}${field.slice(1)}Field`];
-        //@ts-ignore
         delete this.fields[`changeRuleOf${field.charAt(0).toUpperCase()}${field.slice(1)}Field`];
     }
 }

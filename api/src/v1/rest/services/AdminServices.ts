@@ -32,6 +32,8 @@ export default class AdminServices
         await this.adminRepository.init();
         apiResponse.result = await this.adminRepository.getList(query);
 
+        await this.adminRepository.queryRunner.release();
+
         return new ReturnableResponse(200, apiResponse);
     }
 
@@ -54,6 +56,8 @@ export default class AdminServices
         } else {
             apiResponse.result = admin;
         }
+
+        await this.adminRepository.queryRunner.release();
 
         return new ReturnableResponse(statusCode, apiResponse);
     }
