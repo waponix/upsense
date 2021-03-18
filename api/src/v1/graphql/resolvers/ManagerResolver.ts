@@ -17,7 +17,7 @@ export class ManagerResolver
         this.repo.init();
     }
 
-    @Authorized(['ROLE_ADMIN'])
+    @Authorized(['admin'])
     @Query(() => ManagerResponse)
     async getManagers(
         // @Arg('sort') sort: SortType,
@@ -31,7 +31,7 @@ export class ManagerResolver
         return response;
     }
 
-    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
+    @Authorized(['admin', 'manager'])
     @Query(() => SingleManagerResponse)
     async getManager(@Arg("id") id: number) {
         let response: SingleManagerResponse = new SingleManagerResponse();
@@ -53,7 +53,7 @@ export class ManagerResolver
         return response;
     }
 
-    @Authorized(['ROLE_ADMIN'])
+    @Authorized(['admin'])
     @Mutation(() => SingleManagerResponse)
     async createManager(@Arg("data") data: CreateManagerInput) {
         let response: SingleManagerResponse = new SingleManagerResponse();
@@ -88,7 +88,7 @@ export class ManagerResolver
         return response;
     }
 
-    @Authorized(['ROLE_ADMIN', 'ROLE_MANAGER'])
+    @Authorized(['admin', 'manager'])
     @Mutation(() => SingleManagerResponse)
     async updateManager(@Arg("id") id: number, @Arg("data") data: UpdateManagerInput) {
         let response: SingleManagerResponse = new SingleManagerResponse();
@@ -117,7 +117,7 @@ export class ManagerResolver
         return response;
     }
 
-    @Authorized(['ROLE_ADMIN'])
+    @Authorized(['admin'])
     @Mutation(() => SingleManagerResponse)
     async removeManager(@Arg("id") id: number) {
         let response: SingleManagerResponse = new SingleManagerResponse();

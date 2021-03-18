@@ -1,7 +1,7 @@
 import {User as Manager} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
-import {AdminRole} from "../../../components/types/AdminRoleTypes";
+import {UserRole} from "../../../components/types/UserRoleTypes";
 
 export class ManagerRepository extends BaseRepository
 {
@@ -11,7 +11,7 @@ export class ManagerRepository extends BaseRepository
         'firstName',
         'lastName',
         'email',
-        'mobileNumber'
+        'mobile'
     ];
 
     /**
@@ -20,7 +20,7 @@ export class ManagerRepository extends BaseRepository
      */
     async getList (options: QueryOptions = {}): Promise<Manager[]> {
         let parameters: any = {
-            role: AdminRole.manager
+            role: UserRole.manager
         };
         let whereStatements = [
             'manager.role = :role'
@@ -35,8 +35,8 @@ export class ManagerRepository extends BaseRepository
             .addSelect('manager.firstName')
             .addSelect('manager.lastName')
             .addSelect('manager.email')
-            .addSelect('manager.mobileNumber')
-            .addSelect('manager.picture')
+            .addSelect('manager.mobile')
+            .addSelect('manager.image')
             .addSelect('manager.createdAt')
             .addSelect('manager.updatedAt')
             .offset(offset)
@@ -104,9 +104,9 @@ export class ManagerRepository extends BaseRepository
         manager.firstName = data.firstName;
         manager.lastName = data.lastName;
         manager.email = data.email;
-        manager.mobileNumber = data.mobileNumber;
-        manager.picture = data.picture;
-        manager.role = AdminRole.manager;
+        manager.mobile = data.mobile;
+        manager.image = data.image;
+        manager.role = UserRole.manager;
         await repository.save(manager);
         return manager;
     }
@@ -124,8 +124,8 @@ export class ManagerRepository extends BaseRepository
         manager.firstName = data.firstName || manager.firstName;
         manager.lastName = data.lastName || manager.lastName;
         manager.email = data.email || manager.email;
-        manager.picture = data.picture || manager.picture;
-        manager.mobileNumber = data.mobileNumber || manager.mobileNumber;
+        manager.image = data.image || manager.image;
+        manager.mobile = data.mobile || manager.mobile;
         await this.repository.save(manager);
         return true;
     }

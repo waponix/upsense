@@ -10,7 +10,7 @@ export class CreateManagerInput implements Partial<User> {
     password!: string;
 
     @Field(type => String,{ nullable: true })
-    picture?: string;
+    image?: string;
 
     @Field(type => String,{ nullable: false })
     firstName!: string;
@@ -22,7 +22,7 @@ export class CreateManagerInput implements Partial<User> {
     email!: string;
 
     @Field(type => String,{ nullable: true })
-    mobileNumber?: string;
+    mobile?: string;
 }
 
 @InputType({ description: "Modify admin" })
@@ -34,7 +34,7 @@ export class UpdateManagerInput implements Partial<User> {
     password?: string;
 
     @Field(type => String,{ nullable: true })
-    picture?: string;
+    image?: string;
 
     @Field(type => String,{ nullable: true })
     firstName?: string;
@@ -46,7 +46,7 @@ export class UpdateManagerInput implements Partial<User> {
     email?: string;
 
     @Field(type => String,{ nullable: true })
-    mobileNumber?: string;
+    mobile?: string;
 }
 
 @InputType({ description: "Filters available for admin get list" })
@@ -55,7 +55,7 @@ export class ManagerFilterInput implements Partial<User> {
     username?: string;
 
     @Field(type => String,{ nullable: true })
-    picture?: string;
+    image?: string;
 
     @Field(type => String,{ nullable: true })
     firstName?: string;
@@ -67,5 +67,5 @@ export class ManagerFilterInput implements Partial<User> {
     email?: string;
 
     @Field(type => String,{ nullable: true })
-    mobileNumber?: string;
+    mobile?: string;
 }

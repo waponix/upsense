@@ -1,7 +1,7 @@
 import {User} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
-import {AdminRole} from "../../../components/types/AdminRoleTypes";
+import {UserRole} from "../../../components/types/UserRoleTypes";
 import {CreateManagerInput, UpdateManagerInput} from "../resolverInputs/ManagerDataInput";
 
 export class ManagerRepository extends BaseRepository
@@ -12,7 +12,7 @@ export class ManagerRepository extends BaseRepository
         'firstName',
         'lastName',
         'email',
-        'mobileNumber'
+        'mobile'
     ];
 
     /**
@@ -21,7 +21,7 @@ export class ManagerRepository extends BaseRepository
      */
     async getList (options: QueryOptions = {}) {
         let parameters: any = {
-            role: AdminRole.manager
+            role: UserRole.manager
         };
         let whereStatements = [
             'admin.role = :role'
@@ -35,8 +35,8 @@ export class ManagerRepository extends BaseRepository
             .addSelect('admin.firstName')
             .addSelect('admin.lastName')
             .addSelect('admin.email')
-            .addSelect('admin.mobileNumber')
-            .addSelect('admin.picture')
+            .addSelect('admin.mobile')
+            .addSelect('admin.image')
             .addSelect('admin.createdAt')
             .addSelect('admin.updatedAt')
             .offset(options.page)
@@ -104,9 +104,9 @@ export class ManagerRepository extends BaseRepository
         manager.firstName = data.firstName;
         manager.lastName = data.lastName;
         manager.email = data.email;
-        manager.mobileNumber = data.mobileNumber;
-        manager.picture = data.picture;
-        manager.role = AdminRole.manager;
+        manager.mobile = data.mobile;
+        manager.image = data.image;
+        manager.role = UserRole.manager;
         await repository.save(manager);
         return manager;
     }
@@ -124,8 +124,8 @@ export class ManagerRepository extends BaseRepository
         manager.firstName = data.firstName || manager.firstName;
         manager.lastName = data.lastName || manager.lastName;
         manager.email = data.email || manager.email;
-        manager.picture = data.picture || manager.picture;
-        manager.mobileNumber = data.mobileNumber || manager.mobileNumber;
+        manager.image = data.image || manager.image;
+        manager.mobile = data.mobile || manager.mobile;
         await this.em.getRepository(User).save(manager);
         return true;
     }

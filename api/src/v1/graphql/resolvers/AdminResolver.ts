@@ -17,7 +17,7 @@ export class AdminResolver
         this.repo.init();
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized('admin')
     @Query(() => AdminResponse)
     async getAdmins(
         // @Arg('sort') sort: SortType,
@@ -31,7 +31,7 @@ export class AdminResolver
         return response;
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized('admin')
     @Query(() => SingleAdminResponse)
     async getAdmin(@Arg("id") id: number) {
         let response: SingleAdminResponse = new SingleAdminResponse();
@@ -53,7 +53,7 @@ export class AdminResolver
         return response;
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized('admin')
     @Mutation(() => SingleAdminResponse)
     async createAdmin(@Arg("data") data: CreateAdminInput) {
         let response: SingleAdminResponse = new SingleAdminResponse();
@@ -88,7 +88,7 @@ export class AdminResolver
         return response;
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized('admin')
     @Mutation(() => SingleAdminResponse)
     async updateAdmin(@Arg("id") id: number, @Arg("data") data: UpdateAdminInput) {
         let response: SingleAdminResponse = new SingleAdminResponse();
@@ -117,7 +117,7 @@ export class AdminResolver
         return response;
     }
 
-    @Authorized('ROLE_ADMIN')
+    @Authorized('admin')
     @Mutation(() => SingleAdminResponse)
     async removeAdmin(@Arg("id") id: number) {
         let response: SingleAdminResponse = new SingleAdminResponse();

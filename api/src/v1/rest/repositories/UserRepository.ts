@@ -1,7 +1,7 @@
 import {User} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
-import {AdminRole} from "../../../components/types/AdminRoleTypes";
+import {UserRole} from "../../../components/types/UserRoleTypes";
 
 export class UserRepository extends BaseRepository
 {
@@ -11,7 +11,7 @@ export class UserRepository extends BaseRepository
         'firstName',
         'lastName',
         'email',
-        'mobileNumber'
+        'mobile'
     ];
 
     /**
@@ -20,7 +20,7 @@ export class UserRepository extends BaseRepository
      */
     async getList (options: QueryOptions = {}): Promise<User[]> {
         let parameters: any = {
-            role: AdminRole.manager
+            role: UserRole.manager
         };
         let whereStatements = [
             'manager.role = :role'
@@ -35,8 +35,8 @@ export class UserRepository extends BaseRepository
             .addSelect('manager.firstName')
             .addSelect('manager.lastName')
             .addSelect('manager.email')
-            .addSelect('manager.mobileNumber')
-            .addSelect('manager.picture')
+            .addSelect('manager.mobile')
+            .addSelect('manager.image')
             .addSelect('manager.createdAt')
             .addSelect('manager.updatedAt')
             .offset(offset)
@@ -104,9 +104,9 @@ export class UserRepository extends BaseRepository
         user.firstName = data.firstName;
         user.lastName = data.lastName;
         user.email = data.email;
-        user.mobileNumber = data.mobileNumber;
-        user.picture = data.picture;
-        user.role = AdminRole.user;
+        user.mobile = data.mobile;
+        user.image = data.image;
+        user.role = UserRole.user;
         await repository.save(user);
         return user;
     }
@@ -124,8 +124,8 @@ export class UserRepository extends BaseRepository
         user.firstName = data.firstName || user.firstName;
         user.lastName = data.lastName || user.lastName;
         user.email = data.email || user.email;
-        user.picture = data.picture || user.picture;
-        user.mobileNumber = data.mobileNumber || user.mobileNumber;
+        user.image = data.image || user.image;
+        user.mobile = data.mobile || user.mobile;
         await this.repository.save(user);
         return true;
     }

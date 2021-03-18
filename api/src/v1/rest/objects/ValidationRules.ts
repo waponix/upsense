@@ -57,10 +57,17 @@ export default class validationRules
         };
 
         const _removeRule = (field: string) => {
-            return (rule: string) => {
-                const ruleIndex = this.originalFields[field].indexOf(rule);
-                if (ruleIndex > -1) {
-                    this.originalFields[field].splice(ruleIndex, 1);
+            return (rules: string | string[]) => {
+                if (typeof rules === 'string') {
+                    // convert to array
+                    rules = [rules];
+                }
+
+                for (let rule of rules) {
+                    const ruleIndex = this.originalFields[field].indexOf(rule);
+                    if (ruleIndex > -1) {
+                        this.originalFields[field].splice(ruleIndex, 1);
+                    }
                 }
 
                 return this.fields;
