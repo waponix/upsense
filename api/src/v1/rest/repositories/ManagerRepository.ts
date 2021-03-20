@@ -81,15 +81,15 @@ export class ManagerRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number): Promise<Manager | undefined> {
-        return await this.repository.findOne({where: { id }});
+        return await this.repository.findOne({where: { id, role: UserRole.manager }});
     }
 
     async findOneByUsername (username: string): Promise<Manager | undefined> {
-        return await this.repository.findOne({where: { username }});
+        return await this.repository.findOne({where: { username, role: UserRole.manager }});
     }
 
     async findOneByEmail (email: string): Promise<Manager | undefined> {
-        return await this.repository.findOne({where: { email }});
+        return await this.repository.findOne({where: { email, role: UserRole.manager }});
     }
 
     /**

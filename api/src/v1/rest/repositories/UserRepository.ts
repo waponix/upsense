@@ -81,15 +81,15 @@ export class UserRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number): Promise<User | undefined> {
-        return await this.repository.findOne({where: { id }});
+        return await this.repository.findOne({where: { id, role: UserRole.user }});
     }
 
     async findOneByUsername (username: string): Promise<User | undefined> {
-        return await this.repository.findOne({where: { username }});
+        return await this.repository.findOne({where: { username, role: UserRole.user }});
     }
 
     async findOneByEmail (email: string): Promise<User | undefined> {
-        return await this.repository.findOne({where: { email }});
+        return await this.repository.findOne({where: { email, role: UserRole.user }});
     }
 
     /**

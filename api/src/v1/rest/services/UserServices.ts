@@ -181,6 +181,8 @@ export default class UserServices
 
         const {id}: any = request.params;
 
+        await this.userRepository.init();
+
         // get the user to be deleted
         let user: User | undefined = await this.userRepository.findOneById(parseInt(id));
 
@@ -188,6 +190,8 @@ export default class UserServices
             apiResponse.status = Status.NotFound;
             apiResponse.message = CommonMessages.NotFound('User');
             statusCode = 404;
+
+            return new ReturnableResponse(statusCode, apiResponse);
         }
 
         await this.userRepository.init();

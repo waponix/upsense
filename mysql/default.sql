@@ -2,7 +2,7 @@ USE `upsense`;
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `role` enum('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER') NOT NULL DEFAULT 'ROLE_USER',
+  `role` enum('admin','manager','user') NOT NULL DEFAULT 'user',
   `username` text NOT NULL UNIQUE DEFAULT '',
   `password` text NOT NULL,
   `salt` text NOT NULL,

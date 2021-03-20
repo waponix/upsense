@@ -29,7 +29,7 @@ export default class AuthController extends Controller
         if (admin === undefined) {
             apiResponse.message = CommonMessages.SomethingWentWrong;
             apiResponse.status = Status.Error;
-            response.status(400);
+            response.status(401);
             return response.json(apiResponse);
         }
 
@@ -53,10 +53,23 @@ export default class AuthController extends Controller
 
         const {user} = (<any>request);
         const tokenProviderService = new TokenProviderService();
+
+        const adminRepo: Repository<User> = getRepository(User);
+        let admin: User | undefined = await adminRepo.findOne({ where: {id: user.id}, relations: ['refreshToken'] });
+
+        if (admin === undefined) {
+            apiResponse.message = CommonMessages.SomethingWentWrong;
+            apiResponse.status = Status.Error;
+            response.status(401);
+            return response.json(apiResponse);
+        }
+
         try {
             const token = tokenProviderService.generateAccessToken(user);
+            const refreshToken = await tokenProviderService.generateRefreshToken(admin);
             apiResponse.result = {
-                accessToken: token
+                accessToken: token,
+                refreshToken
             };
 
             return response.json(apiResponse);

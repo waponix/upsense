@@ -51,7 +51,7 @@ export default class ManagerServices
 
         if (manager === undefined) {
             apiResponse.status = Status.NotFound;
-            apiResponse.message = CommonMessages.NotFound('User');
+            apiResponse.message = CommonMessages.NotFound('Manager');
             statusCode = 404;
         } else {
             apiResponse.result = manager;
@@ -90,7 +90,7 @@ export default class ManagerServices
                     apiResponse.result = manager;
                 } catch {
                     apiResponse.status = Status.Error;
-                    apiResponse.message = CommonMessages.UnableToSave('User');
+                    apiResponse.message = CommonMessages.UnableToSave('Manager');
                     await this.managerRepository.queryRunner.rollbackTransaction();
                     statusCode = 500;
                 } finally {
@@ -126,7 +126,7 @@ export default class ManagerServices
 
         if (manager === undefined) {
             apiResponse.status = Status.NotFound;
-            apiResponse.message = CommonMessages.NotFound('User');
+            apiResponse.message = CommonMessages.NotFound('Manager');
             statusCode = 404;
 
             return new ReturnableResponse(statusCode, apiResponse);
@@ -151,7 +151,7 @@ export default class ManagerServices
                 } catch {
                     await this.managerRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;
-                    apiResponse.message = CommonMessages.UnableToUpdate('User');
+                    apiResponse.message = CommonMessages.UnableToUpdate('Manager');
                     statusCode = 500;
                 } finally {
                     await this.managerRepository.queryRunner.release();
@@ -180,13 +180,17 @@ export default class ManagerServices
 
         const {id}: any = request.params;
 
+        await this.managerRepository.init();
+
         // get the manager to be deleted
         let manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(id));
 
         if (manager === undefined) {
             apiResponse.status = Status.NotFound;
-            apiResponse.message = CommonMessages.NotFound('User');
+            apiResponse.message = CommonMessages.NotFound('Manager');
             statusCode = 404;
+
+            return new ReturnableResponse(statusCode, apiResponse);
         }
 
         await this.managerRepository.init();
@@ -199,7 +203,7 @@ export default class ManagerServices
         } catch {
             await this.managerRepository.queryRunner.rollbackTransaction();
             apiResponse.status = Status.Error;
-            apiResponse.message = CommonMessages.UnableToDelete('User');
+            apiResponse.message = CommonMessages.UnableToDelete('Manager');
             statusCode = 500;
         } finally {
             await this.managerRepository.queryRunner.release();

@@ -81,15 +81,15 @@ export class AdminRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number): Promise<Admin | undefined> {
-        return await this.repository.findOne({where: { id }});
+        return await this.repository.findOne({where: { id, role: UserRole.admin }});
     }
 
     async findOneByUsername (username: string): Promise<Admin | undefined> {
-        return await this.repository.findOne({where: { username }});
+        return await this.repository.findOne({where: { username, role: UserRole.admin }});
     }
 
     async findOneByEmail (email: string): Promise<Admin | undefined> {
-        return await this.repository.findOne({where: { email }});
+        return await this.repository.findOne({where: { email, role: UserRole.admin }});
     }
 
     /**
