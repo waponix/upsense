@@ -6,11 +6,14 @@ import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {managerCreateValidation, managerUpdateValidation} from "../validators/ManagerValidator";
 import {CommonMessages} from "../../../messages/messages";
+import {CompanyRepository} from "../repositories/CompanyRepository";
+import {Company} from "../../shared/entities/Company";
 
 export default class ManagerServices
 {
     private user: any;
     private managerRepository: ManagerRepository;
+    private companyRepository: CompanyRepository;
 
     /**
      *
@@ -19,6 +22,7 @@ export default class ManagerServices
     constructor(user: any) {
         this.user = user;
         this.managerRepository = new ManagerRepository(Manager);
+        this.companyRepository = new CompanyRepository(Company);
     }
 
     /**
@@ -30,7 +34,10 @@ export default class ManagerServices
         const {query} = request.body;
 
         await this.managerRepository.init();
-        apiResponse.result = await this.managerRepository.getList(query);
+        let result: any[] = await this.managerRepository.getList(query);
+        result = result.map((record: Manager) => record.serialize());
+
+        apiResponse.result = result;
 
         await this.managerRepository.queryRunner.release();
 
@@ -54,7 +61,7 @@ export default class ManagerServices
             apiResponse.message = CommonMessages.NotFound('Manager');
             statusCode = 404;
         } else {
-            apiResponse.result = manager;
+            apiResponse.result = manager.serialize();
         }
 
         await this.managerRepository.queryRunner.release();
@@ -80,14 +87,18 @@ export default class ManagerServices
                 // success callback
                 await this.managerRepository.queryRunner.startTransaction();
 
+                if (data.company) {
+                    // query for company if user passes value
+                    await this.companyRepository.init();
+                    data.company = await this.companyRepository.findOneById(data.company);
+                    await this.companyRepository.queryRunner.release();
+                }
+
                 try {
                     const manager: Manager = await this.managerRepository.create(data);
                     await this.managerRepository.queryRunner.commitTransaction();
-                    // @ts-ignore
-                    delete manager.password;
-                    // @ts-ignore
-                    delete manager.salt;
-                    apiResponse.result = manager;
+
+                    apiResponse.result = manager.serialize();
                 } catch {
                     apiResponse.status = Status.Error;
                     apiResponse.message = CommonMessages.UnableToSave('Manager');
@@ -143,11 +154,8 @@ export default class ManagerServices
                     // @ts-ignore
                     await this.managerRepository.update(manager, data);
                     await this.managerRepository.queryRunner.commitTransaction();
-                    // @ts-ignore
-                    delete manager.password;
-                    // @ts-ignore
-                    delete manager.salt;
-                    apiResponse.result = manager;
+
+                    apiResponse.result = manager?.serialize();
                 } catch {
                     await this.managerRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;

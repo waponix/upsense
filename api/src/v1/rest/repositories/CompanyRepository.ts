@@ -1,6 +1,7 @@
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {Company} from "../../shared/entities/Company";
 import {paginationConfig} from "../../../config";
+import {User, User as Manager} from "../../shared/entities/User";
 
 export class CompanyRepository extends BaseRepository
 {
@@ -13,23 +14,27 @@ export class CompanyRepository extends BaseRepository
      *
      * @param options
      */
-    async getList (options: QueryOptions = {}): Promise<Company[]> {
+    async getList(options: QueryOptions = {}): Promise<Company[]> {
         let parameters: any = {};
         let whereStatements: any = [];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
         const query = await this
-            .createQueryBuilder('company')
-            .select('company.id')
-            .addSelect('company.name')
+            .createQueryBuilder('c')
+            .select([
+                'c.id',
+                'c.name',
+                'c.updatedAt',
+                'c.createdAt'
+            ])
             .offset(offset)
             .limit(paginationConfig.limit);
 
         // create filters if provided
         if (options.filters !== undefined) {
             for (const [field, value] of Object.entries(options.filters)) {
-                whereStatements.push(`company.${field} = :${field}`);
+                whereStatements.push(`c.${field} = :${field}`);
                 parameters[field] = value;
             }
         }
@@ -37,7 +42,7 @@ export class CompanyRepository extends BaseRepository
         // add sort and
         if (options.sort !== undefined) {
             for (const [field, value] of Object.entries(options.sort)) {
-                query.addOrderBy(`company.${field}`, value)
+                query.addOrderBy(`c.${field}`, value)
             }
         }
 
@@ -47,7 +52,7 @@ export class CompanyRepository extends BaseRepository
             let searchStatement = [];
 
             for (const field of this.searchableFields) {
-                searchStatement.push(`company.${field} LIKE :find`);
+                searchStatement.push(`c.${field} LIKE :find`);
             }
 
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
@@ -66,9 +71,39 @@ export class CompanyRepository extends BaseRepository
      *
      * @param id
      */
-    async findOneById (id: number): Promise<Company | undefined>
+    async findOneById(id: number): Promise<Company | undefined>
     {
         return await this.em.getRepository(Company).findOne({where: { id }});
+    }
+
+    /**
+     *
+     * @param user
+     */
+    async findOneByUser(user: User): Promise<Company | undefined>
+    {
+        return this.createQueryBuilder('c')
+            .leftJoin('c.users', 'u')
+            .where('u.id = :userId')
+            .andWhere('u.role = :role')
+            .setParameters({
+                userId: user.id,
+                role: user.role
+            })
+            .getOne();
+    }
+
+    async findOneByManager(manager: Manager): Promise<Company | undefined>
+    {
+        return this.createQueryBuilder('c')
+            .leftJoin('c.users', 'm')
+            .where('m.id = :managerId')
+            .andWhere('m.role = :role')
+            .setParameters({
+                managerId: manager.id,
+                role: manager.role
+            })
+            .getOne();
     }
 
     /**

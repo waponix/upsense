@@ -3,7 +3,7 @@ import {getRepository, Repository} from 'typeorm';
 import { User } from '../../shared/entities/User';
 import { Token } from '../objects/Token';
 import { RefreshToken } from '../../shared/entities/RefreshToken';
-import {TokenProviderService} from "../../shared/services/TokenProviderService";
+import {TokenProviderServices} from "../../shared/services/TokenProviderServices";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {AuthResponse} from "../response/AuthResponse";
 
@@ -12,13 +12,13 @@ export class AuthResolver
 {
     adminRepo: Repository<User>;
     tokenRepo: Repository<RefreshToken>;
-    tokenService: TokenProviderService;
+    tokenService: TokenProviderServices;
 
     constructor() {
         // dependency injection
         this.tokenRepo = getRepository(RefreshToken);
         this.adminRepo = getRepository(User);
-        this.tokenService = new TokenProviderService();
+        this.tokenService = new TokenProviderServices();
     }
 
     @Query(() => String)

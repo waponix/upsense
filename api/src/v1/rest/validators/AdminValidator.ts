@@ -3,6 +3,38 @@ import {getRepository} from 'typeorm';
 import ValidationRules from "../objects/ValidationRules";
 const Validator = require('validatorjs');
 
+const rules = new ValidationRules({
+    username: ['string', 'max:50', 'username_available'],
+    password: ['required', 'string', 'max:100'],
+    firstName: ['required', 'string', 'max:50'],
+    lastName: ['string', 'max:50'],
+    email: ['required', 'email', 'email_available'],
+    mobileNumber: ['max:20'],
+    picture: ['string', 'url', 'max:255']
+});
+
+export const adminCreateValidation = (data: any) => {
+    if (!data.username) {
+        rules.fields.removeRuleFromUsernameField('username_available')
+    }
+    return new Validator(data, rules.fields);
+};
+
+export const adminUpdateValidation = (data: any, admin: Admin) => {
+    rules.removeField('username');
+    rules.fields
+        .removeRuleFromPasswordField('required')
+        .removeRuleFromFirstNameField('required')
+        .removeRuleFromEmailField('required');
+
+    if (data.email && data.email === admin.email) {
+        // only validate email if it is not the same with old email
+        rules.fields.removeRuleFromEmailField('email_available');
+    }
+
+    return new Validator(data, rules.fields);
+};
+
 Validator.registerAsync('username_available', async (username: string, attribute: any, req: any, passes: any) => {
     const adminRepository = getRepository(Admin);
     const admin: Admin | undefined = await adminRepository.findOne({where: {username}});
@@ -24,32 +56,3 @@ Validator.registerAsync('email_available', async (email: string, attribute: any,
         passes(false, 'Email is already in use');
     }
 });
-
-const rules = new ValidationRules({
-    username: ['required', 'string', 'max:50', 'username_available'],
-    password: ['required', 'string', 'max:100'],
-    firstName: ['required', 'string', 'max:50'],
-    lastName: ['string', 'max:50'],
-    email: ['required', 'email', 'email_available'],
-    mobileNumber: ['max:20'],
-    picture: ['string', 'url', 'max:255']
-});
-
-export const adminCreateValidation = (data: any) => {
-    return new Validator(data, rules.fields);
-};
-
-export const adminUpdateValidation = (data: any, admin: Admin) => {
-    rules.removeField('username');
-    rules.fields
-        .removeRuleFromPasswordField('required')
-        .removeRuleFromFirstNameField('required')
-        .removeRuleFromEmailField('required');
-
-    if (data.email && data.email === admin.email) {
-        // only validate email if it is not the same with old email
-        rules.fields.removeRuleFromEmailField('email_available');
-    }
-
-    return new Validator(data, rules.fields);
-};

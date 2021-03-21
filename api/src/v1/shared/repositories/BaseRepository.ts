@@ -14,13 +14,6 @@ export interface QueryOptions {
     find?: string,
 }
 
-interface BaseEntityOptions
-{
-    connection: Connection;
-    queryRunner: QueryRunner;
-
-}
-
 export abstract class BaseRepository {
     protected connection!: Connection;
     public queryRunner!: QueryRunner;
@@ -32,11 +25,6 @@ export abstract class BaseRepository {
     constructor(entity: any)
     {
         this.entity = entity;
-    }
-
-    static async initialize()
-    {
-
     }
 
     /**

@@ -1,12 +1,7 @@
 import {Request, Response} from 'express';
 import Controller from '../../../components/Controller';
-import {TokenProviderService} from "../../shared/services/TokenProviderService";
-import {User} from "../../shared/entities/User";
-import {getRepository, Repository} from "typeorm";
-import {ApiResponse} from "../objects/ApiResponse";
-import {Status} from "../../../components/types/ResponseStatusTypes";
-import {RefreshToken} from "../../shared/entities/RefreshToken";
-import {CommonMessages} from "../../../messages/messages";
+import AuthServices from "../services/AuthServices";
+import {ReturnableResponse} from "../objects/ReturnableResponse";
 
 /**
  * The auth controller
@@ -18,78 +13,31 @@ export default class AuthController extends Controller
 {
     async requestAuthTokenAction(request: Request, response: Response)
     {
-        let apiResponse = new ApiResponse();
-        const tokenProviderService = new TokenProviderService();
+        const authServices: AuthServices = new AuthServices((<any>request).user);
+        const data: ReturnableResponse = await authServices.login();
 
-        const {user} = (<any>request);
-
-        const adminRepo: Repository<User> = getRepository(User);
-        let admin: User | undefined = await adminRepo.findOne({ where: {id: user.id}, relations: ['refreshToken'] });
-
-        if (admin === undefined) {
-            apiResponse.message = CommonMessages.SomethingWentWrong;
-            apiResponse.status = Status.Error;
-            response.status(401);
-            return response.json(apiResponse);
-        }
-
-        const accessToken = tokenProviderService.generateAccessToken(admin);
-        const refreshToken = await tokenProviderService.generateRefreshToken(admin);
-
-        apiResponse.result = {
-            accessToken,
-            refreshToken
-        };
-
-        // send the generated token to the client
         return response
-            .status(200)
-            .json(apiResponse);
+            .status(data.statusCode)
+            .json(data.body);
     }
 
     async refreshAuthTokenAction(request: Request, response: Response)
     {
-        let apiResponse = new ApiResponse();
+        const authServices: AuthServices = new AuthServices((<any>request).user);
+        const data: ReturnableResponse = await authServices.refreshToken();
 
-        const {user} = (<any>request);
-        const tokenProviderService = new TokenProviderService();
-
-        const adminRepo: Repository<User> = getRepository(User);
-        let admin: User | undefined = await adminRepo.findOne({ where: {id: user.id}, relations: ['refreshToken'] });
-
-        if (admin === undefined) {
-            apiResponse.message = CommonMessages.SomethingWentWrong;
-            apiResponse.status = Status.Error;
-            response.status(401);
-            return response.json(apiResponse);
-        }
-
-        try {
-            const token = tokenProviderService.generateAccessToken(user);
-            const refreshToken = await tokenProviderService.generateRefreshToken(admin);
-            apiResponse.result = {
-                accessToken: token,
-                refreshToken
-            };
-
-            return response.json(apiResponse);
-        } catch {
-            apiResponse.status = Status.Error;
-            apiResponse.message = CommonMessages.SomethingWentWrong;
-        }
+        return response
+            .status(data.statusCode)
+            .json(data.body);
     }
 
     async invalidateAuthTokenAction(request: Request, response: Response)
     {
-        let apiResponse = new ApiResponse();
-        const tokenRepo: Repository<RefreshToken> = getRepository(RefreshToken);
-        const {auth} = request.body || {auth: null};
+        const authServices: AuthServices = new AuthServices((<any>request).user);
+        const data: ReturnableResponse = await authServices.logout();
 
-        const refreshToken: RefreshToken | undefined = await tokenRepo.findOne({token: auth});
-
-        if (refreshToken) {
-            await tokenRepo.remove(refreshToken);
-        }
-        return response.json(apiResponse);
+        return response
+            .status(data.statusCode)
+            .json(data.body);
     }
 }

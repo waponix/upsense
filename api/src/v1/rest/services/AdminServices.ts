@@ -6,7 +6,6 @@ import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {adminCreateValidation, adminUpdateValidation} from "../validators/AdminValidator";
 import {CommonMessages} from "../../../messages/messages";
-import {UserRole} from "../../../components/types/UserRoleTypes";
 
 export default class AdminServices
 {
@@ -17,7 +16,8 @@ export default class AdminServices
      *
      * @param user
      */
-    constructor(user: any) {
+    constructor(user: any)
+    {
         this.user = user;
         this.adminRepository = new AdminRepository(Admin);
     }
@@ -26,12 +26,16 @@ export default class AdminServices
      *
      * @param request
      */
-    async getList(request: Request): Promise<ReturnableResponse> {
+    async getList(request: Request): Promise<ReturnableResponse>
+    {
         let apiResponse: ApiResponse = new ApiResponse();
         const {query} = request.body;
 
         await this.adminRepository.init();
-        apiResponse.result = await this.adminRepository.getList(query);
+        let result: any[] = await this.adminRepository.getList(query);
+        result = result.map((record: Admin) => record.serialize());
+
+        apiResponse.result = result;
 
         await this.adminRepository.queryRunner.release();
 
@@ -42,7 +46,8 @@ export default class AdminServices
      *
      * @param request
      */
-    async getOne(request: Request): Promise<ReturnableResponse> {
+    async getOne(request: Request): Promise<ReturnableResponse>
+    {
         await this.adminRepository.init();
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode = 200;
@@ -55,7 +60,7 @@ export default class AdminServices
             apiResponse.message = CommonMessages.NotFound('Admin');
             statusCode = 404;
         } else {
-            apiResponse.result = admin;
+            apiResponse.result = admin.serialize();
         }
 
         await this.adminRepository.queryRunner.release();
@@ -67,7 +72,8 @@ export default class AdminServices
      *
      * @param request
      */
-    async create(request: Request): Promise<ReturnableResponse> {
+    async create(request: Request): Promise<ReturnableResponse>
+    {
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
         const {data} = request.body;
@@ -79,17 +85,14 @@ export default class AdminServices
             validation.checkAsync(async () => {
                 // success callback
                 await this.adminRepository.init();
-
                 await this.adminRepository.queryRunner.startTransaction();
+
 
                 try {
                     const admin: Admin = await this.adminRepository.create(data);
                     await this.adminRepository.queryRunner.commitTransaction();
-                    // @ts-ignore
-                    delete admin.password;
-                    // @ts-ignore
-                    delete admin.salt;
-                    apiResponse.result = admin;
+
+                    apiResponse.result = admin.serialize();
                 } catch {
                     apiResponse.status = Status.Error;
                     apiResponse.message = CommonMessages.UnableToSave('Admin');
@@ -116,7 +119,8 @@ export default class AdminServices
      *
      * @param request
      */
-    async update(request: Request): Promise<ReturnableResponse> {
+    async update(request: Request): Promise<ReturnableResponse>
+    {
         const {data} = request.body;
         const {id} = request.params;
 
@@ -145,11 +149,8 @@ export default class AdminServices
                     // @ts-ignore
                     await this.adminRepository.update(admin, data);
                     await this.adminRepository.queryRunner.commitTransaction();
-                    // @ts-ignore
-                    delete admin.password;
-                    // @ts-ignore
-                    delete admin.salt;
-                    apiResponse.result = admin;
+
+                    apiResponse.result = admin?.serialize();
                 } catch {
                     await this.adminRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;
@@ -176,7 +177,8 @@ export default class AdminServices
      *
      * @param request
      */
-    async delete(request: Request): Promise<ReturnableResponse> {
+    async delete(request: Request): Promise<ReturnableResponse>
+    {
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
 

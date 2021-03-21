@@ -3,6 +3,7 @@ import Controller from '../../../components/Controller';
 //@ts-ignore
 import UserServices from "../services/UserServices";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
+import CompanyServices from "../services/CompanyServices";
 
 /**
  * The user controller
@@ -20,7 +21,7 @@ export default class UserController extends Controller
      */
     async getUsersAction(request: Request, response: Response)
     {
-        const userServices = new UserServices((<any>request).user);
+        const userServices: UserServices = new UserServices((<any>request).user);
         const data: ReturnableResponse = await userServices.getList(request);
 
         return response
@@ -36,7 +37,7 @@ export default class UserController extends Controller
      */
     async getUserAction(request: Request, response: Response)
     {
-        const userServices = new UserServices((<any>request).user);
+        const userServices: UserServices = new UserServices((<any>request).user);
         const data: ReturnableResponse = await userServices.getOne(request);
 
         return response
@@ -52,7 +53,7 @@ export default class UserController extends Controller
      */
     async postUserAction(request: Request, response: Response)
     {
-        const userServices = new UserServices((<any>request).user);
+        const userServices: UserServices = new UserServices((<any>request).user);
         const data: ReturnableResponse = await userServices.create(request);
 
         return response
@@ -68,7 +69,7 @@ export default class UserController extends Controller
      */
     async putUserAction(request: Request, response: Response)
     {
-        const userServices = new UserServices((<any>request).user);
+        const userServices: UserServices = new UserServices((<any>request).user);
         const data: ReturnableResponse = await userServices.update(request);
 
         return response
@@ -84,8 +85,18 @@ export default class UserController extends Controller
      */
     async deleteUserAction(request: Request, response: Response)
     {
-        const userServices = new UserServices((<any>request).user);
+        const userServices: UserServices = new UserServices((<any>request).user);
         const data: ReturnableResponse = await userServices.delete(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
+    async getCompanyAction(request: Request, response: Response)
+    {
+        const companyServices: CompanyServices = new CompanyServices((<any>request).user);
+        const data: ReturnableResponse = await companyServices.getOneByUser(request);
 
         return response
             .status(data.statusCode)

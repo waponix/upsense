@@ -1,4 +1,4 @@
-import {User} from '../../shared/entities/User';
+import {User as Manager, User} from '../../shared/entities/User';
 import {UserRepository} from "../repositories/UserRepository";
 import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
@@ -6,11 +6,14 @@ import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {userCreateValidation, userUpdateValidation} from "../validators/UserValidator";
 import {CommonMessages} from "../../../messages/messages";
+import {CompanyRepository} from "../repositories/CompanyRepository";
+import {Company} from "../../shared/entities/Company";
 
 export default class UserServices
 {
     private user: any;
     private userRepository: UserRepository;
+    private companyRepository: CompanyRepository;
 
     /**
      *
@@ -19,6 +22,7 @@ export default class UserServices
     constructor(user: any) {
         this.user = user;
         this.userRepository = new UserRepository(User);
+        this.companyRepository = new CompanyRepository(Company);
     }
 
     /**
@@ -30,7 +34,10 @@ export default class UserServices
         const {query} = request.body;
 
         await this.userRepository.init();
-        apiResponse.result = await this.userRepository.getList(query);
+        let result: any[] = await this.userRepository.getList(query);
+        result = result.map((record: User) => record.serialize());
+
+        apiResponse.result = result;
 
         await this.userRepository.queryRunner.release();
 
@@ -54,7 +61,7 @@ export default class UserServices
             apiResponse.message = CommonMessages.NotFound('User');
             statusCode = 404;
         } else {
-            apiResponse.result = user;
+            apiResponse.result = user.serialize();
         }
 
         await this.userRepository.queryRunner.release();
@@ -81,14 +88,18 @@ export default class UserServices
 
                 await this.userRepository.queryRunner.startTransaction();
 
+                if (data.company) {
+                    // query for company if user passes value
+                    await this.companyRepository.init();
+                    data.company = await this.companyRepository.findOneById(data.company);
+                    await this.companyRepository.queryRunner.release();
+                }
+
                 try {
                     const user: User = await this.userRepository.create(data);
                     await this.userRepository.queryRunner.commitTransaction();
-                    // @ts-ignore
-                    delete user.password;
-                    // @ts-ignore
-                    delete user.salt;
-                    apiResponse.result = user;
+
+                    apiResponse.result = user.serialize();
                 } catch {
                     apiResponse.status = Status.Error;
                     apiResponse.message = CommonMessages.UnableToSave('User');
@@ -144,11 +155,7 @@ export default class UserServices
                     // @ts-ignore
                     await this.userRepository.update(user, data);
                     await this.userRepository.queryRunner.commitTransaction();
-                    // @ts-ignore
-                    delete user.password;
-                    // @ts-ignore
-                    delete user.salt;
-                    apiResponse.result = user;
+                    apiResponse.result = user?.serialize();
                 } catch {
                     await this.userRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;

@@ -23,29 +23,31 @@ export class ManagerRepository extends BaseRepository
             role: UserRole.manager
         };
         let whereStatements = [
-            'manager.role = :role'
+            'm.role = :role'
         ];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
         const query = await this
-            .createQueryBuilder('manager')
-            .select('manager.id')
-            .addSelect('manager.username')
-            .addSelect('manager.firstName')
-            .addSelect('manager.lastName')
-            .addSelect('manager.email')
-            .addSelect('manager.mobile')
-            .addSelect('manager.image')
-            .addSelect('manager.createdAt')
-            .addSelect('manager.updatedAt')
+            .createQueryBuilder('m')
+            .select([
+                'm.id',
+                'm.username',
+                'm.firstName',
+                'm.lastName',
+                'm.email',
+                'm.mobile',
+                'm.image',
+                'm.createdAt',
+                'm.updatedAt'
+            ])
             .offset(offset)
             .limit(paginationConfig.limit);
 
         // create filters if provided
         if (options.filters !== undefined) {
             for (const [field, value] of Object.entries(options.filters)) {
-                whereStatements.push(`manager.${field} = :${field}`);
+                whereStatements.push(`m.${field} = :${field}`);
                 parameters[field] = value;
             }
         }
@@ -53,7 +55,7 @@ export class ManagerRepository extends BaseRepository
         // add sort and
         if (options.sort !== undefined) {
             for (const [field, value] of Object.entries(options.sort)) {
-                query.addOrderBy(`manager.${field}`, value)
+                query.addOrderBy(`m.${field}`, value)
             }
         }
 
@@ -63,7 +65,7 @@ export class ManagerRepository extends BaseRepository
             let searchStatement = [];
 
             for (const field of this.searchFields) {
-                searchStatement.push(`manager.${field} LIKE :find`);
+                searchStatement.push(`m.${field} LIKE :find`);
             }
 
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
@@ -107,6 +109,7 @@ export class ManagerRepository extends BaseRepository
         manager.mobile = data.mobile;
         manager.image = data.image;
         manager.role = UserRole.manager;
+        manager.company = data.company;
         await repository.save(manager);
         return manager;
     }

@@ -15,37 +15,39 @@ export class UserRepository extends BaseRepository
     ];
 
     /**
-     * Get manager list
+     * Get user list
      * @param options
      */
     async getList (options: QueryOptions = {}): Promise<User[]> {
         let parameters: any = {
-            role: UserRole.manager
+            role: UserRole.user
         };
         let whereStatements = [
-            'manager.role = :role'
+            'u.role = :role'
         ];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
         const query = await this
-            .createQueryBuilder('manager')
-            .select('manager.id')
-            .addSelect('manager.username')
-            .addSelect('manager.firstName')
-            .addSelect('manager.lastName')
-            .addSelect('manager.email')
-            .addSelect('manager.mobile')
-            .addSelect('manager.image')
-            .addSelect('manager.createdAt')
-            .addSelect('manager.updatedAt')
+            .createQueryBuilder('u')
+            .select([
+                'u.id',
+                'u.username',
+                'u.firstName',
+                'u.lastName',
+                'u.email',
+                'u.mobile',
+                'u.image',
+                'u.createdAt',
+                'u.updatedAt'
+            ])
             .offset(offset)
             .limit(paginationConfig.limit);
 
         // create filters if provided
         if (options.filters !== undefined) {
             for (const [field, value] of Object.entries(options.filters)) {
-                whereStatements.push(`user.${field} = :${field}`);
+                whereStatements.push(`u.${field} = :${field}`);
                 parameters[field] = value;
             }
         }
@@ -53,7 +55,7 @@ export class UserRepository extends BaseRepository
         // add sort and
         if (options.sort !== undefined) {
             for (const [field, value] of Object.entries(options.sort)) {
-                query.addOrderBy(`user.${field}`, value)
+                query.addOrderBy(`u.${field}`, value)
             }
         }
 
@@ -63,7 +65,7 @@ export class UserRepository extends BaseRepository
             let searchStatement = [];
 
             for (const field of this.searchFields) {
-                searchStatement.push(`user.${field} LIKE :find`);
+                searchStatement.push(`u.${field} LIKE :find`);
             }
 
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
@@ -107,6 +109,7 @@ export class UserRepository extends BaseRepository
         user.mobile = data.mobile;
         user.image = data.image;
         user.role = UserRole.user;
+        user.company = data.company;
         await repository.save(user);
         return user;
     }

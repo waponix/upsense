@@ -3,6 +3,7 @@ import Controller from '../../../components/Controller';
 //@ts-ignore
 import ManagerServices from "../services/ManagerServices";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
+import CompanyServices from "../services/CompanyServices";
 
 /**
  * The manager controller
@@ -86,6 +87,16 @@ export default class ManagerController extends Controller
     {
         const managerServices = new ManagerServices((<any>request).user);
         const data: ReturnableResponse = await managerServices.delete(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
+    async getCompanyAction(request: Request, response: Response)
+    {
+        const companyServices: CompanyServices = new CompanyServices((<any>request).user);
+        const data: ReturnableResponse = await companyServices.getOneByManager(request);
 
         return response
             .status(data.statusCode)

@@ -26,4 +26,5 @@ export const CommonMessages = {
  */
 export const AuthMessages = {
     InvalidCredentials: `${OperationFailed}, invalid credentials`,
+    InsufficientPermission: `${OperationFailed}, insufficient permission`
 }

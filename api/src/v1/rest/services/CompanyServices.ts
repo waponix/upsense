@@ -6,15 +6,22 @@ import {Status} from "../../../components/types/ResponseStatusTypes";
 import {CommonMessages} from "../../../messages/messages";
 import {companyCreateValidation, companyUpdateValidation} from "../validators/CompanyValidator";
 import {CompanyRepository} from "../repositories/CompanyRepository";
+import {UserRepository} from "../repositories/UserRepository";
+import {User, User as Manager} from "../../shared/entities/User";
+import {ManagerRepository} from "../repositories/ManagerRepository";
 
 export default class companyServices
 {
     private user: any;
-    private companyRepository: any;
+    private companyRepository: CompanyRepository;
+    private userRepository: UserRepository;
+    private managerRepository: ManagerRepository;
 
     constructor(user: any) {
         this.user = user;
         this.companyRepository = new CompanyRepository(Company);
+        this.userRepository = new UserRepository(User);
+        this.managerRepository = new ManagerRepository(Manager)
     }
 
     /**
@@ -25,14 +32,22 @@ export default class companyServices
     {
         let apiResponse: ApiResponse = new ApiResponse();
         const {query} = request.body;
+        await this.companyRepository.init();
 
-        apiResponse.result = await this.companyRepository.getList(query);
+        let result: any[] = await this.companyRepository.getList(query);
+        result = result.map((record: Company) => record.serialize());
+
+        apiResponse.result = result;
 
         await this.companyRepository.queryRunner.release();
 
         return new ReturnableResponse(200, apiResponse);
     }
 
+    /**
+     *
+     * @param request
+     */
     async getOne(request: Request): Promise<ReturnableResponse>
     {
         let statusCode: number = 200;
@@ -48,7 +63,85 @@ export default class companyServices
             apiResponse.message = CommonMessages.NotFound('Company');
             statusCode = 404;
         } else {
-            apiResponse.result = company;
+            apiResponse.result = company.serialize();
+        }
+
+        await this.companyRepository.queryRunner.release();
+
+        return new ReturnableResponse(statusCode, apiResponse);
+    }
+
+    /**
+     *
+     * @param request
+     */
+    async getOneByUser(request: Request): Promise<ReturnableResponse>
+    {
+        let statusCode: number = 200;
+        let apiResponse: ApiResponse = new ApiResponse();
+
+        const {userId} = request.params;
+
+        await this.userRepository.init();
+        const user: User | undefined = await this.userRepository.findOneById(parseInt(userId));
+        await this.userRepository.queryRunner.release();
+
+        if (user === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('User');
+            statusCode = 404;
+
+            return new ReturnableResponse(statusCode, apiResponse);
+        }
+
+        await this.companyRepository.init();
+        const company: Company | undefined = await this.companyRepository.findOneByUser(user);
+
+        if (company === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Company');
+            statusCode = 404;
+        } else {
+            apiResponse.result = company.serialize();
+        }
+
+        await this.companyRepository.queryRunner.release();
+
+        return new ReturnableResponse(statusCode, apiResponse);
+    }
+
+    /**
+     *
+     * @param request
+     */
+    async getOneByManager(request: Request): Promise<ReturnableResponse>
+    {
+        let statusCode: number = 200;
+        let apiResponse: ApiResponse = new ApiResponse();
+
+        const {userId} = request.params;
+
+        await this.managerRepository.init();
+        const manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(userId));
+        await this.managerRepository.queryRunner.release();
+
+        if (manager === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Manager');
+            statusCode = 404;
+
+            return new ReturnableResponse(statusCode, apiResponse);
+        }
+
+        await this.companyRepository.init();
+        const company: Company | undefined = await this.companyRepository.findOneByManager(manager);
+
+        if (company === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Company');
+            statusCode = 404;
+        } else {
+            apiResponse.result = company.serialize();
         }
 
         await this.companyRepository.queryRunner.release();
@@ -76,9 +169,7 @@ export default class companyServices
                 try {
                     const company = await this.companyRepository.create(data);
                     await this.companyRepository.queryRunner.commitTransaction();
-                    //@ts-ignore
-                    delete company.branch;
-                    apiResponse.result = company;
+                    apiResponse.result = company.serialize();
                 } catch (e) {
                     await this.companyRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;
@@ -105,7 +196,7 @@ export default class companyServices
      *
      * @param request
      */
-    async update (request: Request): Promise<ReturnableResponse>
+    async update(request: Request): Promise<ReturnableResponse>
     {
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
@@ -113,7 +204,7 @@ export default class companyServices
         const {data} = request.body;
 
         await this.companyRepository.init();
-        let company: Company | undefined = this.companyRepository.findOneById(parseInt(id));
+        let company: Company | undefined = await this.companyRepository.findOneById(parseInt(id));
 
         if (company === undefined) {
             apiResponse.status = Status.NotFound;
@@ -129,6 +220,7 @@ export default class companyServices
             validation.checkAsync(async () => {
                 await this.companyRepository.queryRunner.startTransaction();
                 try {
+                    //@ts-ignore
                     await this.companyRepository.update(company, data);
                     await this.companyRepository.queryRunner.commitTransaction();
                 } catch {
@@ -170,9 +262,11 @@ export default class companyServices
             apiResponse.status = Status.NotFound;
             apiResponse.message = CommonMessages.NotFound('Company');
             statusCode = 404;
+
+            return new ReturnableResponse(statusCode, apiResponse);
         }
 
-        await this.companyRepository.queryRunner().startTransaction();
+        await this.companyRepository.queryRunner.startTransaction();
         try {
             await this.companyRepository.delete(company);
         } catch {

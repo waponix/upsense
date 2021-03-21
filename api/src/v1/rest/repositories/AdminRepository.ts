@@ -23,29 +23,31 @@ export class AdminRepository extends BaseRepository
             role: UserRole.admin
         };
         let whereStatements = [
-            'admin.role = :role'
+            'a.role = :role'
         ];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
         const query = await this
-            .createQueryBuilder('admin')
-            .select('admin.id')
-            .addSelect('admin.username')
-            .addSelect('admin.firstName')
-            .addSelect('admin.lastName')
-            .addSelect('admin.email')
-            .addSelect('admin.mobile')
-            .addSelect('admin.image')
-            .addSelect('admin.createdAt')
-            .addSelect('admin.updatedAt')
+            .createQueryBuilder('a')
+            .select([
+                'a.id',
+                'a.username',
+                'a.firstName',
+                'a.lastName',
+                'a.email',
+                'a.mobile',
+                'a.image',
+                'a.createdAt',
+                'a.updatedAt'
+            ])
             .offset(offset)
             .limit(paginationConfig.limit);
 
         // create filters if provided
         if (options.filters !== undefined) {
             for (const [field, value] of Object.entries(options.filters)) {
-                whereStatements.push(`admin.${field} = :${field}`);
+                whereStatements.push(`a.${field} = :${field}`);
                 parameters[field] = value;
             }
         }
@@ -53,7 +55,7 @@ export class AdminRepository extends BaseRepository
         // add sort and
         if (options.sort !== undefined) {
             for (const [field, value] of Object.entries(options.sort)) {
-                query.addOrderBy(`admin.${field}`, value)
+                query.addOrderBy(`a.${field}`, value)
             }
         }
 
@@ -63,7 +65,7 @@ export class AdminRepository extends BaseRepository
             let searchStatement = [];
 
             for (const field of this.searchableFields) {
-                searchStatement.push(`admin.${field} LIKE :find`);
+                searchStatement.push(`a.${field} LIKE :find`);
             }
 
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
