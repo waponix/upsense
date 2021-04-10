@@ -71,6 +71,23 @@ export class AdminRepository extends BaseRepository
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
         }
 
+        do {
+            if (options.relation === undefined) {
+                break;
+            }
+
+            if (options.relation.indexOf('company') > -1) {
+                query
+                    .leftJoinAndSelect('a.company', 'c');
+            }
+
+            if (options.relation.indexOf('zone') > -1) {
+                query.leftJoinAndSelect('a.zones', 'z');
+            }
+
+            break;
+        } while (true);
+
         query
             .where(whereStatements.join(' AND '))
             .setParameters(parameters);
