@@ -58,6 +58,18 @@ export class CompanyRepository extends BaseRepository
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
         }
 
+        do {
+            if (options.relation === undefined) {
+                break;
+            }
+
+            if (options.relation.indexOf('zone') > -1) {
+                query.leftJoinAndSelect('c.zones', 'z');
+            }
+
+            break;
+        } while (true);
+
         if (whereStatements.length > 0) {
             query
                 .where(whereStatements.join(' AND '))
@@ -102,6 +114,19 @@ export class CompanyRepository extends BaseRepository
             .setParameters({
                 managerId: manager.id,
                 role: manager.role
+            })
+            .getOne();
+    }
+
+    async findIfCompanyBelongsToUser(companyId: number, userId: number): Promise<Company | undefined>
+    {
+        return this.createQueryBuilder('c')
+            .leftJoin('c.users', 'u')
+            .where('c.id = :companyId')
+            .andWhere('u.id = :userId')
+            .setParameters({
+                companyId,
+                userId
             })
             .getOne();
     }

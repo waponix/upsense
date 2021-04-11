@@ -9,6 +9,7 @@ import {CompanyRepository} from "../repositories/CompanyRepository";
 import {UserRepository} from "../repositories/UserRepository";
 import {User, User as Manager} from "../../shared/entities/User";
 import {ManagerRepository} from "../repositories/ManagerRepository";
+import {UserRole} from "../../../components/types/UserRoleTypes";
 
 export default class companyServices
 {
@@ -279,5 +280,29 @@ export default class companyServices
         }
 
         return new ReturnableResponse(statusCode, apiResponse);
+    }
+
+    async validateCompany(request: Request, response: ReturnableResponse | null = null): Promise<boolean> {
+        if (this.user.role === UserRole.admin) {
+            // no need to check if user has admin role
+            return true;
+        }
+
+        const companyId: number = parseInt(request.params.companyId);
+        let apiResponse: ApiResponse = new ApiResponse();
+
+        await this.companyRepository.init();
+        const company: Company | undefined = await this.companyRepository.findIfCompanyBelongsToUser(companyId, this.user.id);
+        await this.companyRepository.queryRunner.release();
+
+        if (company === undefined) {
+            apiResponse.status = Status.Unauthorized;
+            apiResponse.message = CommonMessages.NotFound('Company');
+            response = new ReturnableResponse(404, apiResponse);
+
+            return false;
+        }
+
+        return true;
     }
 }

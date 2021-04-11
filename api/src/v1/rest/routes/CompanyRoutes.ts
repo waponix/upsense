@@ -7,7 +7,7 @@ import {authorize} from "../../../components/security/Authorization";
 let routes = new Routes('/companies', Controller);
 
 routes.registerRoutes((router: Router, controller: Controller) => {
-    // register the routes here
+// register the routes here
     router
         // get company list
         .get('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getCompaniesAction)
@@ -18,7 +18,9 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // update company
         .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putCompanyAction)
         // delete company
-        .delete('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.deleteCompanyAction);
+        .delete('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.deleteCompanyAction)
+        // add company zone
+        .post('/:companyId/zones', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.postZoneAction);
 });
 
 module.exports = routes;

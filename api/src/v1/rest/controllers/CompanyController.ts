@@ -1,7 +1,9 @@
 import {Request, Response} from 'express';
 import Controller from '../../../components/Controller';
 import CompanyServices from '../services/CompanyServices';
+import ZoneServices from "../services/ZoneServices";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
+import {Zone} from "../../shared/entities/Zone";
 
 
 export default class CompanyController extends Controller
@@ -50,6 +52,16 @@ export default class CompanyController extends Controller
     {
         const companyServices: CompanyServices = new CompanyServices((<any>request).user);
         const data: ReturnableResponse = await companyServices.delete(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
+    async postZoneAction (request: Request, response: Response)
+    {
+        const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
+        const data: ReturnableResponse = await zoneServices.create(request);
 
         return response
             .status(data.statusCode)
