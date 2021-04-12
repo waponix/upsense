@@ -12,7 +12,7 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // get users list
         .get('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager']), controller.getUsersAction)
         // get one user
-        .get('/:id', passport.authenticate('jwt', {session: false, optional: false}, authorize(['admin', 'manager', 'user'])), controller.getUserAction)
+        .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager', 'user']), controller.getUserAction)
         // get user's company
         .get('/:userId/company', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager', 'user']), controller.getCompanyAction)
         // add user
