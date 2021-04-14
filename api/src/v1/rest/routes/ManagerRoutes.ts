@@ -14,13 +14,13 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // get one manager
         .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', "manager"]), controller.getManagerAction)
         // get manager's company
-        .get('/:managerId/company', passport.authenticate('jwt', {session: false, optional: false}), controller.getCompanyAction)
+        .get('/:managerId/company', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', "manager"]), controller.getCompanyAction)
         // add manager
-        .post('/', passport.authenticate('jwt', {session: false, optional: false}), controller.postManagerAction)
+        .post('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.postManagerAction)
         // update manager
-        .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), controller.putManagerAction)
+        .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager']), controller.putManagerAction)
         // delete manager
-        .delete('/:id', passport.authenticate('jwt', {session: false, optional: false}), controller.deleteManagerAction);
+        .delete('/:id', passport.authenticate('jwt', {session: false, optional: false}, authorize(['admin'])), controller.deleteManagerAction);
 });
 
 module.exports = routes;

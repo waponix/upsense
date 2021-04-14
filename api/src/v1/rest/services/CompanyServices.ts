@@ -3,7 +3,7 @@ import {Request} from "express";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {ApiResponse} from "../objects/ApiResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {CommonMessages} from "../../../messages/messages";
+import {CommonMessages, OperationNotAllowed} from "../../../messages/messages";
 import {companyCreateValidation, companyUpdateValidation} from "../validators/CompanyValidator";
 import {CompanyRepository} from "../repositories/CompanyRepository";
 import {UserRepository} from "../repositories/UserRepository";
@@ -120,10 +120,10 @@ export default class companyServices
         let statusCode: number = 200;
         let apiResponse: ApiResponse = new ApiResponse();
 
-        const {userId} = request.params;
+        const {managerId} = request.params;
 
         await this.managerRepository.init();
-        const manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(userId));
+        const manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(managerId));
         await this.managerRepository.queryRunner.release();
 
         if (manager === undefined) {
@@ -282,25 +282,36 @@ export default class companyServices
         return new ReturnableResponse(statusCode, apiResponse);
     }
 
-    async validateCompany(request: Request, response: ReturnableResponse | null = null): Promise<boolean> {
+    async validateCompany(request: Request): Promise<boolean | ReturnableResponse> {
+        const companyId: number = parseInt(request.params.companyId);
+        let apiResponse: ApiResponse = new ApiResponse();
+
+        // validate if company do exist
+        await this.companyRepository.init();
+        let company: Company | undefined = await this.companyRepository.findOneById(companyId);
+        await this.companyRepository.queryRunner.release();
+
+        if (company === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Company');
+            return new ReturnableResponse(404, apiResponse);
+        }
+
+
         if (this.user.role === UserRole.admin) {
             // no need to check if user has admin role
             return true;
         }
 
-        const companyId: number = parseInt(request.params.companyId);
-        let apiResponse: ApiResponse = new ApiResponse();
-
+        // validate if company belongs to logged in user
         await this.companyRepository.init();
-        const company: Company | undefined = await this.companyRepository.findIfCompanyBelongsToUser(companyId, this.user.id);
+        company = await this.companyRepository.findIfCompanyBelongsToUser(companyId, this.user.id);
         await this.companyRepository.queryRunner.release();
 
         if (company === undefined) {
             apiResponse.status = Status.Unauthorized;
-            apiResponse.message = CommonMessages.NotFound('Company');
-            response = new ReturnableResponse(404, apiResponse);
-
-            return false;
+            apiResponse.message = OperationNotAllowed;
+            return new ReturnableResponse(401, apiResponse);
         }
 
         return true;

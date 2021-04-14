@@ -1,4 +1,5 @@
 export const OperationFailed = 'Operation failed';
+export const OperationNotAllowed = 'Operation not allowed';
 export const OperationSuccess= 'Operation successful';
 
 /**

@@ -22,21 +22,18 @@ export default class ZoneServices
     async create(request: Request): Promise<ReturnableResponse>
     {
         const companyServices = new CompanyServices(this.user);
-        let apiResponse: ApiResponse = new ApiResponse();
-        let statusCode: number = 200;
-        let response = null;
         // validate the company id if it belongs to the currently logged in user
         // @ts-ignore
-        const isCompanyValid: boolean = await companyServices.validateCompany(request, response);
-
-        console.log(isCompanyValid);
+        const companyValidationResponse: boolean | ReturnableResponse = await companyServices.validateCompany(request);
 
         // @ts-ignore
-        if (!isCompanyValid && response !== null) {
+        if (companyValidationResponse !== true) {
             //@ts-ignore
-            return response;
+            return companyValidationResponse;
         }
 
+        let apiResponse: ApiResponse = new ApiResponse();
+        let statusCode: number = 200;
         const {data} = request.body;
 
         data.company = parseInt(request.params.companyId);

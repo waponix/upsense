@@ -12,7 +12,7 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // get company list
         .get('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getCompaniesAction)
         // get one company
-        .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager']), controller.getCompanyAction)
+        .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getCompanyAction)
         // add company
         .post('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.postCompanyAction)
         // update company
@@ -20,7 +20,7 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // delete company
         .delete('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.deleteCompanyAction)
         // add company zone
-        .post('/:companyId/zones', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.postZoneAction);
+        .post('/:companyId/zones', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager']), controller.postZonesAction);
 });
 
 module.exports = routes;

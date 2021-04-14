@@ -58,7 +58,17 @@ export default class CompanyController extends Controller
             .json(data.body);
     }
 
-    async postZoneAction (request: Request, response: Response)
+    // async getZonesAction (request: Request, response: Response)
+    // {
+    //     const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
+    //     const data: ReturnableResponse = await zoneServices.getList(request);
+    //
+    //     return response
+    //         .status(data.statusCode)
+    //         .json(data.body);
+    // }
+
+    async postZonesAction (request: Request, response: Response)
     {
         const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
         const data: ReturnableResponse = await zoneServices.create(request);
