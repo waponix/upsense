@@ -28,7 +28,7 @@ export default class CompanyController extends Controller
             .json(data.body);
     }
 
-    async postCompanyAction (request: Request, response: Response)
+    async postCompaniesAction (request: Request, response: Response)
     {
         const companyServices: CompanyServices = new CompanyServices((<any>request).user);
         const data: ReturnableResponse = await companyServices.create(request);
@@ -38,7 +38,7 @@ export default class CompanyController extends Controller
             .json(data.body);
     }
 
-    async putCompanyAction (request: Request, response: Response)
+    async putCompaniesAction (request: Request, response: Response)
     {
         const companyServices: CompanyServices = new CompanyServices((<any>request).user);
         const data: ReturnableResponse = await companyServices.update(request);
@@ -58,20 +58,50 @@ export default class CompanyController extends Controller
             .json(data.body);
     }
 
-    // async getZonesAction (request: Request, response: Response)
-    // {
-    //     const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
-    //     const data: ReturnableResponse = await zoneServices.getList(request);
-    //
-    //     return response
-    //         .status(data.statusCode)
-    //         .json(data.body);
-    // }
+    async getZonesAction (request: Request, response: Response)
+    {
+        const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
+        const data: ReturnableResponse = await zoneServices.getList(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
+    async getZoneAction (request: Request, response: Response)
+    {
+        const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
+        const data: ReturnableResponse = await zoneServices.getOne(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
 
     async postZonesAction (request: Request, response: Response)
     {
         const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
         const data: ReturnableResponse = await zoneServices.create(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
+    async putZonesAction (request: Request, response: Response)
+    {
+        const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
+        const data: ReturnableResponse = await zoneServices.update(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
+    async deleteZonesAction (request: Request, response: Response)
+    {
+        const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
+        const data: ReturnableResponse = await zoneServices.delete(request);
 
         return response
             .status(data.statusCode)

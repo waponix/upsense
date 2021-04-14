@@ -14,13 +14,21 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // get one company
         .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getCompanyAction)
         // add company
-        .post('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.postCompanyAction)
+        .post('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.postCompaniesAction)
         // update company
-        .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putCompanyAction)
+        .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putCompaniesAction)
         // delete company
         .delete('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.deleteCompanyAction)
+        // get company zone list
+        .get('/:companyId/zones', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getZonesAction)
+        // get one company zone
+        .get('/:companyId/zones/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getZoneAction)
         // add company zone
-        .post('/:companyId/zones', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager']), controller.postZonesAction);
+        .post('/:companyId/zones', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager']), controller.postZonesAction)
+        // update company zone
+        .put('/:companyId/zones/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager']), controller.putZonesAction)
+        // delete company zone
+        .delete('/:companyId/zones/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager']), controller.deleteZonesAction);
 });
 
 module.exports = routes;

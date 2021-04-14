@@ -162,8 +162,7 @@ export class CompanyRepository extends BaseRepository
 
     async delete(company: Company): Promise<boolean>
     {
-        const companyRepository = await this.em.getRepository(Company);
-        companyRepository.remove(company);
+        await this.repository.remove(company);
         return true;
     }
 }

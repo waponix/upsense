@@ -22,9 +22,11 @@ export const zoneUpdateValidation = (data: Partial<Zone>, zone: Zone) => {
     return new Validator(data, rules.fields);
 }
 
-Validator.registerAsync('zone_name_available', async (name: string, attribute: any, req: any, passes: any) => {
-    let zoneRepository = getRepository(Zone);
-    let zone: Zone | undefined = await zoneRepository.findOne({name});
+Validator.registerAsync('zone_name_available', async function (name: string, attribute: any, req: any, passes: any) {
+    const zoneRepository = getRepository(Zone);
+    //@ts-ignore
+    const companyId = parseInt(this.validator.input.company);
+    const zone: Zone | undefined = await zoneRepository.findOne({where: {name, company: companyId}});
 
     if (!zone) {
         passes();
