@@ -2,6 +2,7 @@ import {User} from '../../shared/entities/User';
 import {getRepository} from 'typeorm';
 import ValidationRules from "../objects/ValidationRules";
 import {Company} from "../../shared/entities/Company";
+import {Zone} from "../../shared/entities/Zone";
 const Validator = require('validatorjs');
 
 const rules = new ValidationRules({
@@ -12,7 +13,8 @@ const rules = new ValidationRules({
     email: ['required', 'email', 'email_available'],
     mobileNumber: ['max:20'],
     picture: ['string', 'url', 'max:255'],
-    company: ['required', 'integer', 'company_exist']
+    company: ['required', 'integer', 'company_exist'],
+    zones: ['array', 'zone_exist']
 });
 
 export const userCreateValidation = (data: any) => {
@@ -39,9 +41,25 @@ export const userUpdateValidation = (data: any, user: User) => {
     return new Validator(data, rules.fields);
 };
 
+Validator.registerAsync('zone_exist', async function (zones: any[], attribute: any, req: any, passes: any) {
+    const zoneRepository = getRepository(Zone);
+    //@ts-ignore
+    const companyId = parseInt(this.validator.input.company);
+
+    for (let zoneId of zones) {
+        const zone: Zone | undefined = await zoneRepository.findOne({where: {id: parseInt(zoneId), company: companyId}});
+
+        if (!zone) {
+            passes(false, `There is no zone with id ${zoneId}`);
+        }
+    }
+
+    passes();
+});
+
 Validator.registerAsync('username_available', async (username: string, attribute: any, req: any, passes: any) => {
-    const managerRepository = getRepository(User);
-    const manager: User | undefined = await managerRepository.findOne({where: {username}});
+    const userRepository = getRepository(User);
+    const manager: User | undefined = await userRepository.findOne({where: {username}});
 
     if (!manager) {
         passes();
@@ -51,8 +69,8 @@ Validator.registerAsync('username_available', async (username: string, attribute
 });
 
 Validator.registerAsync('email_available', async (email: string, attribute: any, req: any, passes: any) => {
-    const adminRepository = getRepository(User);
-    const admin: User | undefined = await adminRepository.findOne({where: {email}});
+    const userRepository = getRepository(User);
+    const admin: User | undefined = await userRepository.findOne({where: {email}});
 
     if (!admin) {
         passes();

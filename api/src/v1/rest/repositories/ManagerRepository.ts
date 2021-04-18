@@ -72,16 +72,16 @@ export class ManagerRepository extends BaseRepository
         }
 
         do {
-            if (options.relation === undefined) {
+            if (options.relations === undefined) {
                 break;
             }
 
-            if (options.relation.indexOf('company') > -1) {
+            if (options.relations.indexOf('company') > -1) {
                 query
                     .leftJoinAndSelect('m.company', 'c');
             }
 
-            if (options.relation.indexOf('zone') > -1) {
+            if (options.relations.indexOf('zones') > -1) {
                 query.leftJoinAndSelect('m.zones', 'z');
             }
 

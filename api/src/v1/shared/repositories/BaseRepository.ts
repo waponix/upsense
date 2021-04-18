@@ -12,7 +12,7 @@ export interface QueryOptions {
     sort?: SortType,
     page?: number,
     find?: string,
-    relation?: string[]
+    relations?: string[]
 }
 
 export abstract class BaseRepository {

@@ -54,6 +54,19 @@ export class ZoneRepository extends BaseRepository
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
         }
 
+        do {
+            if (options.relations === undefined) {
+                break;
+            }
+
+            if (options.relations.indexOf('users') > -1) {
+                query
+                    .leftJoinAndSelect('z.users', 'u');
+            }
+
+            break;
+        } while (true);
+
         if (whereStatements.length > 0) {
             query
                 .where(whereStatements.join(' AND '))
@@ -100,6 +113,19 @@ export class ZoneRepository extends BaseRepository
         return await this.em.getRepository(Zone).findOne({where: { id }});
     }
 
+    async findOneBy(options: any, relations: any = null): Promise<Zone | undefined>
+    {
+        options = {where: options};
+        if (relations !== null) {
+            options.relations = relations;
+        }
+        return await this.em.getRepository(Zone).findOne(options);
+    }
+
+    /**
+     *
+     * @param zone
+     */
     async delete(zone: Zone): Promise<boolean>
     {
         await this.repository.remove(zone);

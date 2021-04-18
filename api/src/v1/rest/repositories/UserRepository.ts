@@ -72,16 +72,16 @@ export class UserRepository extends BaseRepository
         }
 
         do {
-            if (options.relation === undefined) {
+            if (options.relations === undefined) {
                 break;
             }
 
-            if (options.relation.indexOf('company') > -1) {
+            if (options.relations.indexOf('company') > -1) {
                 query
                     .leftJoinAndSelect('u.company', 'c');
             }
 
-            if (options.relation.indexOf('zone') > -1) {
+            if (options.relations.indexOf('zones') > -1) {
                 query.leftJoinAndSelect('u.zones', 'z');
             }
 
@@ -116,7 +116,6 @@ export class UserRepository extends BaseRepository
      * @param data
      */
     async create (data: any): Promise<User> {
-        const repository = await this.repository;
         let user: User = new User();
         user.username = data.username;
         user.password = data.password;
@@ -127,7 +126,13 @@ export class UserRepository extends BaseRepository
         user.image = data.image;
         user.role = UserRole.user;
         user.company = data.company;
-        await repository.save(user);
+
+        if (data.zones) {
+            // assign the zones to the user
+            user.zones = data.zones;
+        }
+
+        await this.repository.save(user);
         return user;
     }
 

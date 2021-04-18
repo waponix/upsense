@@ -8,11 +8,14 @@ import {userCreateValidation, userUpdateValidation} from "../validators/UserVali
 import {CommonMessages} from "../../../messages/messages";
 import {CompanyRepository} from "../repositories/CompanyRepository";
 import {Company} from "../../shared/entities/Company";
+import {ZoneRepository} from "../repositories/ZoneRepository";
+import {Zone} from "../../shared/entities/Zone";
 
 export default class UserServices
 {
     private user: any;
     private userRepository: UserRepository;
+    private zoneRepository: ZoneRepository;
     private companyRepository: CompanyRepository;
 
     /**
@@ -23,6 +26,7 @@ export default class UserServices
         this.user = user;
         this.userRepository = new UserRepository(User);
         this.companyRepository = new CompanyRepository(Company);
+        this.zoneRepository = new ZoneRepository(Zone);
     }
 
     /**
@@ -95,12 +99,24 @@ export default class UserServices
                     await this.companyRepository.queryRunner.release();
                 }
 
+                if (data.zones) {
+                    await this.zoneRepository.init();
+                    let zones = [];
+                    for (let zoneId of data.zones) {
+                        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(zoneId), company: data.company});
+                        zones.push(zone);
+                    }
+                    data.zones = zones;
+                    await this.zoneRepository.queryRunner.release();
+                }
+
                 try {
                     const user: User = await this.userRepository.create(data);
                     await this.userRepository.queryRunner.commitTransaction();
 
                     apiResponse.result = user.serialize();
-                } catch {
+                } catch (e) {
+                    console.log(e.message);
                     apiResponse.status = Status.Error;
                     apiResponse.message = CommonMessages.UnableToSave('User');
                     await this.userRepository.queryRunner.rollbackTransaction();
