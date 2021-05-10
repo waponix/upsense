@@ -85,7 +85,7 @@ export class CompanyRepository extends BaseRepository
      */
     async findOneById(id: number): Promise<Company | undefined>
     {
-        return await this.em.getRepository(Company).findOne({where: { id }});
+        return await this.em.getRepository(Company).findOne({where: { id }, relations: ['zones']});
     }
 
     /**

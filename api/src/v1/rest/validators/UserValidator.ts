@@ -27,11 +27,16 @@ export const userCreateValidation = (data: any) => {
 export const userUpdateValidation = (data: any, user: User) => {
     rules
         .removeField('username')
-        .removeField('company');
+        .removeField('company')
+        .removeField('zones')
+        .addField('addZones', ['array', 'zone_exist'])
+        .addField('removeZones', ['array', 'zone_exist']);
     rules.fields
         .removeRuleFromPasswordField('required')
         .removeRuleFromFirstNameField('required')
         .removeRuleFromEmailField('required');
+
+    data.company = user.company.id;
 
     if (data.email && data.email === user.email) {
         // only validate email if it is not the same with old email

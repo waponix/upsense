@@ -18,7 +18,7 @@ export class UserRepository extends BaseRepository
      * Get user list
      * @param options
      */
-    async getList (options: QueryOptions = {}): Promise<User[]> {
+    async getList(options: QueryOptions = {}): Promise<User[]> {
         let parameters: any = {
             role: UserRole.user
         };
@@ -98,16 +98,17 @@ export class UserRepository extends BaseRepository
     /**
      * Get single user by id
      * @param id
+     * @param relation
      */
-    async findOneById (id: number): Promise<User | undefined> {
-        return await this.repository.findOne({where: { id, role: UserRole.user }});
+    async findOneById(id: number, relation: any = []): Promise<User | undefined> {
+        return await this.repository.findOne({where: { id, role: UserRole.user }, relations: ['company', 'zones']});
     }
 
-    async findOneByUsername (username: string): Promise<User | undefined> {
+    async findOneByUsername(username: string): Promise<User | undefined> {
         return await this.repository.findOne({where: { username, role: UserRole.user }});
     }
 
-    async findOneByEmail (email: string): Promise<User | undefined> {
+    async findOneByEmail(email: string): Promise<User | undefined> {
         return await this.repository.findOne({where: { email, role: UserRole.user }});
     }
 
@@ -115,7 +116,7 @@ export class UserRepository extends BaseRepository
      * Create user
      * @param data
      */
-    async create (data: any): Promise<User> {
+    async create(data: any): Promise<User> {
         let user: User = new User();
         user.username = data.username;
         user.password = data.password;
@@ -141,7 +142,7 @@ export class UserRepository extends BaseRepository
      * @param user
      * @param data
      */
-    async update (user: User, data: Partial<User>): Promise<boolean> {
+    async update(user: User, data: Partial<User>): Promise<boolean> {
         if (!!data.password) {
             user.password = data.password;
             user.hashPassword()
@@ -151,7 +152,25 @@ export class UserRepository extends BaseRepository
         user.email = data.email || user.email;
         user.image = data.image || user.image;
         user.mobile = data.mobile || user.mobile;
+
         await this.repository.save(user);
+
+        const relationQueryBuilder = this.repository
+            .createQueryBuilder()
+            .relation(User, 'zones');
+
+        //@ts-ignore
+        if (data.removeZones) {
+            //@ts-ignore
+            await relationQueryBuilder.of(user).remove(data.removeZones);
+        }
+
+        //@ts-ignore
+        if (data.addZones) {
+            //@ts-ignore
+            await relationQueryBuilder.of(user).add(data.addZones);
+        }
+
         return true;
     }
 
@@ -159,7 +178,7 @@ export class UserRepository extends BaseRepository
      * Delete user
      * @param user
      */
-    async delete (user: User): Promise<boolean> {
+    async delete(user: User): Promise<boolean> {
         await this.repository.remove(user);
         return true;
     }

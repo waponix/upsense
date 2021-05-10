@@ -1,4 +1,4 @@
-import {User as Manager} from "../../shared/entities/User";
+import {User, User as Manager} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {UserRole} from "../../../components/types/UserRoleTypes";
@@ -100,7 +100,7 @@ export class ManagerRepository extends BaseRepository
      * @param id
      */
     async findOneById (id: number): Promise<Manager | undefined> {
-        return await this.repository.findOne({where: { id, role: UserRole.manager }});
+        return await this.repository.findOne({where: { id, role: UserRole.manager }, relations: ['company', 'zones']});
     }
 
     async findOneByUsername (username: string): Promise<Manager | undefined> {
@@ -127,6 +127,12 @@ export class ManagerRepository extends BaseRepository
         manager.image = data.image;
         manager.role = UserRole.manager;
         manager.company = data.company;
+
+        if (data.zones) {
+            // assign the zones to the user
+            manager.zones = data.zones;
+        }
+
         await repository.save(manager);
         return manager;
     }
@@ -146,7 +152,25 @@ export class ManagerRepository extends BaseRepository
         manager.email = data.email || manager.email;
         manager.image = data.image || manager.image;
         manager.mobile = data.mobile || manager.mobile;
+
         await this.repository.save(manager);
+
+        const relationQueryBuilder = this.repository
+            .createQueryBuilder()
+            .relation(Manager, 'zones');
+
+        //@ts-ignore
+        if (data.removeZones) {
+            //@ts-ignore
+            await relationQueryBuilder.of(manager).remove(data.removeZones);
+        }
+
+        //@ts-ignore
+        if (data.addZones) {
+            //@ts-ignore
+            await relationQueryBuilder.of(manager).add(data.addZones);
+        }
+
         return true;
     }
 

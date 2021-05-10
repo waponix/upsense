@@ -8,12 +8,15 @@ import {managerCreateValidation, managerUpdateValidation} from "../validators/Ma
 import {CommonMessages} from "../../../messages/messages";
 import {CompanyRepository} from "../repositories/CompanyRepository";
 import {Company} from "../../shared/entities/Company";
+import {Zone} from "../../shared/entities/Zone";
+import {ZoneRepository} from "../repositories/ZoneRepository";
 
 export default class ManagerServices
 {
     private user: any;
     private managerRepository: ManagerRepository;
     private companyRepository: CompanyRepository;
+    private zoneRepository: ZoneRepository;
 
     /**
      *
@@ -23,6 +26,7 @@ export default class ManagerServices
         this.user = user;
         this.managerRepository = new ManagerRepository(Manager);
         this.companyRepository = new CompanyRepository(Company);
+        this.zoneRepository = new ZoneRepository(Zone);
     }
 
     /**
@@ -94,6 +98,17 @@ export default class ManagerServices
                     await this.companyRepository.queryRunner.release();
                 }
 
+                if (data.zones) {
+                    await this.zoneRepository.init();
+                    let zones = [];
+                    for (let zoneId of data.zones) {
+                        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(zoneId), company: data.company});
+                        zones.push(zone);
+                    }
+                    data.zones = zones;
+                    await this.zoneRepository.queryRunner.release();
+                }
+
                 try {
                     const manager: Manager = await this.managerRepository.create(data);
                     await this.managerRepository.queryRunner.commitTransaction();
@@ -149,6 +164,28 @@ export default class ManagerServices
         return new Promise(resolve => {
             validation.checkAsync(async () => {
                 await this.managerRepository.queryRunner.startTransaction();
+
+                if (data.addZones) {
+                    await this.zoneRepository.init();
+                    let zones = [];
+                    for (let zoneId of data.addZones) {
+                        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(zoneId), company: data.company});
+                        zones.push(zone);
+                    }
+                    data.addZones = zones;
+                    await this.zoneRepository.queryRunner.release();
+                }
+
+                if (data.removeZones) {
+                    await this.zoneRepository.init();
+                    let zones = [];
+                    for (let zoneId of data.removeZones) {
+                        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(zoneId), company: data.company});
+                        zones.push(zone);
+                    }
+                    data.removeZones = zones;
+                    await this.zoneRepository.queryRunner.release();
+                }
 
                 try {
                     // @ts-ignore
