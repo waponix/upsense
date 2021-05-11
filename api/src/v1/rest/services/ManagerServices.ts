@@ -192,6 +192,7 @@ export default class ManagerServices
                     await this.managerRepository.update(manager, data);
                     await this.managerRepository.queryRunner.commitTransaction();
 
+                    manager = await this.managerRepository.findOneById(parseInt(id));
                     apiResponse.result = manager?.serialize();
                 } catch {
                     await this.managerRepository.queryRunner.rollbackTransaction();

@@ -1,4 +1,4 @@
-import {User as Manager, User} from '../../shared/entities/User';
+import {User} from '../../shared/entities/User';
 import {UserRepository} from "../repositories/UserRepository";
 import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
@@ -10,6 +10,7 @@ import {CompanyRepository} from "../repositories/CompanyRepository";
 import {Company} from "../../shared/entities/Company";
 import {ZoneRepository} from "../repositories/ZoneRepository";
 import {Zone} from "../../shared/entities/Zone";
+import {UserRole} from "../../../components/types/UserRoleTypes";
 
 export default class UserServices
 {
@@ -144,6 +145,11 @@ export default class UserServices
     async update(request: Request): Promise<ReturnableResponse> {
         const {data} = request.body;
         const {id} = request.params;
+
+        if (this.user.role === UserRole.user && data.zones) {
+            // don't allow zones to update for role user
+            delete data.zones;
+        }
 
         await this.userRepository.init();
 
