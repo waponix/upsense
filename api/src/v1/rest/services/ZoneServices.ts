@@ -4,11 +4,12 @@ import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {ApiResponse} from "../objects/ApiResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {CommonMessages} from "../../../messages/messages";
+import {CommonMessages, OperationNotAllowed} from "../../../messages/messages";
 import {zoneCreateValidation, zoneUpdateValidation} from "../validators/ZoneValidator";
 import CompanyServices from "./CompanyServices";
 import {Company} from "../../shared/entities/Company";
 import {companyUpdateValidation} from "../validators/CompanyValidator";
+import {UserRole} from "../../../components/types/UserRoleTypes";
 
 export default class ZoneServices
 {
@@ -254,4 +255,35 @@ export default class ZoneServices
 
         return new ReturnableResponse(statusCode, apiResponse);
     }
+
+    async validateZone(request: Request): Promise<boolean | ReturnableResponse> {
+        const companyId: number = parseInt(request.params.companyId);
+        const zoneId: number = parseInt(request.params.zoneId);
+        let apiResponse: ApiResponse = new ApiResponse();
+
+        // validate if company do exist
+        await this.zoneRepository.init();
+        let zone: Zone | undefined = await this.zoneRepository.findOneById(zoneId);
+        await this.zoneRepository.queryRunner.release();
+
+        if (zone === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Zone');
+            return new ReturnableResponse(404, apiResponse);
+        }
+
+        // validate if zone belongs to company
+        await this.zoneRepository.init();
+        zone = await this.zoneRepository.findIfZoneBelongsToCompany(zoneId, companyId);
+        await this.zoneRepository.queryRunner.release();
+
+        if (zone === undefined) {
+            apiResponse.status = Status.Unauthorized;
+            apiResponse.message = OperationNotAllowed;
+            return new ReturnableResponse(401, apiResponse);
+        }
+
+        return true;
+    }
+
 }

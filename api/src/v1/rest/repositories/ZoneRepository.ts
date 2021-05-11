@@ -1,6 +1,7 @@
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {Zone} from "../../shared/entities/Zone";
 import {paginationConfig} from "../../../config";
+import {Company} from "../../shared/entities/Company";
 
 export class ZoneRepository extends BaseRepository
 {
@@ -130,5 +131,18 @@ export class ZoneRepository extends BaseRepository
     {
         await this.repository.remove(zone);
         return true;
+    }
+
+    async findIfZoneBelongsToCompany(zoneId: number, companyId: number): Promise<Zone | undefined>
+    {
+        return this.createQueryBuilder('z')
+            .leftJoin('z.company', 'c')
+            .where('z.id = :zoneId')
+            .andWhere('c.id = :companyId')
+            .setParameters({
+                zoneId,
+                companyId
+            })
+            .getOne();
     }
 }
