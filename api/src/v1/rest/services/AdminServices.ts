@@ -29,7 +29,10 @@ export default class AdminServices
     async getList(request: Request): Promise<ReturnableResponse>
     {
         let apiResponse: ApiResponse = new ApiResponse();
-        const {query} = request.body;
+        let query: any = {};
+        if ((<any>request).query.query !== undefined) {
+            query = JSON.parse((<any>request).query.query);
+        }
 
         await this.adminRepository.init();
         let result: any[] = await this.adminRepository.getList(query);

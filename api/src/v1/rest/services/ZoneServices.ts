@@ -40,7 +40,12 @@ export default class ZoneServices
         }
 
         let apiResponse: ApiResponse = new ApiResponse();
-        const {query} = request.body;
+
+        let query = {};
+        if ((<any>request).query.query !== undefined) {
+            query = JSON.parse((<any>request).query.query);
+        }
+
         await this.zoneRepository.init();
 
         let result: any[] = await this.zoneRepository.getList(query);

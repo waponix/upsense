@@ -36,7 +36,10 @@ export default class UserServices
      */
     async getList(request: Request): Promise<ReturnableResponse> {
         let apiResponse: ApiResponse = new ApiResponse();
-        const {query} = request.body;
+        let query: any = {};
+        if ((<any>request).query.query !== undefined) {
+            query = JSON.parse((<any>request).query.query);
+        }
 
         await this.userRepository.init();
         let result: any[] = await this.userRepository.getList(query);

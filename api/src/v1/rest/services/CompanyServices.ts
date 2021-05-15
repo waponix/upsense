@@ -32,7 +32,12 @@ export default class companyServices
     async getList(request: Request): Promise<ReturnableResponse>
     {
         let apiResponse: ApiResponse = new ApiResponse();
-        const {query} = request.body;
+
+        let query: any = {};
+        if ((<any>request).query.query !== undefined) {
+            query = JSON.parse((<any>request).query.query);
+        }
+
         await this.companyRepository.init();
 
         let result: any[] = await this.companyRepository.getList(query);
@@ -270,7 +275,8 @@ export default class companyServices
         await this.companyRepository.queryRunner.startTransaction();
         try {
             await this.companyRepository.delete(company);
-        } catch {
+        } catch (e) {
+            console.log(e);
             await this.companyRepository.queryRunner.rollbackTransaction();
             apiResponse.status = Status.Error;
             apiResponse.message = CommonMessages.UnableToDelete('Company');

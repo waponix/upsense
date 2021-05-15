@@ -58,7 +58,10 @@ export default class NotificationSettingServices
         }
 
         let apiResponse: ApiResponse = new ApiResponse();
-        const {query} = request.body;
+        let query: any = {};
+        if ((<any>request).query.query !== undefined) {
+            query = JSON.parse((<any>request).query.query);
+        }
 
         await this.notificationSettingRepository.init();
         let result: any[] = await this.notificationSettingRepository.getList(query);

@@ -2,6 +2,7 @@ import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseReposi
 import {Company} from "../../shared/entities/Company";
 import {paginationConfig} from "../../../config";
 import {User, User as Manager} from "../../shared/entities/User";
+import {Zone} from "../../shared/entities/Zone";
 
 export class CompanyRepository extends BaseRepository
 {
@@ -63,6 +64,10 @@ export class CompanyRepository extends BaseRepository
                 break;
             }
 
+            if (options.relations.indexOf('users') > -1) {
+                query.leftJoinAndSelect('c.users', 'u');
+            }
+
             if (options.relations.indexOf('zones') > -1) {
                 query.leftJoinAndSelect('c.zones', 'z');
             }
@@ -85,7 +90,7 @@ export class CompanyRepository extends BaseRepository
      */
     async findOneById(id: number): Promise<Company | undefined>
     {
-        return await this.em.getRepository(Company).findOne({where: { id }, relations: ['zones']});
+        return await this.em.getRepository(Company).findOne({where: { id }, relations: ['users', 'zones']});
     }
 
     /**
@@ -162,7 +167,9 @@ export class CompanyRepository extends BaseRepository
 
     async delete(company: Company): Promise<boolean>
     {
-        await this.repository.remove(company);
+        await this.em.getRepository(Zone).remove(company.zones);
+        await this.em.getRepository(User).remove(company.users);
+        await this.repository.delete(company.id);
         return true;
     }
 }
