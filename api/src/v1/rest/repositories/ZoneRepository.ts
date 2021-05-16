@@ -11,9 +11,11 @@ export class ZoneRepository extends BaseRepository
      *
      * @param options
      */
-    async getList(options: QueryOptions = {}): Promise<Zone[]> {
-        let parameters: any = {};
-        let whereStatements: any = [];
+    async getList(companyId: number, options: QueryOptions = {}): Promise<Zone[]> {
+        let parameters: any = { companyId };
+        let whereStatements: any = [
+            'z.company = :companyId'
+        ];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
