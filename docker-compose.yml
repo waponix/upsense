@@ -25,13 +25,13 @@ services:
 
   api:
     build:
-      dockerfile: ./api/Dockerfile
+      dockerfile: ./api/DockerfileDev
       context: ./
-    image: upsense_api:latest
+    image: upsense_api_dev:latest
     ports:
       - 8442:8443
-    #    volumes: # Use this when in development
-    #      - ./api:/var/www/api
+    volumes: # Use this when in development
+      - ./api:/var/www/api
     links:
       - mariadb:mysql
       - influxdb
@@ -40,14 +40,14 @@ services:
 
   broker:
     build:
-      dockerfile: ./mqtt/Dockerfile
+      dockerfile: ./mqtt/DockerfileDev
       context: ./
-    image: upsense_broker:latest
+    image: upsense_broker_dev:latest
     ports:
       - 1883:1883
       - 1884:1884
-#    volumes: # Use this when in development
-#      - ./mqtt:/var/www/mqtt_broker
+    volumes: # Use this when in development
+      - ./mqtt:/var/www/mqtt_broker
     links:
       - influxdb
     restart: unless-stopped

@@ -1,4 +1,5 @@
-import { connect } from 'mqtt';
+//@ts-ignore
+import mqtt from 'mqtt';
 import { mqttConfig } from '../../../config';
 import { MQTTPubSub } from 'graphql-mqtt-subscriptions';
 
@@ -9,7 +10,7 @@ export class SensorDataReceiver
 
     constructor()
     {
-        this.client = connect({
+        this.client = mqtt.connect({
             host: mqttConfig.host,
             port: mqttConfig.port,
             protocol: mqttConfig.protocol,

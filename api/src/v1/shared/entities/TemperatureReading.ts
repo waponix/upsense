@@ -1,1 +1,0 @@
-import { Entity, Column, ManyToOne } from 'typeorm';import { BaseEntity } from './BaseEntity';import { Sensor } from './Sensor';@Entity({ name: 'temperature_readings' })export class TemperatureReading extends BaseEntity{    @Column({ default: 0 })    temp!: number;    @ManyToOne(() => Sensor, sensor => sensor.temperatureReadings)    sensor!: Sensor;}

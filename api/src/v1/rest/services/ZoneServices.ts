@@ -169,8 +169,10 @@ export default class ZoneServices
 
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
+        const {companyId} = request.params;
         const {id} = request.params;
         const {data} = request.body;
+        data.company = parseInt(companyId);
 
         await this.zoneRepository.init();
         let zone: Zone | undefined = await this.zoneRepository.findOneById(parseInt(id));

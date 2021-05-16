@@ -21,6 +21,7 @@ import {UserEndpoints} from "./v1/graphql/endpoints/UserEndpoint";
 
 import { SensorResolver } from './v1/graphql/resolvers/SensorResolver';
 import {SubscriptionEndpoints} from "./v1/graphql/endpoints/SubscriptionEndpoints";
+import {SubscriberApp} from "./mqtt";
 
 class App
 {
@@ -64,17 +65,8 @@ class App
             await ManagerEndpoints(this.app).init();
             await UserEndpoints(this.app).init();
             await SubscriptionEndpoints(this.app, this.httpServer).init();
-            //
-            // new SubscriptionServer({
-            //     execute,
-            //     subscribe,
-            //     schema: subscriptionEndpoint.schema,
-            // }, {
-            //     server: this.httpServer,
-            //     path: '/'
-            // });
 
-            // register rest endpoints
+            new SubscriberApp();
         } catch (e) {
             console.log(`Server failed to start: ${e}`)
         }

@@ -15,8 +15,9 @@ export const zoneCreateValidation = (data: Partial<Zone>) => {
 
 export const zoneUpdateValidation = (data: Partial<Zone>, zone: Zone) => {
     rules.removeField('company');
+    rules.fields.removeRuleFromNameField(['required']);
     if (data.name === zone.name) {
-        rules.fields.removeRuleFromNameField(['required', 'company_name_available']);
+        rules.fields.removeRuleFromNameField(['zone_name_available']);
     }
 
     return new Validator(data, rules.fields);
