@@ -46,9 +46,11 @@ export default class ZoneServices
             query = JSON.parse((<any>request).query.query);
         }
 
+        const companyId = parseInt(request.params.companyId);
+
         await this.zoneRepository.init();
 
-        let result: any[] = await this.zoneRepository.getList(query);
+        let result: any[] = await this.zoneRepository.getList(companyId, query);
         result = result.map((record: Zone) => record.serialize());
 
         apiResponse.result = result;
@@ -78,10 +80,10 @@ export default class ZoneServices
         let statusCode: number = 200;
         let apiResponse: ApiResponse = new ApiResponse();
 
-        const {id} = request.params;
+        const {id, companyId} = request.params;
 
         await this.zoneRepository.init();
-        const zone: Zone | undefined = await this.zoneRepository.findOneById(parseInt(id));
+        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(id), company: parseInt(companyId)});
 
         if (zone === undefined) {
             apiResponse.status = Status.NotFound;
@@ -169,13 +171,12 @@ export default class ZoneServices
 
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
-        const {companyId} = request.params;
-        const {id} = request.params;
+        const {id, companyId} = request.params;
         const {data} = request.body;
         data.company = parseInt(companyId);
 
         await this.zoneRepository.init();
-        let zone: Zone | undefined = await this.zoneRepository.findOneById(parseInt(id));
+        let zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(id), company: parseInt(companyId)});
 
         if (zone === undefined) {
             apiResponse.status = Status.NotFound;
