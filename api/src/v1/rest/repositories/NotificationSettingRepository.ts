@@ -1,6 +1,7 @@
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {NotificationSetting} from "../../shared/entities/NotificationSetting";
+import {Zone} from "../../shared/entities/Zone";
 
 export class NotificationSettingRepository extends BaseRepository
 {
@@ -17,9 +18,11 @@ export class NotificationSettingRepository extends BaseRepository
      * Get user list
      * @param options
      */
-    async getList(options: QueryOptions = {}): Promise<NotificationSetting[]> {
-        let parameters: any = {};
-        let whereStatements = [];
+    async getList(zoneId: number, options: QueryOptions = {}): Promise<NotificationSetting[]> {
+        let parameters: any = { zoneId };
+        let whereStatements = [
+            'ns.zone = :zoneId'
+        ];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
@@ -86,6 +89,15 @@ export class NotificationSettingRepository extends BaseRepository
      */
     async findOneById(id: number): Promise<NotificationSetting | undefined> {
         return await this.repository.findOne({where: { id }, relations: ['zone']});
+    }
+
+    async findOneBy(options: any, relations: any = null): Promise<NotificationSetting | undefined>
+    {
+        if (relations !== null) {
+            options.relations = relations;
+        }
+        options = {where: options};
+        return await this.repository.findOne(options);
     }
 
     /**

@@ -8,7 +8,7 @@ export class ZoneRepository extends BaseRepository
     private searchableFields: string[] = ['name'];
 
     /**
-     *
+     * @param companyId
      * @param options
      */
     async getList(companyId: number, options: QueryOptions = {}): Promise<Zone[]> {
@@ -113,16 +113,16 @@ export class ZoneRepository extends BaseRepository
      */
     async findOneById(id: number): Promise<Zone | undefined>
     {
-        return await this.em.getRepository(Zone).findOne({where: { id }});
+        return await this.repository.findOne({where: { id }});
     }
 
     async findOneBy(options: any, relations: any = null): Promise<Zone | undefined>
     {
-        options = {where: options};
         if (relations !== null) {
             options.relations = relations;
         }
-        return await this.em.getRepository(Zone).findOne(options);
+        options = {where: options};
+        return await this.repository.findOne(options);
     }
 
     /**

@@ -63,8 +63,10 @@ export default class NotificationSettingServices
             query = JSON.parse((<any>request).query.query);
         }
 
+        const { zoneId } = request.params;
+
         await this.notificationSettingRepository.init();
-        let result: any[] = await this.notificationSettingRepository.getList(query);
+        let result: any[] = await this.notificationSettingRepository.getList(parseInt(zoneId), query);
         result = result.map((record: NotificationSetting) => record.serialize());
 
         apiResponse.result = result;
@@ -104,9 +106,12 @@ export default class NotificationSettingServices
         await this.notificationSettingRepository.init();
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode = 200;
-        const {id} = request.params;
+        const {id, zoneId} = request.params;
 
-        const notificationSetting: NotificationSetting | undefined = await this.notificationSettingRepository.findOneById(parseInt(id));
+        const notificationSetting: NotificationSetting | undefined = await this.notificationSettingRepository.findOneBy({
+            id: parseInt(id),
+            zone: zoneId
+        });
 
         if (notificationSetting === undefined) {
             apiResponse.status = Status.NotFound;
@@ -223,13 +228,16 @@ export default class NotificationSettingServices
         }
 
         const {data} = request.body;
-        const {id} = request.params;
+        const {id, zoneId} = request.params;
 
         await this.notificationSettingRepository.init();
 
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
-        let notificaitonSetting: NotificationSetting | undefined = await this.notificationSettingRepository.findOneById(parseInt(id));
+        let notificaitonSetting: NotificationSetting | undefined = await this.notificationSettingRepository.findOneBy({
+            id: parseInt(id),
+            zone: zoneId
+        });
 
         if (notificaitonSetting === undefined) {
             apiResponse.status = Status.NotFound;
