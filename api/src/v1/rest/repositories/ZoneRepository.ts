@@ -118,10 +118,10 @@ export class ZoneRepository extends BaseRepository
 
     async findOneBy(options: any, relations: any = null): Promise<Zone | undefined>
     {
+        options = {where: options};
         if (relations !== null) {
             options.relations = relations;
         }
-        options = {where: options};
         return await this.repository.findOne(options);
     }
 

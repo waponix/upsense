@@ -14,7 +14,8 @@ const routes: Routes[] = [
     require('./v1/rest/routes/AdminRoutes'),
     require('./v1/rest/routes/ManagerRoutes'),
     require('./v1/rest/routes/UserRoutes'),
-    require('./v1/rest/routes/CompanyRoutes')
+    require('./v1/rest/routes/CompanyRoutes'),
+    require('./v1/rest/routes/HubRoutes')
 ];
 
 // register v1 apis

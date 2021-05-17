@@ -195,6 +195,7 @@ export default class ZoneServices
                     //@ts-ignore
                     await this.zoneRepository.update(zone, data);
                     await this.zoneRepository.queryRunner.commitTransaction();
+                    apiResponse.result = zone;
                 } catch {
                     await this.zoneRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;
