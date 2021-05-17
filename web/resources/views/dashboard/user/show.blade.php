@@ -1,52 +1,83 @@
-@extends('dashboard.base')
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col col-md-12 col-lg-12">
+            <div class="animated fade-in">
 
-@section('content')
+                <div class="c-avatar c-avatar-xl border-primary mb-3">
+                    <img id="image" class="c-avatar-img"
+                         src=""/>
+                </div>
 
-    <div class="container-fluid">
-        <div class="animated fadeIn">
-            <div class="row">
-                <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
-                    <div class="card">
-                        <h4 class="card-header">
-                            <i class="cil-user"></i> {{ __('View User') }}
-                        </h4>
-                        <div class="card-body">
-                            <div class="">
-
-                                <div class="c-avatar c-avatar-xl border-primary mb-3">
-                                    <img class="c-avatar-img"
-                                         src="{{ url('/assets/img/avatars/' . $user->image) }}"
-                                         alt="{{$user->email}}"/>
-                                </div>
-
-                                <div><strong>First Name:</strong> {{ $user->first_name }}</div>
-                                <div><strong>Last Name:</strong> {{ $user->last_name }}</div>
-                                <div><strong>Mobile Number:</strong> {{ $user->mobile }}</div>
-                                <div><strong>Roles:</strong> {{ $user->menuroles }}</div>
-                                <div><strong>E-mail:</strong> {{ $user->email }}</div>
-                                <div>
-                                    <strong>Zones:</strong> @foreach($user->zones as $zone)   {{ $zone->name }} @endforeach
-                                </div>
-                                <div>
-                                    <strong>Companies:</strong> @foreach($user->zones as $zone)   {{ $zone->company->name }} @endforeach
-                                </div>
-                            </div>
-                            <br>
-                            <hr>
-                            <a href="{{ url('/users/' . $user->id . '/edit') }}"
-                               class="btn btn-block btn-primary">{{ __('Edit User') }}</a>
-                            <a href="{{ route('users.index') }}"
-                               class="btn btn-block btn-light">{{ __('Return') }}</a>
-                        </div>
-                    </div>
+                <div>
+                    <strong>First Name:</strong>
+                    <span id="firstName"></span>
+                </div>
+                <div>
+                    <strong>Last Name:</strong>
+                    <span id="lastName"></span>
+                </div>
+                <div>
+                    <strong>Mobile:</strong>
+                    <span id="mobile"></span>
+                </div>
+                <div>
+                    <strong>Role:</strong>
+                    <span id="role">{{$role}}</span>
+                </div>
+                <div>
+                    <strong>E-mail:</strong>
+                    <span id="email"></span>
+                </div>
+                <div>
+                    <strong>Zones:</strong>
+                    <span id="zones"></span>
+                </div>
+                <div>
+                    <strong>Company:</strong>
+                    <span id="company"></span>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-@endsection
+<script>
+    $(document).ready(function () {
+        $('#show{{$role}}Modal').on('show.coreui.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var id = button.data('id') // Extract info from data-* attributes
+            // // If necessary, you could initiate an AJAX request here
+            // // and then do the updating in a callback.
+            // // Update the modal's content.
+            //
+            //
+            let modal = $(this)
+            let query = {"relations": ["company", "zones"]};
+            query = encodeURI(JSON.stringify(query));
+            api.get('/{{$role}}s/' + id + '?query=' + query).then((res) => {
+                let dt = res.data.result;
+                console.log(res)
+                modal.find("#image").attr("src", '/assets/img/avatars/' + dt.image);
+                modal.find("#firstName").text(dt.firstName);
+                modal.find("#lastName").text(dt.lastName);
+                modal.find("#mobile").text(dt.mobile);
+                modal.find("#email").text(dt.email);
+                modal.find("#role").text(dt.role);
+
+                if (dt.zones !== 'undefined') {
+                    $.each(dt.zones, function(i,e){
+                        modal.find("#zones").append(e.name + " ");
+                    });
+                } else {
+                    modal.find("#zones").text('N/A')
+                }
+                modal.find("#company").text(typeof dt.company !== 'undefined' ? dt.company.name : 'N/A');
+
+            }).catch((error) => {
+                console.error(error)
+            });
+        });
 
 
-@section('javascript')
-
-@endsection
+    });
+</script>

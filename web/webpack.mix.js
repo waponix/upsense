@@ -19,6 +19,8 @@ const mix = require('laravel-mix');
 //mix.copy('resources/vendors/pace-progress/css/pace.min.css', 'public/css');
 mix.copy('node_modules/@coreui/chartjs/dist/css/coreui-chartjs.css', 'public/css');
 mix.copy('node_modules/cropperjs/dist/cropper.css', 'public/css');
+mix.copy('node_modules/datatables.net-dt/css/jquery.dataTables.css', 'public/css');
+mix.copy('node_modules/datatables.net-dt/images/', 'public/images/', false);
 //main css
 mix.sass('resources/sass/style.scss', 'public/css');
 // mix.sass('node_modules/@coreui/icons/scss/flag/flag-icons.scss', 'public/css');
@@ -28,8 +30,11 @@ mix.sass('resources/sass/style.scss', 'public/css');
 mix.copy('node_modules/@coreui/utils/dist/coreui-utils.js', 'public/js');
 mix.copy('node_modules/jquery/dist/jquery.min.js', 'public/js');
 mix.copy('node_modules/axios/dist/axios.min.js', 'public/js');
+mix.copy('node_modules/datatables.net/js/jquery.dataTables.js', 'public/js');
 //mix.copy('node_modules/pace-progress/pace.min.js', 'public/js');
 mix.copy('node_modules/@coreui/coreui/dist/js/coreui.bundle.min.js', 'public/js');
+mix.copy('node_modules/@coreui/coreui/dist/js/coreui.min.js', 'public/js');
+
 // views scripts
 mix.copy('node_modules/chart.js/dist/Chart.min.js', 'public/js');
 mix.copy('node_modules/chartjs-plugin-streaming/dist/chartjs-plugin-streaming.min.js', 'public/js');
@@ -48,6 +53,7 @@ mix.copy('resources/js/coreui/charts.js', 'public/js');
 mix.copy('resources/js/coreui/widgets.js', 'public/js');
 mix.copy('resources/js/coreui/popovers.js', 'public/js');
 mix.copy('resources/js/coreui/tooltips.js', 'public/js');
+
 // details scripts admin-panel
 mix.js('resources/js/coreui/menu-create.js', 'public/js');
 mix.js('resources/js/coreui/menu-edit.js', 'public/js');

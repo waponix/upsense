@@ -12,14 +12,14 @@
                         </h4>
                         <div class="card-body">
                             <br>
-                            <form method="POST" action="/users/{{ $currentAuthenticatedUser->id }}">
+                            <form method="POST" action="/users/{{ session('user')->id }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="input-group mb-3">
                                     <div class="c-avatar c-avatar-xl border-primary mb-3">
                                         <img class="c-avatar-img"
-                                             src="{{ url('/assets/img/avatars/' . $currentAuthenticatedUser->image) }}"
-                                             alt="{{$currentAuthenticatedUser->email}}"/>
+                                             src="{{ url('/assets/img/avatars/' . session('user')->image) }}"
+                                             alt="{{session('user')->email}}"/>
                                     </div>
                                 </div>
                                 <div class="input-group mb-3">
@@ -31,7 +31,7 @@
                                     </span>
                                     </div>
                                     <input class="form-control" type="text" placeholder="{{ __('First Name') }}"
-                                           name="first_name" value="{{ $currentAuthenticatedUser->first_name }}"
+                                           name="first_name" value="{{ session('user')->first_name }}"
                                            required autofocus>
                                 </div>
                                 <div class="input-group mb-3">
@@ -43,14 +43,14 @@
                                         </span>
                                     </div>
                                     <input class="form-control" type="text" placeholder="{{ __('Last Name') }}"
-                                           name="last_name" value="{{ $currentAuthenticatedUser->last_name }}">
+                                           name="last_name" value="{{ session('user')->last_name }}">
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">@</span>
                                     </div>
                                     <input class="form-control" type="email" placeholder="{{ __('E-Mail Address') }}"
-                                           name="email" value="{{ $currentAuthenticatedUser->email }}" required>
+                                           name="email" value="{{ session('user')->email }}" required>
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -59,7 +59,7 @@
                                       </svg></span>
                                     </div>
                                     <input class="form-control" type="text" placeholder="{{ __('Mobile') }}"
-                                           name="mobile" value="{{ $currentAuthenticatedUser->mobile }}" required>
+                                           name="mobile" value="{{ session('user')->mobile }}" required>
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -68,7 +68,7 @@
                                       </svg></span>
                                     </div>
                                     <input class="form-control" type="text" placeholder="{{ __('Roles') }}"
-                                           name="menuroles" value="{{ $currentAuthenticatedUser->menuroles }}" required>
+                                           name="role" value="{{ session('user')->role }}" required>
                                 </div>
 
                                 <div class="form-group row">

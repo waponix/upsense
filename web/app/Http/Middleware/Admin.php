@@ -21,9 +21,9 @@ class Admin
 //            return abort(401);
 //        }
 
-        if ($request->user()->role !== 'admin') {
-            return abort(401);
-        }
+//        if ($request->user()->role !== 'admin') {
+//            return abort(401);
+//        }
 
         return $next($request);
     }

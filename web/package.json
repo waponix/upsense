@@ -36,12 +36,12 @@
     "watch-js": "nodemon --watch public/js/src/ -x \"npm run js\"",
     "watch-pug": "nodemon -e pug -x \"npm run pug\"",
     "dev": "npm run development",
-    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
     "watch": "npm run development -- --watch",
     "watch-poll": "npm run watch -- --watch-poll",
     "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
     "prod": "npm run production",
-    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "dependencies": {
     "@coreui/chartjs": "^2.0.0",
@@ -53,6 +53,8 @@
     "chart.js": "2.9.4",
     "chartjs-plugin-streaming": "^1.8.0",
     "cropperjs": "^1.5.7",
+    "datatables.net": "^1.10.24",
+    "datatables.net-dt": "^1.10.24",
     "install": "^0.13.0",
     "jquery": "^3.5.1",
     "jquery-ui": "^1.12.1",
@@ -85,7 +87,7 @@
     "js-beautify": "^1.11.0",
     "jsdom": "^16.2.2",
     "minimist": "^1.2.5",
-    "node-sass": "^4.14.1",
+    "node-sass": "^4.5.3",
     "nodemon": "^2.0.4",
     "npm-run-all": "^4.1.5",
     "postcss-cli": "^7.1.1",

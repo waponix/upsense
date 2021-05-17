@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\NonUserRole;
+use App\Models\User;
 use App\Models\Zone;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class UsersController extends Controller
 {
@@ -27,34 +27,58 @@ class UsersController extends Controller
      */
     public function __construct()
     {
-//        $this->middleware('auth');
-//        $this->middleware('admin');
-//        $this->middleware('manager');
+        parent::__construct();
     }
 
     /**
-     * Display a listing of the resource.
-     *
+     * @param Request $request
      * @return Application|Factory|View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $me = auth()->user();
-        $users = User::all();
-        return view('dashboard.user.index', compact('users', 'me'));
+//        $body = json_encode([
+//            "query" => [
+//                "relations" => [
+//                    "company",
+//                    "zones"
+//                ]
+//            ]
+//        ]);
+//
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->withBody($body, 'application/json')
+//            ->withOptions([
+//                'body' => $body,
+//            ])
+//            ->get(env('JWT_ISSUER') . '/admins');
+//
+//        $users = null;
+//
+//        if ($response->successful()) {
+//            $users = $response->json()['result'];
+//
+//        }
+
+        return view('dashboard.user.index');
     }
 
 
     /**
-     * Display a listing of the resource.
-     *
+     * Create user
+     * @param Request $request
      * @return Application|Factory|View
      */
-    public function create()
+    public function create(Request $request)
     {
-        $zones = Zone::all();
-        $roles = self::ROLES;
-        return view('dashboard.user.create', compact('zones', $roles));
+//        $roles = self::ROLES;
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->get(env('JWT_ISSUER') . '/companies');
+//
+//        $companies = [];
+//        if ($response->successful()) {
+//            $companies = $response->json()['result'];
+//        }
+        return view('dashboard.user.create');
     }
 
     /**
@@ -65,28 +89,33 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-//        $validatedData = $request->validate([
-////            'username' => 'required|min:1|max:256',
-//            'first_name' => 'required|min:1|max:256',
-//            'last_name' => 'max:256',
-//            'email' => 'required|email|max:256',
-//            'mobile' => 'required|integer|max:20',
+//        $body = json_encode([
+//            "data" => [
+//                "password" => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+//                "firstName" => $request->input('first_name'),
+//                "lastName" => $request->input('last_name'),
+//                "email" => $request->input('email'),
+//                "mobile" => $request->input('mobile'),
+//                "company" => $request->input('company'),
+//                "role" => $request->input('role'),
+//                "zones" => $request->input('zone')
+//            ]
 //        ]);
-
-        $user = new User();
-        $user->first_name = $request->input('first_name');
-        $user->last_name = $request->input('last_name');
-        $user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
-        $user->email = $request->input('email');
-        $user->mobile = $request->input('mobile');
-        $user->role = $request->input('role');
-        $user->zone_id = $request->input('zone_id');
-
-        $user->save();
-
-        $request->session()->flash('message', 'Successfully created user');
-        return redirect()->route('users.index');
+//
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->withBody($body, 'application/json')
+//            ->withOptions([
+//                'body' => $body,
+//            ])
+////            ->asForm()
+//            ->post(env('JWT_ISSUER') . '/users');
+//
+//        if ($response->successful()) {
+//            $request->session()->flash('message', 'Successfully created user');
+//            return redirect()->route('users.index');
+//        }
     }
+
 
     /**
      * Display the specified resource.
@@ -96,23 +125,44 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-        return view('dashboard.user.show', compact('user'));
+//        $user = User::find($id);
+//        return view('dashboard.user.show', compact('user'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param Request $request
+     * @param  $id
      * @return Application|Factory|View
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $user = User::find($id);
-        $zones = Zone::all();
-        $roles = self::ROLES;
-
-        return view('dashboard.user.edit', compact('user', 'zones', 'roles'));
+//        $body = json_encode([
+//            "query" => [
+//                "relations" => [
+//                    "company",
+//                    "zones"
+//                ]
+//            ]
+//        ]);
+//
+//        $usersResponse = Http::withToken($request->session()->get('accessToken'))
+//            ->withBody($body, 'application/json')
+//            ->withOptions([
+//                'body' => $body,
+//            ])
+//            ->get(env('JWT_ISSUER') . '/users/' . $id);
+//
+//        $users = null;
+//        if ($usersResponse->successful()) {
+//            $user = $usersResponse->json()['result'];
+//            $zones = Zone::all();
+//            $roles = self::ROLES;
+//
+//            return view('dashboard.user.edit', compact('user', 'zones', 'roles'));
+//        }
+        return view('dashboard.user.edit');
     }
 
     /**
@@ -124,25 +174,30 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-//        $val = $request->validate([
-//            'first_name' => 'required|min:1|max:255',
-//            'last_name' => 'max:255',
-//            'email' => 'required|email|max:255',
-//            'mobile' => 'required|integer|max:20'
+//        $body = json_encode([
+//            "data" => [
+//                "password" => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+//                "firstName" => $request->input('first_name'),
+//                "lastName" => $request->input('last_name'),
+//                "email" => $request->input('email'),
+//                "mobile" => $request->input('mobile'),
+////                "company" => $request->input('company'),
+////                "role" => $request->input('role'),
+//                "zones" => [$request->input('zone_id')]
+//            ]
 //        ]);
-//        dd($val);
-
-        $user = User::find($id);
-
-        $user->first_name = $request->input('first_name');
-        $user->last_name = $request->input('last_name');
-        $user->email = $request->input('email');
-        $user->mobile = $request->input('mobile');
-        $user->menuroles = $request->input('menuroles');
-        $user->save();
-
-        $request->session()->flash('message', 'Successfully updated user');
-        return redirect()->route('users.index');
+//
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->withBody($body, 'application/json')
+//            ->withOptions([
+//                'body' => $body,
+//            ])
+//            ->put(env('JWT_ISSUER') . '/users');
+//
+//        if ($response->successful()) {
+//            $request->session()->flash('message', 'Successfully created user');
+//            return redirect()->route('users.index');
+//        }
     }
 
     /**
@@ -154,13 +209,13 @@ class UsersController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $user = User::find($id);
-        if ($user) {
-            $user->delete();
-        }
-        $request->session()->flash('message', 'Successfully deleted user');
-
-        return redirect()->route('users.index');
+//        $user = User::find($id);
+//        if ($user) {
+//            $user->delete();
+//        }
+//        $request->session()->flash('message', 'Successfully deleted user');
+//
+//        return redirect()->route('users.index');
     }
 
     /**
@@ -180,7 +235,7 @@ class UsersController extends Controller
     public function profileEdit()
     {
         $zones = Zone::all();
-        return view('dashboard.user.profileEdit', compact('zones' ));
+        return view('dashboard.user.profileEdit', compact('zones'));
     }
 
     /**
@@ -206,7 +261,6 @@ class UsersController extends Controller
         $user->last_name = $request->input('last_name');
         $user->email = $request->input('email');
         $user->mobile = $request->input('mobile');
-        $user->menuroles = $request->input('menuroles');
         $user->save();
 
         $request->session()->flash('message', 'Successfully updated user');

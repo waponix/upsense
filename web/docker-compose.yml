@@ -69,7 +69,59 @@ services:
             - sail
         healthcheck:
           test: ["CMD", "redis-cli", "ping"]
-    # memcached:
+    # memcached:version: "3.9"
+            #
+            #services:
+            #  mariadb:
+            #    image: mariadb:10.5.8-focal
+            #    ports:
+            #      - 3306:3306
+            #    environment:
+            #      MYSQL_ROOT_PASSWORD: admin123
+            #      MYSQL_DATABASE: upsense
+            #    volumes:
+            #      - ./mysql/default.sql:/docker-entrypoint-initdb.d/default.sql
+            #    restart: unless-stopped
+            #
+            #  api:
+            #    build:
+            #      dockerfile: ./api/DockerfileDev
+            #      context: ./
+            #    image: upsense_api_dev:latest
+            #    ports:
+            #      - 8443:8443
+            #    volumes: # Use this when in development
+            #      - ./api:/var/www/api
+            #    links:
+            #      - mariadb:mysql
+            #      - influxdb
+            #      - broker
+            #    restart: unless-stopped
+            #
+            #  influxdb:
+            #    image: influxdb:1.8.3
+            #    ports:
+            #      - 8086:8086
+            #    environment:
+            #      INFLUXDB_HTTP_LOG_ENABLED: 0
+            #    volumes:
+            #      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
+            #      - ./influxdb/storage:/var/lib/influxdb
+            #    restart: unless-stopped
+            #
+            #  broker:
+            #    build:
+            #      dockerfile: ./mqtt/DockerfileDev
+            #      context: ./
+            #    image: upsense_broker_dev:latest
+            #    ports:
+            #      - 1883:1883
+            #      - 1884:1884
+            #    volumes: # Use this when in development
+            #      - ./mqtt:/var/www/mqtt_broker
+            #    links:
+          #      - influxdb
+          #    restart: unless-stopped
     #     image: 'memcached:alpine'
     #     ports:
     #         - '11211:11211'
