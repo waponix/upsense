@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class CompanyController extends Controller
 {
@@ -18,19 +19,23 @@ class CompanyController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('admin');
+        parent::__construct();
+//        $this->middleware('admin');
     }
 
     /**
-     * Display a listing of the resource.
-     *
+     * @param Request $request
      * @return Application|Factory|View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $companies = Company::paginate(20);
-        return view('dashboard.company.index', ['companies' => $companies]);
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->get(env('JWT_ISSUER') . '/companies');
+//        $companies = [];
+//        if ($response->successful()) {
+//            $companies = $response->json()['result'];
+//        }
+        return view('dashboard.company.index');
     }
 
     /**
@@ -51,41 +56,59 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|min:1|max:64'
-        ]);
+//        $body = json_encode([
+//            "data" => [
+//                "name" => $request->input('name')
+//            ]
+//        ]);
+//
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->withBody($body, 'application/json')
+//            ->post(env('JWT_ISSUER') . '/companies');
+//
+//        if ($response->successful()) {
+//            $request->session()->flash('message', 'Successfully created company');
+//            return redirect()->route('company.index');
+//        }
 
-        $company = new Company();
-        $company->name = $request->input('name');
-        $company->save();
-
-        $request->session()->flash('message', 'Successfully created company');
-        return redirect()->route('company.index');
     }
 
     /**
      * Display the specified resource.
      *
+     * @param Request $request
      * @param int $id
      * @return Application|Factory|View
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $company = Company::find($id);
-        return view('dashboard.company.show', ['company' => $company]);
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->get(env('JWT_ISSUER') . '/companies/' . $id);
+//
+//        $company = '';
+//        if ($response->successful()) {
+//            $company = $response->json()['result'];
+//        }
+        return view('dashboard.company.show');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param int $id
+     * @param Request $request
      * @return Application|Factory|View
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $company = Company::find($id);
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->get(env('JWT_ISSUER') . '/companies/' . $id);
+//
+//        if ($response->successful()) {
+//            $company = $response->json()['result'];
+//        }
 
-        return view('dashboard.company.edit', ['company' => $company]);
+        return view('dashboard.company.edit');
     }
 
     /**
@@ -97,14 +120,20 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|min:1|max:64',
-        ]);
-        $company = Company::find($id);
-        $company->name = $request->input('name');
-        $company->save();
-        $request->session()->flash('message', 'Successfully edited company');
-        return redirect()->route('company.index');
+//        $body = json_encode([
+//            "data" => [
+//                "name" => $request->input('name')
+//            ]
+//        ]);
+//
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->withBody($body, 'application/json')
+//            ->put(env('JWT_ISSUER') . '/companies/' . $id);
+//
+//        if ($response->successful()) {
+//            $request->session()->flash('message', 'Successfully edited company');
+//            return redirect()->route('company.index');
+//        }
     }
 
     /**
@@ -116,12 +145,13 @@ class CompanyController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $company = Company::find($id);
-        if ($company) {
-            $company->delete();
-        }
-        $request->session()->flash('message', 'Successfully deleted company');
-
-        return redirect()->route('company.index');
+//        $response = Http::withToken($request->session()->get('accessToken'))
+//            ->delete(env('JWT_ISSUER') . '/companies/' . $id);
+//
+//        if ($response->successful()) {
+//            $request->session()->flash('message', 'Successfully deleted company');
+//
+//            return redirect()->route('company.index');
+//        }
     }
 }

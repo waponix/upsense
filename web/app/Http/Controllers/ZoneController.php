@@ -30,8 +30,8 @@ class ZoneController extends Controller
      */
     public function index()
     {
-        $zones = Zone::all();
-        return view('dashboard.zone.index', ['zones' => $zones]);
+//        $zones = Zone::all();
+        return view('dashboard.zone.index');
     }
 
     /**
@@ -41,8 +41,8 @@ class ZoneController extends Controller
      */
     public function create()
     {
-        $companies = Company::all();
-        return view('dashboard.zone.create', compact('companies'));
+//        $companies = Company::all();
+        return view('dashboard.zone.create');
     }
 
     /**
@@ -57,13 +57,13 @@ class ZoneController extends Controller
 //            'name' => 'required|min:1|max:64'
 //        ]);
 
-        $zone = new Zone();
-        $zone->name = $request->input('name');
-        $zone->company_id = $request->input('company_id');
-        $zone->save();
-
-        $request->session()->flash('message', 'Successfully created zone');
-        return redirect()->route('zones.index');
+//        $zone = new Zone();
+//        $zone->name = $request->input('name');
+//        $zone->company_id = $request->input('company_id');
+//        $zone->save();
+//
+//        $request->session()->flash('message', 'Successfully created zone');
+//        return redirect()->route('zones.index');
     }
 
     /**
@@ -74,8 +74,8 @@ class ZoneController extends Controller
      */
     public function show($id)
     {
-        $zone = Zone::find($id);
-        return view('dashboard.zone.show', ['zone' => $zone]);
+//        $zone = Zone::find($id);
+        return view('dashboard.zone.show');
     }
 
     /**
@@ -86,10 +86,10 @@ class ZoneController extends Controller
      */
     public function edit($id)
     {
-        $zone = Zone::find($id);
-        $companies = Company::all();
+//        $zone = Zone::find($id);
+//        $companies = Company::all();
 
-        return view('dashboard.zone.edit', ['zone' => $zone, 'companies' => $companies]);
+        return view('dashboard.zone.edit');
     }
 
     /**
@@ -104,13 +104,13 @@ class ZoneController extends Controller
 //        $validatedData = $request->validate([
 //            'name' => 'required|min:1|max:64',
 //        ]);
-        $zone = Zone::find($id);
-        $zone->name = $request->input('name');
-        $zone->company_id = $request->input('company_id');
-        $zone->save();
-
-        $request->session()->flash('message', 'Successfully edited zone');
-        return redirect()->route('zones.index');
+//        $zone = Zone::find($id);
+//        $zone->name = $request->input('name');
+//        $zone->company_id = $request->input('company_id');
+//        $zone->save();
+//
+//        $request->session()->flash('message', 'Successfully edited zone');
+//        return redirect()->route('zones.index');
     }
 
     /**
@@ -121,10 +121,10 @@ class ZoneController extends Controller
      */
     public function destroy($id)
     {
-        $zone = Zone::find($id);
-        if ($zone) {
-            $zone->delete();
-        }
-        return redirect()->route('zones.index');
+//        $zone = Zone::find($id);
+//        if ($zone) {
+//            $zone->delete();
+//        }
+//        return redirect()->route('zones.index');
     }
 }

@@ -1,36 +1,52 @@
-@extends('dashboard.base')
-
-@section('content')
-
-    <div class="container-fluid">
-        <div class="animated fadeIn">
-            <div class="row">
-                <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>{{ __('Create Company') }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <form method="POST" action="{{ route('company.store') }}">
-                                @csrf
-                                <div class="form-group row">
-                                    <label>Company Name</label>
-                                    <input class="form-control" type="text" placeholder="{{ __('Company Name') }}" name="name"
-                                           required autofocus>
-                                </div>
-                                <button class="btn btn-block btn-success" type="submit">{{ __('Add') }}</button>
-                                <a href="{{ route('company.index') }}"
-                                   class="btn btn-block btn-primary">{{ __('Return') }}</a>
-                            </form>
-                        </div>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col col-md-12 col-lg-12">
+            <div class="animated fadeIn">
+                <form id="createCompanyForm" method="POST" autocomplete="off" class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="{{ __('Company Name') }}"
+                               name="name"
+                               required>
                     </div>
-                </div>
+
+                    <button id="createCompanyButton" class="btn btn-block btn-success"
+                            type="submit">{{ __('Save') }}</button>
+                    <a class="btn btn-block btn-secondary" data-dismiss="modal">{{ __('Return') }}</a>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-@endsection
+<script>
+    $("#createCompanyForm").on("submit", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        api.post('/companies', {
+            data: {
+                "name": $(this).find('[name="name"]').val(),
+            }
+        })
+            .then((response) => {
+                if (response.error) {
+                    showAlert(response.error, 'error')
+                } else {
+                    getData();
+                    showAlert('Successfully added company', 'success');
+                    $("#createCompanyModal").modal('hide');
+                    $('.needs-validation').removeClass('was-validated');
+                    $("#createCompanyForm").find('input:text, input:password, select')
+                        .each(function () {
+                            $(this).val('');
+                        });
+                }
+            }, (error) => {
+                $.each(error.response.data.error, function (i, v) {
+                    // $('.needs-validation').removeClass('was-validated');
+                    $("#" + i).addClass('is-invalid').next().text(v)
+                });
 
-@section('javascript')
-
-@endsection
+                // error.response.data.error
+            });
+    });
+</script>

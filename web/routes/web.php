@@ -10,13 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 //Auth::routes();
 Route::get('/login', 'LoginController@index')->name('login');
 Route::post('/login', 'LoginController@authenticate')->name('authenticate');
-Route::post('/logout', 'LoginController@logout')->name('logout');
+Route::get('/logout', 'LoginController@logout')->name('logout');
+Route::post('/refreshToken', 'LoginController@refreshToken')->name('refreshToken');
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['verifiedAuthToken']], function () {
     Route::get('/', 'HomeController@index')->name('dashboard.home.index');
     Route::get('/profile', 'UsersController@profile')->name('user.profile');
     Route::get('/profile/edit', 'UsersController@profileEdit')->name('user.profile.edit');
@@ -34,11 +34,12 @@ Route::group(['middleware' => ['auth']], function () {
         return view('dashboard.500');
     });
 
-    Route::group(['middleware' => 'nonUserRole'], function () {
-        Route::resource('users', UsersController::class);
-//        Route::resource('notifications', NotificationsController::class);
-        Route::resource('mail', MailController::class);
-    });
+//    Route::group(['middleware' => 'nonUserRole'], function () {
+    Route::resource('users', UsersController::class);
+    Route::resource('mail', MailController::class);
+    //        Route::resource('notifications', NotificationsController::class);
+
+//    });
 
     Route::group(['middleware' => 'admin'], function () {
         Route::resource('zones', ZoneController::class);

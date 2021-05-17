@@ -1,15 +1,15 @@
 <div class="c-sidebar-brand">
-    <img class="c-sidebar-brand-full" src="{{ url('/assets/brand/logo.png') }}" height="46" alt="Upsense">
+    <img class="c-sidebar-brand-full" src="{{ url('/assets/brand/logo.png') }}" height="42" alt="Upsense">
     <img class="c-sidebar-brand-minimized" src="{{ url('assets/brand/minimized_logo.png') }}" height="46" alt="Upsense">
 </div>
 <ul class="c-sidebar-nav ps">
     <li class="c-sidebar-nav-item">
-        <a class="c-sidebar-nav-link" href="//192.168.0.111:3000">
+        <a class="c-sidebar-nav-link" href="{{ route('dashboard.home.index')}}">
             <i class="cil-speedometer c-sidebar-nav-icon"></i>
             {{ __('Dashboard') }}
         </a>
     </li>
-    @if($currentAuthenticatedUser->role == 'manager' || $currentAuthenticatedUser->role == 'admin')
+    @if(session('user')->role == 'manager' || session('user')->role == 'admin')
         <li class="c-sidebar-nav-title">
             {{ __('Management') }}
         </li>
@@ -21,7 +21,7 @@
                             class="c-sidebar-nav-icon"></span>{{ __('Users') }}</a></li>
                 {{--            <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('roles.index')}}"><span--}}
                 {{--                        class="c-sidebar-nav-icon"></span>{{ __('Roles') }}</a></li>--}}
-                @if($currentAuthenticatedUser->role == 'admin')
+                @if(session('user')->role == 'admin')
 
                     <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('zones.index')}}"><span
                                 class="c-sidebar-nav-icon"></span>{{ __('Zones') }}</a></li>
@@ -71,7 +71,7 @@
             {{ __('Alerts') }}
         </a>
     </li>
-    @if ($currentAuthenticatedUser->role == 'admin')
+    @if (session('user')->role == 'admin')
         <li class="c-sidebar-nav-dropdown"><a class="c-sidebar-nav-dropdown-toggle" href="#"><i
                     class="cil-calculator c-sidebar-nav-icon"></i>{{ __('Settings') }}</a>
             <ul class="c-sidebar-nav-dropdown-items">

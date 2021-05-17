@@ -29,11 +29,18 @@
                     </svg>
                 </a>
             </li>
+
             <li class="c-header-nav-item dropdown">
                 <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
                    aria-expanded="false">
                     <div class="c-avatar">
-                        <img class="c-avatar-img" src="{{ url('/assets/img/avatars/' . $currentAuthenticatedUser->image) }}" alt="{{$currentAuthenticatedUser->email}}">
+                        @if(session('user')->image)
+                            <img class="c-avatar-img" src="{{ url('/assets/img/avatars/' . session('user')->image) }}"
+                                 alt="">
+                        @else
+                            <img class="c-avatar-img" src="{{ url('/assets/img/avatars/0.jpg') }}"
+                                 alt="">
+                        @endif
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right pt-0">
@@ -58,14 +65,11 @@
                         </svg>
                         Settings
                     </a>
-                    <a class="dropdown-item" href="#" onclick="document.getElementById('logout').submit();">
+                    <a class="dropdown-item" href="{{ route('logout') }}">
                         <svg class="c-icon mr-2">
                             <use xlink:href="{{ url('/icons/sprites/free.svg#cil-account-logout') }}"></use>
                         </svg>
-                        Logout
-                        <form id="logout" action="{{ url('/logout') }}" method="POST">
-                            @csrf
-                        </form>
+                        {{ __('Logout') }}
                     </a>
                 </div>
             </li>
@@ -84,4 +88,5 @@
                 @endfor
             </ol>
         </div>
+
     </header>

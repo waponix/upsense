@@ -28,9 +28,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         // Using Closure based composers
-        View::composer('*', function ($view) use ($auth) {
-            $view->with('currentAuthenticatedUser', $auth->user());
-        });
+//        View::composer('*', function ($view) use ($auth) {
+//            $view->with('currentAuthenticatedUser', $auth->user());
+//        });
+
         //
     }
 }

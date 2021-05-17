@@ -38,7 +38,7 @@
                                 @if(Session::has('errors'))
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="alert alert-danger" role="alert">{{ Session::get('errors') }}</div>
+                                            <div class="alert alert-danger" role="alert">{{ trim(Session::get('errors'), '[""]') }}</div>
                                         </div>
                                     </div>
                                 @endif
@@ -91,7 +91,7 @@
                 // window.location = "/";
 
             }).catch(function (error) {
-                console.log('Error on Authentication');
+                console.error('Error on Authentication');
             });
         });
 

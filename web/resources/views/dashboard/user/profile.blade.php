@@ -15,20 +15,20 @@
 
                                 <div class="c-avatar c-avatar-xl border-primary mb-3">
                                     <img class="c-avatar-img"
-                                         src="{{ url('/assets/img/avatars/' . $currentAuthenticatedUser->image) }}"
-                                         alt="{{$currentAuthenticatedUser->email}}"/>
+                                         src="{{ url('/assets/img/avatars/' . session('user')->image) }}"
+                                         alt="{{session('user')->email}}"/>
                                 </div>
 
-                                <div><strong>First Name:</strong> {{ $currentAuthenticatedUser->first_name }}</div>
-                                <div><strong>Last Name:</strong> {{ $currentAuthenticatedUser->last_name }}</div>
-                                <div><strong>Mobile Number:</strong> {{ $currentAuthenticatedUser->mobile }}</div>
-                                <div><strong>Roles:</strong> {{ $currentAuthenticatedUser->menuroles }}</div>
-                                <div><strong>E-mail:</strong> {{ $currentAuthenticatedUser->email }}</div>
+                                <div><strong>First Name:</strong> {{ session('user')->first_name }}</div>
+                                <div><strong>Last Name:</strong> {{ session('user')->last_name }}</div>
+                                <div><strong>Mobile Number:</strong> {{ session('user')->mobile }}</div>
+                                <div><strong>Roles:</strong> {{ session('user')->role }}</div>
+                                <div><strong>E-mail:</strong> {{ session('user')->email }}</div>
                                 <div>
-                                    <strong>Zones:</strong> @foreach($currentAuthenticatedUser->zones as $zone)   {{ $zone->name }} @endforeach
+                                    <strong>Zones:</strong> @foreach(session('user')->zones as $zone) {{ $zone->name }} @endforeach
                                 </div>
                                 <div>
-                                    <strong>Companies:</strong> @foreach($currentAuthenticatedUser->zones as $zone)   {{ $zone->company->name }} @endforeach
+                                    <strong>Companies:</strong> @foreach(session('user')->zones as $zone) {{ $zone->company->name }} @endforeach
                                 </div>
                             </div>
                             <br>
