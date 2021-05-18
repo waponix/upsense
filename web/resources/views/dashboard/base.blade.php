@@ -153,6 +153,8 @@
 
     function refreshToken() {
 
+        alert("{{session('refreshToken')}}");
+        console.log("{{session('refreshToken')}}")
         api.post('/auth/refresh', {
             headers: {
                 'Authorization': `Bearer "{{session('refreshToken')}}"`

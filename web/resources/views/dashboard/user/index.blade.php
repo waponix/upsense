@@ -166,11 +166,11 @@
                         });
                     }
                     let newData = [
-                        '<div class="c-avatar">' +
-                        '    <img class="c-avatar-img c-avatar"' +
-                        '         src="/assets/img/avatars/' + dt.image + '"' +
-                        '    />' +
-                        '</div>',
+                        // '<div class="c-avatar">' +
+                        // '    <img class="c-avatar-img c-avatar"' +
+                        // '         src="/assets/img/avatars/' + dt.image + '"' +
+                        // '    />' +
+                        // '</div>',
                         dt.firstName,
                         dt.lastName,
                         dt.mobile,
