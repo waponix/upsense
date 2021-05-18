@@ -3,10 +3,10 @@
         <div class="col col-md-12 col-lg-12">
             <div class="animated fade-in">
 
-                <div class="c-avatar c-avatar-xl border-primary mb-3">
-                    <img id="image" class="c-avatar-img"
-                         src=""/>
-                </div>
+{{--                <div class="c-avatar c-avatar-xl border-primary mb-3">--}}
+{{--                    <img id="image" class="c-avatar-img"--}}
+{{--                         src=""/>--}}
+{{--                </div>--}}
 
                 <div>
                     <strong>First Name:</strong>

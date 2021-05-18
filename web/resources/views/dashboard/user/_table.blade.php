@@ -1,7 +1,7 @@
 <table id="{{$role}}-table" class="data-table table table-outline table-fixed table-hover mt-lg-5" style="margin-top: 20px">
     <thead>
     <tr>
-        <th><i class="cil-filter-frames"></i></th>
+{{--        <th><i class="cil-filter-frames"></i></th>--}}
         <th>First Name</th>
         <th>Last Name</th>
         <th>Mobile</th>
