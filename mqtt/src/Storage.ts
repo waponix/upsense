@@ -1,5 +1,6 @@
 import {FieldType, InfluxDB} from 'influx';
 import {influxConfig} from './config';
+import moment from 'moment';
 
 export class Storage
 {
@@ -28,13 +29,17 @@ export class Storage
             .catch((error: any) => console.log({ error }));
     }
 
-    save (reading: any) {
+    save (data: any) {
+        const dataTimestamp: number = moment(data.obj?.time).unix();
+
         this.client.writePoints([
             {
                 measurement: 'reading',
-                tags: {imei: 'dummysensor01'},
+                tags: {serial: data.obj?.devEUI},
                 fields: {
-                    temperature: reading.temperature
+                    temperature: data.temperature,
+                    humidity: data.humidity,
+                    timestamp: dataTimestamp
                 }
             }
         ]).then(() => {

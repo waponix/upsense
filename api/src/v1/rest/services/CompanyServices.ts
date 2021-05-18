@@ -229,6 +229,7 @@ export default class companyServices
                     //@ts-ignore
                     await this.companyRepository.update(company, data);
                     await this.companyRepository.queryRunner.commitTransaction();
+                    apiResponse.result = company;
                 } catch {
                     await this.companyRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;

@@ -33,7 +33,6 @@ export default class HubServices
         await this.hubRepository.init();
 
         let result: any[] = await this.hubRepository.getList(query);
-        console.log(result);
         result = result.map((record: Hub) => record.serialize());
 
         apiResponse.result = result;

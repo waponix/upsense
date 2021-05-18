@@ -20,10 +20,11 @@ const MQTT_OPTIONS = {
 
 export class SubscriberApp
 {
-    client: any = null;
-    sensorRepository: SensorRepository;
-    sensorReadingRepository: SensorReadingRepository;
-    hubRepository: HubRepository;
+    private client: any = null;
+    private sensorRepository: SensorRepository;
+    private sensorReadingRepository: SensorReadingRepository;
+    private hubRepository: HubRepository;
+    private topic: string = 'iot/+/sensor';
 
     constructor() {
         this.sensorRepository = new SensorRepository(Sensor);
@@ -35,7 +36,7 @@ export class SubscriberApp
         this.client.on('connect', () => {
             console.log('Receiver connection to the MQTT broker: OK')
             // subscribe to a topic
-            this.client.subscribe('iot/+/sensor');
+            this.client.subscribe(this.topic);
 
             // receive a message and do something with it
             this.client.on('message', async (topic: string, message: Buffer) => {
@@ -67,6 +68,7 @@ export class SubscriberApp
             hub.serial = data.obj?.rxInfo[0].mac;
         }
 
+        // update hub data
         hub.isConnected = 1;
         hub.name = data.obj?.rxInfo[0].name;
         hub.lastSeen = dataTimestamp;
@@ -80,7 +82,9 @@ export class SubscriberApp
 
         if (sensor === undefined) {
             sensor = new Sensor();
-            sensor.hub = hub;
+            if (hub) {
+                sensor.hub = hub;
+            }
             sensor.serial = data.obj?.devEUI;
         }
 
@@ -93,15 +97,19 @@ export class SubscriberApp
         await this.sensorRepository.save(sensor);
         await this.sensorRepository.queryRunner.release();
 
-        await this.sensorReadingRepository.init();
+        if (data.temperature && data.humidity) {
+            await this.sensorReadingRepository.init();
 
-        let sensorReading = new SensorReading();
-        sensorReading.temperature = data.temperature;
-        sensorReading.humidity = data.humidity;
-        sensorReading.timestamp = dataTimestamp;
-        sensorReading.sensor = sensor;
+            let sensorReading = new SensorReading();
+            sensorReading.temperature = data.temperature;
+            sensorReading.humidity = data.humidity;
+            sensorReading.timestamp = dataTimestamp;
+            if (sensor) {
+                sensorReading.sensor = sensor;
+            }
 
-        await this.sensorReadingRepository.save(sensorReading);
-        await this.sensorReadingRepository.queryRunner.release();
+            await this.sensorReadingRepository.save(sensorReading);
+            await this.sensorReadingRepository.queryRunner.release();
+        }
     }
 }

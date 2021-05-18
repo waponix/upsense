@@ -32,7 +32,7 @@ export class HubRepository extends BaseRepository
         // create filters if provided
         if (options.filters !== undefined) {
             for (const [field, value] of Object.entries(options.filters)) {
-                whereStatements.push(`z.${field} = :${field}`);
+                whereStatements.push(`h.${field} = :${field}`);
                 parameters[field] = value;
             }
         }
@@ -40,7 +40,7 @@ export class HubRepository extends BaseRepository
         // add sort and
         if (options.sort !== undefined) {
             for (const [field, value] of Object.entries(options.sort)) {
-                query.addOrderBy(`z.${field}`, value)
+                query.addOrderBy(`h.${field}`, value)
             }
         }
 
@@ -50,7 +50,7 @@ export class HubRepository extends BaseRepository
             let searchStatement = [];
 
             for (const field of this.searchableFields) {
-                searchStatement.push(`z.${field} LIKE :find`);
+                searchStatement.push(`h.${field} LIKE :find`);
             }
 
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
