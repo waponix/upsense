@@ -108,6 +108,15 @@ export class UserRepository extends BaseRepository
         return await this.repository.findOne({where: { username, role: UserRole.user }});
     }
 
+    async findOneBy(options: any, relations: any = null): Promise<User | undefined>
+    {
+        options = {where: options};
+        if (relations !== null) {
+            options.relations = relations;
+        }
+        return await this.repository.findOne(options);
+    }
+
     async findOneByEmail(email: string): Promise<User | undefined> {
         return await this.repository.findOne({where: { email, role: UserRole.user }});
     }

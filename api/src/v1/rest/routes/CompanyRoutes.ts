@@ -28,17 +28,7 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // update company zone
         .put('/:companyId/zones/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putZonesAction)
         // delete company zone
-        .delete('/:companyId/zones/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.deleteZonesAction)
-        // get notification setting list
-        .get('/:companyId/zones/:zoneId/notification-settings', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getNotificationSettingsAction)
-        // get one notification setting
-        .get('/:companyId/zones/:zoneId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getNotificationSettingAction)
-        // add notification setting
-        .post('/:companyId/zones/:zoneId/notification-settings/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.postNotificationSettingAction)
-        // update notification setting
-        .put('/:companyId/zones/:zoneId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putNotificationSettingAction)
-        // delete notification setting
-        .delete('/:companyId/zones/:zoneId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.deleteNotificationSettingAction);
+        .delete('/:companyId/zones/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.deleteZonesAction);
 });
 
 module.exports = routes;

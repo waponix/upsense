@@ -10,11 +10,11 @@ routes.registerRoutes((router: Router, controller: Controller) => {
     // register the routes here
     router
         // get hub list
-        .get('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager', 'user']), controller.getSensorsAction);
+        .get('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager', 'user']), controller.getSensorsAction)
         // // get one hub
         // .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getHubAction)
         // // update hub
-        // .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putHubAction);
+        .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putSensorAction);
 });
 
 module.exports = routes;

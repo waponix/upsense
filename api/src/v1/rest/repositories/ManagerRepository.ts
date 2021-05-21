@@ -1,4 +1,4 @@
-import {User, User as Manager} from "../../shared/entities/User";
+import {User as Manager} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {UserRole} from "../../../components/types/UserRoleTypes";
@@ -101,6 +101,15 @@ export class ManagerRepository extends BaseRepository
      */
     async findOneById (id: number): Promise<Manager | undefined> {
         return await this.repository.findOne({where: { id, role: UserRole.manager }, relations: ['company', 'zones']});
+    }
+
+    async findOneBy(options: any, relations: any = null): Promise<Manager | undefined>
+    {
+        options = {where: options};
+        if (relations !== null) {
+            options.relations = relations;
+        }
+        return await this.repository.findOne(options);
     }
 
     async findOneByUsername (username: string): Promise<Manager | undefined> {

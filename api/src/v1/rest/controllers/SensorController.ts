@@ -15,13 +15,13 @@ export default class SensorController extends Controller
             .json(data.body);
     }
 
-    // async getHubAction(request: Request, response: Response)
-    // {
-    //     const sensorServices: SensorServices = new SensorServices((<any>request).user);
-    //     const data: ReturnableResponse = await sensorServices.getOne(request);
-    //
-    //     return response
-    //         .status(data.statusCode)
-    //         .json(data.body);
-    // }
+    async putSensorAction(request: Request, response: Response)
+    {
+        const sensorServices: SensorServices = new SensorServices((<any>request).user);
+        const data: ReturnableResponse = await sensorServices.update(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
 }

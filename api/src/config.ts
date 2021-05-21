@@ -37,3 +37,13 @@ export const mqttConfig = {
     username: process.env.MQTT_USERNAME,
     password: process.env.MQTT_PASSWORD
 }
+
+/**
+ * Mailer config
+ */
+export const mailerConfig = {
+    host: process.env.MAILER_HOST,
+    port: process.env.MAILER_PORT,
+    user: process.env.MAILER_USER,
+    password: process.env.MAILER_PWD
+}

@@ -3,7 +3,6 @@ import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {CommonMessages} from "../../../messages/messages";
-import {ZoneRepository} from "../repositories/ZoneRepository";
 import {Zone} from "../../shared/entities/Zone";
 import {
     notificationSettingCreateValidation,
@@ -13,11 +12,13 @@ import {NotificationSettingRepository} from "../repositories/NotificationSetting
 import {NotificationSetting} from "../../shared/entities/NotificationSetting";
 import CompanyServices from "./CompanyServices";
 import ZoneServices from "./ZoneServices";
+import {UserRepository} from "../repositories/UserRepository";
+import {User} from "../../shared/entities/User";
 
 export default class NotificationSettingServices
 {
     private user: any;
-    private zoneRepository: ZoneRepository;
+    private userRepository: UserRepository;
     private notificationSettingRepository: NotificationSettingRepository;
 
     /**
@@ -26,7 +27,7 @@ export default class NotificationSettingServices
      */
     constructor(user: any) {
         this.user = user;
-        this.zoneRepository = new ZoneRepository(Zone);
+        this.userRepository = new UserRepository(User);
         this.notificationSettingRepository = new NotificationSettingRepository(NotificationSetting);
     }
 
@@ -167,11 +168,11 @@ export default class NotificationSettingServices
 
                 await this.notificationSettingRepository.queryRunner.startTransaction();
 
-                await this.zoneRepository.init();
-                const {zoneId} = request.params;
-                const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(zoneId)});
-                data.zone = zone;
-                await this.zoneRepository.queryRunner.release();
+                await this.userRepository.init();
+                const {userId} = request.params;
+                const user: User | undefined = await this.userRepository.findOneBy({id: parseInt(userId)});
+                data.user = user;
+                await this.userRepository.queryRunner.release();
 
                 try {
                     const notificationSetting: NotificationSetting = await this.notificationSettingRepository.create(data);

@@ -1,6 +1,6 @@
 //@ts-ignore
 import mqtt from 'mqtt';
-import { mqttConfig } from './config';
+import {mailerConfig, mqttConfig} from './config';
 import {SensorRepository} from "./v1/rest/repositories/SensorRepository";
 import {Sensor} from "./v1/shared/entities/Sensor";
 import moment from 'moment';
@@ -8,6 +8,8 @@ import {SensorReadingRepository} from "./v1/rest/repositories/SensorReadingRepos
 import {SensorReading} from "./v1/shared/entities/SensorReading";
 import {HubRepository} from "./v1/rest/repositories/HubRepository";
 import {Hub} from "./v1/shared/entities/Hub";
+
+const nodeMailer = require('nodemailer');
 
 const MQTT_OPTIONS = {
     port: mqttConfig.port,
@@ -90,6 +92,10 @@ export class SubscriberApp
 
         sensor.name = data.obj?.deviceName;
         sensor.currentTemp = data.temperature;
+
+        if (data.battery) {
+            sensor.batteryStatus = data.battery;
+        }
         //@ts-ignore
         sensor.lastSeen = dataTimestamp;
         sensor.isConnected = 1;
@@ -104,6 +110,11 @@ export class SubscriberApp
             sensorReading.temperature = data.temperature;
             sensorReading.humidity = data.humidity;
             sensorReading.timestamp = dataTimestamp;
+
+            if (data.battery) {
+                sensorReading.battery = data.battery;
+            }
+
             if (sensor) {
                 sensorReading.sensor = sensor;
             }
@@ -111,5 +122,43 @@ export class SubscriberApp
             await this.sensorReadingRepository.save(sensorReading);
             await this.sensorReadingRepository.queryRunner.release();
         }
+
+        // await this.mailer();
+    }
+
+    private async mailer()
+    {
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodeMailer.createTransport({
+            host: 'mail.upsense.co',
+            port: 25,
+            secure: false,
+            auth: {
+                user: 'notice@upsense.co',
+                pass: '00UpsenseAdmin12300'
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
+
+        // send mail with defined transport object
+        try {
+            let info = await transporter.sendMail({
+                from: 'Upsense <notice@upsense.co>', // sender address
+                to: "eric.bermejo.reyes@gmail.com", // list of receivers
+                subject: "Temperature Alert - {Zone} - {Sensor Name}", // Subject line
+                html: "" +
+                    "<p>Dear User,</p><br>" +
+                    "<p>The temperature limit has exceeded in {Zone} -  {Sensor Name}.</p>" +
+                    "<p>At {Date}-{Month)-{Year} {Time}, the temperature recorded was {temperature}°C for this location.</p>" +
+                    "<p>Do check to ensure your operations are not affected.</p><br><br><br>" +
+                    "<p>Thank you,</p>" +
+                    "<p>Upsense Team</p>", // html body
+            });
+        } catch (e) {
+            console.log(e);
+        }
+
     }
 }

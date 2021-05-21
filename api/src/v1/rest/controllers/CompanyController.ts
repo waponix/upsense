@@ -3,7 +3,6 @@ import Controller from '../../../components/Controller';
 import CompanyServices from '../services/CompanyServices';
 import ZoneServices from "../services/ZoneServices";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
-import NotificationSettingServices from "../services/NotificationSettingServices";
 
 
 export default class CompanyController extends Controller
@@ -103,57 +102,6 @@ export default class CompanyController extends Controller
     {
         const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
         const data: ReturnableResponse = await zoneServices.delete(request);
-
-        return response
-            .status(data.statusCode)
-            .json(data.body);
-    }
-
-    // Notification Setting endpoints
-    async getNotificationSettingsAction(request: Request, response: Response)
-    {
-        const notificationSettingServices: NotificationSettingServices = new NotificationSettingServices((<any>request).user);
-        const data: ReturnableResponse = await notificationSettingServices.getList(request);
-
-        return response
-            .status(data.statusCode)
-            .json(data.body);
-    }
-
-    async getNotificationSettingAction(request: Request, response: Response)
-    {
-        const notificationSettingServices: NotificationSettingServices = new NotificationSettingServices((<any>request).user);
-        const data: ReturnableResponse = await notificationSettingServices.getOne(request);
-
-        return response
-            .status(data.statusCode)
-            .json(data.body);
-    }
-
-    async postNotificationSettingAction(request: Request, response: Response)
-    {
-        const notificationSettingServices: NotificationSettingServices = new NotificationSettingServices((<any>request).user);
-        const data: ReturnableResponse = await notificationSettingServices.create(request);
-
-        return response
-            .status(data.statusCode)
-            .json(data.body);
-    }
-
-    async putNotificationSettingAction(request: Request, response: Response)
-    {
-        const notificationSettingServices: NotificationSettingServices = new NotificationSettingServices((<any>request).user);
-        const data: ReturnableResponse = await notificationSettingServices.update(request);
-
-        return response
-            .status(data.statusCode)
-            .json(data.body);
-    }
-
-    async deleteNotificationSettingAction(request: Request, response: Response)
-    {
-        const notificationSettingServices: NotificationSettingServices = new NotificationSettingServices((<any>request).user);
-        const data: ReturnableResponse = await notificationSettingServices.delete(request);
 
         return response
             .status(data.statusCode)

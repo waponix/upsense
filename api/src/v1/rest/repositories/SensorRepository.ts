@@ -77,6 +77,15 @@ export class SensorRepository extends BaseRepository
         return await query.getMany();
     }
 
+    async update(sensor: Sensor, data: Partial<Sensor>): Promise<boolean> {
+        sensor.maxTemp = data.maxTemp || sensor.maxTemp;
+        sensor.minTemp = data.minTemp || sensor.minTemp;
+
+        await this.repository.save(sensor);
+
+        return true;
+    }
+
     async findOneBy(options: any, relations: any = null): Promise<Sensor | undefined> {
         options = {where: options};
         if (relations !== null) {

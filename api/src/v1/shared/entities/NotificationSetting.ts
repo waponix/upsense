@@ -1,6 +1,7 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { BaseEntity } from './BaseEntity';
 import { Zone } from './Zone';
+import {User} from "./User";
 
 @Entity({ name: 'notification_settings' })
 export class NotificationSetting extends BaseEntity
@@ -17,8 +18,8 @@ export class NotificationSetting extends BaseEntity
     @Column({ type: 'smallint', name: 'max_repeat', default: 0 })
     maxRepeat!: number;
 
-    @ManyToOne(() => Zone, zone => zone.notificationSettings, { onDelete: 'CASCADE' })
-    zone!: Zone;
+    @ManyToOne(() => User, user => user.notificationSettings, { onDelete: 'CASCADE' })
+    user!: User;
 
     public serialize()
     {
@@ -31,8 +32,8 @@ export class NotificationSetting extends BaseEntity
             updatedAt: this.updatedAt
         };
 
-        if (this.zone) {
-            serialized.zone = this.zone.serialize();
+        if (this.user) {
+            serialized.zone = this.user.serialize();
         }
 
         return serialized;

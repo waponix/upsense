@@ -111,9 +111,9 @@ export class NotificationSettingRepository extends BaseRepository
         notificationSetting.repeatTime = data.repeatTime;
         notificationSetting.maxRepeat = data.maxRepeat;
 
-        if (data.zone) {
+        if (data.user) {
             // assign the zones to the notificationSetting
-            notificationSetting.zone = data.zone;
+            notificationSetting.user = data.user;
         }
 
         await this.repository.save(notificationSetting);
