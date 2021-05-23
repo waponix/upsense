@@ -31,6 +31,10 @@ export class Storage
 
     save (data: any) {
         const dataTimestamp: number = moment(data.obj?.time).unix();
+        let battery: null | number = null;
+        if (data.battery) {
+            battery = data.battery;
+        }
 
         this.client.writePoints([
             {
@@ -39,7 +43,8 @@ export class Storage
                 fields: {
                     temperature: data.temperature,
                     humidity: data.humidity,
-                    timestamp: dataTimestamp
+                    timestamp: dataTimestamp,
+                    battery
                 }
             }
         ]).then(() => {

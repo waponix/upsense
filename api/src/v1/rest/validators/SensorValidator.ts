@@ -6,8 +6,8 @@ import {Zone} from "../../shared/entities/Zone";
 const Validator = require('validatorjs');
 
 const rules = new ValidationRules({
-    maxTemp: ['number'],
-    minTemp: ['number']
+    maxTemp: ['numeric'],
+    minTemp: ['numeric']
 });
 
 export const sensorUpdateValidation = (data: any) => {

@@ -6,7 +6,6 @@ import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {CommonMessages} from "../../../messages/messages";
 import {sensorUpdateValidation} from "../validators/SensorValidator";
-import {Zone} from "../../shared/entities/Zone";
 
 export default class SensorServices
 {
@@ -38,6 +37,29 @@ export default class SensorServices
         await this.sensorRepository.queryRunner.release();
 
         return new ReturnableResponse(200, apiResponse);
+    }
+
+    async getOne(request: Request): Promise<ReturnableResponse>
+    {
+        let statusCode: number = 200;
+        let apiResponse: ApiResponse = new ApiResponse();
+
+        const {id} = request.params;
+
+        await this.sensorRepository.init();
+        const sensor: Sensor | undefined = await this.sensorRepository.findOneBy({id: parseInt(id)}, ['hub']);
+
+        if (sensor === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Sensor');
+            statusCode = 404;
+        } else {
+            apiResponse.result = sensor.serialize();
+        }
+
+        await this.sensorRepository.queryRunner.release();
+
+        return new ReturnableResponse(statusCode, apiResponse);
     }
 
     async update(request: Request): Promise<ReturnableResponse>

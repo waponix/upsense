@@ -116,4 +116,16 @@ export class HubRepository extends BaseRepository
     async save(hub: Hub) {
         await this.repository.save(hub);
     }
+
+    async findUserEmailsForNotification(hub: Hub): Promise<string[]>
+    {
+        return this
+            .createQueryBuilder('h')
+            .innerJoin('h.zone', 'z')
+            .innerJoin('z.users', 'u')
+            .select('u.email as email')
+            .where('h.id = :hubId')
+            .setParameter('hubId', hub.id)
+            .getRawMany();
+    }
 }

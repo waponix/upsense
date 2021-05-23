@@ -9,11 +9,11 @@ let routes = new Routes('/sensors', Controller);
 routes.registerRoutes((router: Router, controller: Controller) => {
     // register the routes here
     router
-        // get hub list
+        // get sensor list
         .get('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager', 'user']), controller.getSensorsAction)
-        // // get one hub
-        // .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getHubAction)
-        // // update hub
+        // get one sensor
+        .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getSensorAction)
+        // // update sensor
         .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putSensorAction);
 });
 

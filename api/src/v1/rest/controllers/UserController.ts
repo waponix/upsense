@@ -125,7 +125,7 @@ export default class UserController extends Controller
             .json(data.body);
     }
 
-    async postNotificationSettingAction(request: Request, response: Response)
+    /*async postNotificationSettingAction(request: Request, response: Response)
     {
         const notificationSettingServices: NotificationSettingServices = new NotificationSettingServices((<any>request).user);
         const data: ReturnableResponse = await notificationSettingServices.create(request);
@@ -133,7 +133,7 @@ export default class UserController extends Controller
         return response
             .status(data.statusCode)
             .json(data.body);
-    }
+    }*/
 
     async putNotificationSettingAction(request: Request, response: Response)
     {
@@ -145,7 +145,7 @@ export default class UserController extends Controller
             .json(data.body);
     }
 
-    async deleteNotificationSettingAction(request: Request, response: Response)
+    /*async deleteNotificationSettingAction(request: Request, response: Response)
     {
         const notificationSettingServices: NotificationSettingServices = new NotificationSettingServices((<any>request).user);
         const data: ReturnableResponse = await notificationSettingServices.delete(request);
@@ -153,5 +153,5 @@ export default class UserController extends Controller
         return response
             .status(data.statusCode)
             .json(data.body);
-    }
+    }*/
 }

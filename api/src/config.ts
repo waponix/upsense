@@ -42,8 +42,8 @@ export const mqttConfig = {
  * Mailer config
  */
 export const mailerConfig = {
-    host: process.env.MAILER_HOST,
-    port: process.env.MAILER_PORT,
-    user: process.env.MAILER_USER,
-    password: process.env.MAILER_PWD
+    host: 'mail.upsense.co',
+    port: 25,
+    user: 'notice@upsense.co',
+    password: '00UpsenseAdmin12300'
 }

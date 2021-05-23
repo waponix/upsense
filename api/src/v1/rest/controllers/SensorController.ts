@@ -15,6 +15,16 @@ export default class SensorController extends Controller
             .json(data.body);
     }
 
+    async getSensorAction(request: Request, response: Response)
+    {
+        const sensorServices: SensorServices = new SensorServices((<any>request).user);
+        const data: ReturnableResponse = await sensorServices.getOne(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
     async putSensorAction(request: Request, response: Response)
     {
         const sensorServices: SensorServices = new SensorServices((<any>request).user);

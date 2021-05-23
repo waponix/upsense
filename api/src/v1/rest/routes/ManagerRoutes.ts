@@ -26,11 +26,11 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // get one notification setting
         .get('/:userId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.getNotificationSettingAction)
         // add notification setting
-        .post('/:userId/notification-settings/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.postNotificationSettingAction)
+        // .post('/:userId/notification-settings/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.postNotificationSettingAction)
         // update notification setting
         .put('/:userId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.putNotificationSettingAction)
         // delete notification setting
-        .delete('/:userId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.deleteNotificationSettingAction);
+        // .delete('/:userId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.deleteNotificationSettingAction);
 });
 
 module.exports = routes;

@@ -83,7 +83,7 @@ export default class ZoneServices
         const {id, companyId} = request.params;
 
         await this.zoneRepository.init();
-        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(id), company: parseInt(companyId)});
+        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(id), company: parseInt(companyId)}, ['users']);
 
         if (zone === undefined) {
             apiResponse.status = Status.NotFound;
@@ -124,8 +124,10 @@ export default class ZoneServices
         // do validation before proceed
         let validation = zoneCreateValidation(data);
 
+        console.log("test lang a\n");
         return new Promise(resolve => {
             validation.checkAsync(async () => {
+                console.log('test lang b\n');
                 // success callback
                 await this.zoneRepository.init();
                 await this.zoneRepository.queryRunner.startTransaction();

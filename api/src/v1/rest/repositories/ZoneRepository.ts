@@ -2,6 +2,7 @@ import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseReposi
 import {Zone} from "../../shared/entities/Zone";
 import {paginationConfig} from "../../../config";
 import {Company} from "../../shared/entities/Company";
+import {Hub} from "../../shared/entities/Hub";
 
 export class ZoneRepository extends BaseRepository
 {
@@ -125,6 +126,16 @@ export class ZoneRepository extends BaseRepository
         return await this.repository.findOne(options);
     }
 
+    async findOneByHub(hub: Hub): Promise<Zone | undefined>
+    {
+        return this
+            .createQueryBuilder('z')
+            .innerJoin('z.hubs', 'h')
+            .where('h.id = :hubId')
+            .setParameter('hubId', hub.id)
+            .getOne();
+    }
+
     /**
      *
      * @param zone
@@ -137,7 +148,8 @@ export class ZoneRepository extends BaseRepository
 
     async findIfZoneBelongsToCompany(zoneId: number, companyId: number): Promise<Zone | undefined>
     {
-        return this.createQueryBuilder('z')
+        return this
+            .createQueryBuilder('z')
             .leftJoin('z.company', 'c')
             .where('z.id = :zoneId')
             .andWhere('c.id = :companyId')

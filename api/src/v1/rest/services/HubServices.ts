@@ -50,7 +50,7 @@ export default class HubServices
         const {id} = request.params;
 
         await this.hubRepository.init();
-        const hub: Hub | undefined = await this.hubRepository.findOneBy({id: parseInt(id)}, ['zone']);
+        const hub: Hub | undefined = await this.hubRepository.findOneBy({id: parseInt(id)}, ['zone', 'sensors']);
 
         if (hub === undefined) {
             apiResponse.status = Status.NotFound;

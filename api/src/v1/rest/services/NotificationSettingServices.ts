@@ -3,9 +3,7 @@ import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {CommonMessages} from "../../../messages/messages";
-import {Zone} from "../../shared/entities/Zone";
 import {
-    notificationSettingCreateValidation,
     notificationSettingUpdateValidation
 } from "../validators/NotificationSettingValidator";
 import {NotificationSettingRepository} from "../repositories/NotificationSettingRepository";
@@ -127,10 +125,10 @@ export default class NotificationSettingServices
         return new ReturnableResponse(statusCode, apiResponse);
     }
 
-    /**
+    /*/!**
      *
      * @param request
-     */
+     *!/
     async create(request: Request): Promise<ReturnableResponse> {
         const companyServices = new CompanyServices(this.user);
         // validate the company id if it belongs to the currently logged in user
@@ -199,7 +197,7 @@ export default class NotificationSettingServices
                 resolve(new ReturnableResponse(statusCode, apiResponse));
             });
         });
-    }
+    }*/
 
     /**
      *
@@ -230,6 +228,14 @@ export default class NotificationSettingServices
 
         const {data} = request.body;
         const {id, zoneId} = request.params;
+
+        if (data.sendEmail) {
+            data.sendEmail = (!!data.sendEmail) ? 1 : 0;
+        }
+
+        if (data.sendSms) {
+            data.sendSms = (!!data.sendSms) ? 1 : 0;
+        }
 
         await this.notificationSettingRepository.init();
 
@@ -284,10 +290,10 @@ export default class NotificationSettingServices
         });
     }
 
-    /**
+    /*/!**
      *
      * @param request
-     */
+     *!/
     async delete(request: Request): Promise<ReturnableResponse> {
         const companyServices = new CompanyServices(this.user);
         // validate the company id if it belongs to the currently logged in user
@@ -346,5 +352,5 @@ export default class NotificationSettingServices
         }
 
         return new ReturnableResponse(statusCode, apiResponse);
-    }
+    }*/
 }
