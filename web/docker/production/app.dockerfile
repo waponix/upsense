@@ -34,5 +34,8 @@ RUN chown -R www-data:www-data \
 
 RUN mv .env.prod .env
 
+# install php vendors
+RUN composer install
+
 # RUN php artisan migrate:fresh --seed
 RUN php artisan optimize
