@@ -1,4 +1,4 @@
-# Upsense Client
+# Upsense web
 
 ### Prerequisites (non-docker setup)
 php 7.4 with php-pdo-mysql php-mysql ext installed
@@ -11,10 +11,10 @@ nodejs 14.15.4
 
 ``` bash
 # clone the repo
-$ git clone https://github.com/kevin-nicolli/Upsense-client.git
+$ git clone https://github.com/ericbermejoreyes/upsense.git
 
 # go into app's directory
-$ cd Upsense-client
+$ cd web
 
 # install app's dependencies
 $ composer install
@@ -33,7 +33,7 @@ Then in file ".env" complete this database configuration:
 * DB_PORT=3306
 * DB_DATABASE=upsense
 * DB_USERNAME=root
-* DB_PASSWORD=
+* DB_PASSWORD=admin
 
 ### Set APP_URL
 
@@ -74,8 +74,8 @@ $ php artisan serve
 
 Open your browser with address: [localhost:8000](localhost:8000) (change localhost with server ip)  
 
-* E-mail: _admin@admin.com_
-* Password: _password_
+* E-mail: _admin_
+* Password: _admin_
 
 This user has roles: _user_ and _admin_
 
@@ -88,11 +88,17 @@ docker should be installed in the system
 ## Installation
 
 ``` bash
-cd upsense
+# clone the repo
+$ git clone https://github.com/ericbermejoreyes/upsense.git
+
+# go into web directory
+$ cd web
 
 // initiate docker
-./vendor/bin/sail up
+./vendor/bin/sail up -d
 
-... to be configured more
+
+
+
 
 ```

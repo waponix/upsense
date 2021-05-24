@@ -30,7 +30,7 @@ services:
         
         ports: 
             - 8990:80
-            # - 4433:443
+            # - 443:443
     
     # mysql database
     mysql:
