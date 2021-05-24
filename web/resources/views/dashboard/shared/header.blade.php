@@ -38,7 +38,7 @@
                             <img class="c-avatar-img" src="{{ url('/assets/img/avatars/' . session('user')->image) }}"
                                  alt="">
                         @else
-                            <img class="c-avatar-img" src="{{ url('/assets/img/avatars/0.jpg') }}"
+                            <img class="c-avatar-img" src="{{ url('/assets/img/avatars/0.png') }}"
                                  alt="">
                         @endif
                     </div>

@@ -9,7 +9,8 @@
                     <div class="card p-4">
                         <div class="card-body">
                             <h1>Login</h1>
-                            <p class="text-muted">Sign In to your account</p>
+                            {{$JWT_ISSUER}}
+                            <p class="text-muted">Sign In to your account </p>
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
                                 <div class="input-group mb-3">
@@ -34,7 +35,6 @@
                                     <input class="form-control" type="password" placeholder="{{ __('Password') }}"
                                            name="password" required>
                                 </div>
-
                                 @if(Session::has('errors'))
                                     <div class="row">
                                         <div class="col-12">
@@ -76,7 +76,7 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <!-- <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/axios.min.js') }}"></script>
 
     <script>
@@ -95,5 +95,5 @@
             });
         });
 
-    </script>
+    </script> -->
 @endsection

@@ -75,18 +75,18 @@
 <script>
     $(document).ready(function () {
         $('.data-table').DataTable();
-
-        function showAlert(msg, type) {
-            let alertHtml = '<div id="alert-flash" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">\n' +
-                '                    <strong>' + type.toUpperCase() + '! </strong> <span id="alert-msg">' + msg + '</span>\n' +
-                '                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">\n' +
-                '                        <span aria-hidden="true">&times;</span>\n' +
-                '                    </button>\n' +
-                '                </div>';
-
-            $('#alert-flash').append(alertHtml);
-        }
     });
+    function showAlert(msg, type) {
+        let alertHtml = '<div id="alert-flash" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">\n' +
+            '                    <strong>' + type.toUpperCase() + '! </strong> <span id="alert-msg">' + msg + '</span>\n' +
+            '                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">\n' +
+            '                        <span aria-hidden="true">&times;</span>\n' +
+            '                    </button>\n' +
+            '                </div>';
+
+        $('#alert-flash').append(alertHtml);
+    }
+
 </script>
 
 <script>
@@ -115,7 +115,7 @@
     'use strict';
     let api = axios.create({
         baseURL: "{{$JWT_ISSUER}}",
-        timeout: 5000,
+        timeout: 3000,
         headers: {
             'Authorization': 'Bearer  `{{session('accessToken')}}`',
             'Content-Type': 'application/json',
@@ -143,7 +143,7 @@
             originalRequest._retry = true;
             refreshToken();
 
-            api.defaults.headers.common['Authorization'] = `Bearer "{{session('accessToken')}}"`;
+            api.defaults.headers.common['Authorization'] = 'Bearer  `{{session('accessToken')}}`';
             return api(originalRequest);
         }
 
@@ -152,12 +152,11 @@
 
 
     function refreshToken() {
-
-        alert("{{session('refreshToken')}}");
         console.log("{{session('refreshToken')}}")
         api.post('/auth/refresh', {
             headers: {
-                'Authorization': `Bearer "{{session('refreshToken')}}"`
+                'Authorization': 'Bearer  `{{session('refreshToken')}}`'
+                
             }
         }).then((response) => {
             if (response.resultCode === 0) {

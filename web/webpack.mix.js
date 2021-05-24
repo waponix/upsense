@@ -75,6 +75,6 @@ mix.copy('resources/assets', 'public/assets');
 // mix.browserSync({ proxy: "http://localhost:8000" });
 
 mix.browserSync({
-    proxy: 'http://localhost:8000',
+    proxy: 'http://localhost',
     files: ['./resources/**/*', './routes/**/*', './app/**/*', './config/**/*']
 }).setPublicPath('public');

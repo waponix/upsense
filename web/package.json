@@ -1,12 +1,12 @@
 {
-  "name": "@upsense/upsense-client-admin",
+  "name": "@upsense/upsense-web-client",
   "version": "1.0.0",
-  "description": "Upsense client web admin",
-  "homepage": "https://upsense.co",
+  "description": "Upsense web client",
+  "homepage": "https://portal.upsense.co",
   "license": "MIT",
   "author": {
     "name": "Upsense team",
-    "url": "https://upsense.co"
+    "url": "https://portal.upsense.co"
   },
   "main": "public/index.php",
   "repository": {
@@ -87,7 +87,7 @@
     "js-beautify": "^1.11.0",
     "jsdom": "^16.2.2",
     "minimist": "^1.2.5",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.14",
     "nodemon": "^2.0.4",
     "npm-run-all": "^4.1.5",
     "postcss-cli": "^7.1.1",

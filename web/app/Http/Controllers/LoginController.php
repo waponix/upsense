@@ -47,9 +47,10 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         $error = '';
+
         try {
             $res = Http::withBasicAuth($request->get('email'), $request->get('password'))
-                ->post(env('JWT_ISSUER') . '/auth/login');
+                ->post(config('app.JWT_ISSUER') . '/auth/login');
 
             if ($res->failed()) {
                 if ($res->status() == 401) {
@@ -66,8 +67,8 @@ class LoginController extends Controller
 
                 $decoded = JWT\JWT::decode(
                     $accessToken,
-                    env('JWT_SECRET'),
-                    [env('JWT_ALGORITHM')]
+                    config('app.JWT_SECRET'),
+                    [config('app.JWT_ALGORITHM')]
                 );
 
                 $user = new User();
@@ -88,6 +89,7 @@ class LoginController extends Controller
             }
         } catch (\Exception $e) {
             $error = 'There is something wrong with the server. Please contact administrator.';
+            $error = $e->getMessage();
         }
 
         if ($error != '') {
@@ -103,14 +105,14 @@ class LoginController extends Controller
      */
     public function refreshToken(Request $request)
     {
-        $res = Http::post(env('JWT_ISSUER') . '/auth/refresh');
+        $res = Http::post(config('app.JWT_ISSUER') . '/auth/refresh');
         if ($res->successful()) {
             $accessToken = JWT\JWT::jsonDecode($res->body())->result->accessToken;
             $refreshToken = JWT\JWT::jsonDecode($res->body())->result->refreshToken;
             $decoded = JWT\JWT::decode(
                 $accessToken,
-                env('JWT_SECRET'),
-                [env('JWT_ALGORITHM')]
+                config('app.JWT_SECRET'),
+                [config('app.JWT_ALGORITHM')]
             );
 
             $request->session()->put('accessToken', $accessToken);

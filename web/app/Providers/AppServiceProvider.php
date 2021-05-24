@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Config;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::share('JWT_ISSUER', env('JWT_ISSUER'));
+        View::share('JWT_ISSUER', Config::get('app.JWT_ISSUER'));
         View::share('ROLES', self::ROLES);
         Paginator::useBootstrap();
     }

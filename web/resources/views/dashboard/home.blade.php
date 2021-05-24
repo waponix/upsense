@@ -170,7 +170,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($sensors as $sensor)
+                            {{-- @foreach($sensors as $sensor)
                                 <tr>
                                     <td>
                                         {{$sensor->description}}
@@ -275,7 +275,7 @@
                                         <strong>{{ \Carbon\Carbon::parse($sensor->last_seen)->diffForHumans([ 'parts' => 2 ]) }}</strong>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @endforeach --}}
 
                             </tbody>
                         </table>
@@ -333,13 +333,13 @@
                                     </div>
                                 </div>
                             </div>
-                            @foreach($sensors as $sensor)
+                            {{-- @foreach($sensors as $sensor)
                                 <div class="progress-group">
                                     <div class="progress-group-header align-items-end">
                                         {{--                              <svg class="c-icon progress-group-icon">--}}
                                         {{--                                <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-globe-alt"></use>--}}
                                         {{--                              </svg>--}}
-                                        <div>{{$sensor->description}}</div>
+                                        {{-- <div>{{$sensor->description}}</div>
                                         <div class="ml-auto font-weight-bold mr-2">120</div>
                                         <div class="text-muted small">(56%)</div>
                                     </div>
@@ -350,7 +350,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            @endforeach  --}}
                         </div>
                         <!-- /.col-->
                         <div class="col-sm-6">

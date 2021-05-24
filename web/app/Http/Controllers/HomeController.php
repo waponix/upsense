@@ -30,8 +30,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $sensors = Sensor::all();
-        return view('dashboard.home', compact('sensors'));
+        // $sensors = Sensor::all();
+        return view('dashboard.home');
     }
 
 }
