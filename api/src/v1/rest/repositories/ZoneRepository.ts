@@ -110,7 +110,7 @@ export class ZoneRepository extends BaseRepository
 
     /**
      *
-     * @param id
+     * @param idads
      */
     async findOneById(id: number): Promise<Zone | undefined>
     {

@@ -105,15 +105,15 @@ export default class UserController extends Controller
     }
 
     // Notification Setting endpoints
-    async getNotificationSettingsAction(request: Request, response: Response)
-    {
-        const notificationSettingServices: NotificationSettingServices = new NotificationSettingServices((<any>request).user);
-        const data: ReturnableResponse = await notificationSettingServices.getList(request);
-
-        return response
-            .status(data.statusCode)
-            .json(data.body);
-    }
+    // async getNotificationSettingsAction(request: Request, response: Response)
+    // {
+    //     const notificationSettingServices: NotificationSettingServices = new NotificationSettingServices((<any>request).user);
+    //     const data: ReturnableResponse = await notificationSettingServices.getList(request);
+    //
+    //     return response
+    //         .status(data.statusCode)
+    //         .json(data.body);
+    // }
 
     async getNotificationSettingAction(request: Request, response: Response)
     {

@@ -123,8 +123,10 @@ export class HubRepository extends BaseRepository
             .createQueryBuilder('h')
             .innerJoin('h.zone', 'z')
             .innerJoin('z.users', 'u')
+            .innerJoin('u.notificationSetting', 'ns')
             .select('u.email as email')
-            .where('h.id = :hubId')
+            .where('ns.sendEmail = 1')
+            .andWhere('h.id = :hubId')
             .setParameter('hubId', hub.id)
             .getRawMany();
     }

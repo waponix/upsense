@@ -2,6 +2,7 @@ import {User} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {paginationConfig} from "../../../config";
 import {UserRole} from "../../../components/types/UserRoleTypes";
+import {NotificationSetting} from "../../shared/entities/NotificationSetting";
 
 export class UserRepository extends BaseRepository
 {
@@ -142,7 +143,14 @@ export class UserRepository extends BaseRepository
             user.zones = data.zones;
         }
 
+        let notificationSetting: NotificationSetting = new NotificationSetting();
+        notificationSetting.user = user;
+
+        user.notificationSetting = notificationSetting;
+
         await this.repository.save(user);
+
+        await this.em.getRepository(NotificationSetting).save(notificationSetting);
         return user;
     }
 

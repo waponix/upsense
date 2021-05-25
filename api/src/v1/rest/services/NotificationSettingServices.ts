@@ -32,7 +32,6 @@ export default class NotificationSettingServices
     /**
      *
      * @param request
-     */
     async getList(request: Request): Promise<ReturnableResponse> {
         const companyServices = new CompanyServices(this.user);
         // validate the company id if it belongs to the currently logged in user
@@ -73,7 +72,7 @@ export default class NotificationSettingServices
         await this.notificationSettingRepository.queryRunner.release();
 
         return new ReturnableResponse(200, apiResponse);
-    }
+    }*/
 
     /**
      *
@@ -105,12 +104,13 @@ export default class NotificationSettingServices
         await this.notificationSettingRepository.init();
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode = 200;
-        const {id, zoneId} = request.params;
+        const {userId} = request.params;
 
-        const notificationSetting: NotificationSetting | undefined = await this.notificationSettingRepository.findOneBy({
-            id: parseInt(id),
-            zone: zoneId
-        });
+        const user: User | undefined = await this.userRepository.findOneBy({
+            id: parseInt(userId)
+        }, ['notificationSetting']);
+
+        let notificationSetting: NotificationSetting | undefined = user?.notificationSetting;
 
         if (notificationSetting === undefined) {
             apiResponse.status = Status.NotFound;
@@ -227,7 +227,7 @@ export default class NotificationSettingServices
         }
 
         const {data} = request.body;
-        const {id, zoneId} = request.params;
+        const {userId} = request.params;
 
         if (data.sendEmail) {
             data.sendEmail = (!!data.sendEmail) ? 1 : 0;
@@ -241,12 +241,13 @@ export default class NotificationSettingServices
 
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
-        let notificaitonSetting: NotificationSetting | undefined = await this.notificationSettingRepository.findOneBy({
-            id: parseInt(id),
-            zone: zoneId
-        });
+        let user: User | undefined = await this.userRepository.findOneBy({
+            id: parseInt(userId)
+        }, ['notificationSetting']);
 
-        if (notificaitonSetting === undefined) {
+        let notificationSetting: NotificationSetting | undefined = user?.notificationSetting;
+
+        if (notificationSetting === undefined) {
             apiResponse.status = Status.NotFound;
             apiResponse.message = CommonMessages.NotFound('Notification Setting');
             statusCode = 404;
@@ -263,11 +264,12 @@ export default class NotificationSettingServices
 
                 try {
                     // @ts-ignore
-                    await this.notificationSettingRepository.update(notificaitonSetting, data);
+                    await this.notificationSettingRepository.update(notificationSetting, data);
                     await this.notificationSettingRepository.queryRunner.commitTransaction();
-                    // get updated notificaitonSetting
-                    notificaitonSetting = await this.notificationSettingRepository.findOneById(parseInt(id));
-                    apiResponse.result = notificaitonSetting?.serialize();
+                    // get updated notificationSetting
+                    //@ts-ignore
+                    notificationSetting = await this.notificationSettingRepository.findOneById(parseInt(notificationSetting.id));
+                    apiResponse.result = notificationSetting?.serialize();
                 } catch {
                     await this.notificationSettingRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;

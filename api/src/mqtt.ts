@@ -150,11 +150,11 @@ export class SubscriberApp
 
         // Handle notifications
         let triggerSendNotification = false;
-        if (data.maxTemp !== null && data.temperature > sensor.maxTemp) {
+        if (sensor.maxTemp !== null && data.temperature > sensor.maxTemp) {
             triggerSendNotification = true;
         }
 
-        if (data.minTemp !== null && data.temperature < sensor.minTemp) {
+        if (sensor.minTemp !== null && data.temperature < sensor.minTemp) {
             triggerSendNotification = true;
         }
 
@@ -199,7 +199,7 @@ export class SubscriberApp
                     "<p>Dear User,</p><br>" +
                     `<p>The temperature limit has exceeded in ${zoneName} -  ${sensorName}.</p>` +
                     `<p>At <b>${date.format('DD-MM-YYYY hh:mm:ss a')}</b>, the temperature recorded was <b>${temperature}°C</b> for this location.</p>` +
-                    "<p>Do check to ensure your operations are not affected.</p><br><br><br>" +
+                    "<p>Do check to ensure your operations are not affected.</p><br>" +
                     "<p>Thank you,</p>" +
                     "<p>Upsense Team</p>", // html body
             });

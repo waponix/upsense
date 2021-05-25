@@ -230,7 +230,6 @@ export default class ManagerServices
         const {id}: any = request.params;
 
         await this.managerRepository.init();
-
         // get the manager to be deleted
         let manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(id));
 

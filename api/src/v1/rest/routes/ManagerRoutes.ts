@@ -22,13 +22,13 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // delete manager
         .delete('/:id', passport.authenticate('jwt', {session: false, optional: false}, authorize(['admin'])), controller.deleteManagerAction)
         // get notification setting list
-        .get('/:userId/notification-settings', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.getNotificationSettingsAction)
+        // .get('/:userId/notification-settings', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.getNotificationSettingsAction)
         // get one notification setting
-        .get('/:userId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.getNotificationSettingAction)
+        .get('/:userId/notification-setting', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.getNotificationSettingAction)
         // add notification setting
         // .post('/:userId/notification-settings/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.postNotificationSettingAction)
         // update notification setting
-        .put('/:userId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.putNotificationSettingAction)
+        .put('/:userId/notification-setting', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.putNotificationSettingAction)
         // delete notification setting
         // .delete('/:userId/notification-settings/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['manager']), controller.deleteNotificationSettingAction);
 });

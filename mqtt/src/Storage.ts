@@ -31,21 +31,22 @@ export class Storage
 
     save (data: any) {
         const dataTimestamp: number = moment(data.obj?.time).unix();
-        let battery: null | number = null;
+
+        let fields: any = {
+            temperature: data.temperature,
+            humidity: data.humidity,
+            timestamp: dataTimestamp
+        };
+
         if (data.battery) {
-            battery = data.battery;
+            fields.battery = data.battery;
         }
 
         this.client.writePoints([
             {
                 measurement: 'reading',
                 tags: {serial: data.obj?.devEUI},
-                fields: {
-                    temperature: data.temperature,
-                    humidity: data.humidity,
-                    timestamp: dataTimestamp,
-                    battery
-                }
+                fields
             }
         ]).then(() => {
             // console.log('saved');

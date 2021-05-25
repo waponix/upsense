@@ -124,10 +124,8 @@ export default class ZoneServices
         // do validation before proceed
         let validation = zoneCreateValidation(data);
 
-        console.log("test lang a\n");
         return new Promise(resolve => {
             validation.checkAsync(async () => {
-                console.log('test lang b\n');
                 // success callback
                 await this.zoneRepository.init();
                 await this.zoneRepository.queryRunner.startTransaction();
