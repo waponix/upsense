@@ -10,6 +10,7 @@ import {CompanyRepository} from "../repositories/CompanyRepository";
 import {Company} from "../../shared/entities/Company";
 import {Zone} from "../../shared/entities/Zone";
 import {ZoneRepository} from "../repositories/ZoneRepository";
+import {UserRole} from "../../../components/types/UserRoleTypes";
 
 export default class ManagerServices
 {
@@ -60,6 +61,13 @@ export default class ManagerServices
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode = 200;
         const {id} = request.params;
+
+        if (this.user.role === UserRole.manager && parseInt(id) !== this.user.id) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Manager');
+            statusCode = 404;
+            return new ReturnableResponse(statusCode, apiResponse);
+        }
 
         const manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(id));
 

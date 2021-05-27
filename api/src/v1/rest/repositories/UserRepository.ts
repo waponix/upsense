@@ -3,6 +3,9 @@ import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseReposi
 import {paginationConfig} from "../../../config";
 import {UserRole} from "../../../components/types/UserRoleTypes";
 import {NotificationSetting} from "../../shared/entities/NotificationSetting";
+import {Company} from "../../shared/entities/Company";
+import {CompanyRepository} from "./CompanyRepository";
+import {Repository} from "typeorm";
 
 export class UserRepository extends BaseRepository
 {
@@ -18,8 +21,9 @@ export class UserRepository extends BaseRepository
     /**
      * Get user list
      * @param options
+     * @param user
      */
-    async getList(options: QueryOptions = {}): Promise<User[]> {
+    async getList(options: QueryOptions = {}, apiUser: any): Promise<User[]> {
         let parameters: any = {
             role: UserRole.user
         };
@@ -29,7 +33,7 @@ export class UserRepository extends BaseRepository
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
-        const query = await this
+        const mainQuery = await this
             .createQueryBuilder('u')
             .select([
                 'u.id',
@@ -45,6 +49,21 @@ export class UserRepository extends BaseRepository
             .offset(offset)
             .limit(paginationConfig.limit);
 
+        if (apiUser.role && apiUser.role === UserRole.manager) {
+            const companyRepository: Repository<Company> = this.em.getRepository(Company);
+            const company: Company | undefined = await companyRepository
+                .createQueryBuilder('c')
+                .innerJoin('c.users', 'u')
+                .where('u.id = :userId')
+                .setParameter('userId', apiUser.id)
+                .getOne();
+
+            mainQuery.innerJoin('u.company', 'cmp');
+
+            whereStatements.push('cmp.id = :companyId');
+            parameters.companyId = company?.id;
+        }
+
         // create filters if provided
         if (options.filters !== undefined) {
             for (const [field, value] of Object.entries(options.filters)) {
@@ -56,7 +75,7 @@ export class UserRepository extends BaseRepository
         // add sort and
         if (options.sort !== undefined) {
             for (const [field, value] of Object.entries(options.sort)) {
-                query.addOrderBy(`u.${field}`, value)
+                mainQuery.addOrderBy(`u.${field}`, value)
             }
         }
 
@@ -78,22 +97,22 @@ export class UserRepository extends BaseRepository
             }
 
             if (options.relations.indexOf('company') > -1) {
-                query
+                mainQuery
                     .leftJoinAndSelect('u.company', 'c');
             }
 
             if (options.relations.indexOf('zones') > -1) {
-                query.leftJoinAndSelect('u.zones', 'z');
+                mainQuery.leftJoinAndSelect('u.zones', 'z');
             }
 
             break;
         } while (true);
 
-        query
+        mainQuery
             .where(whereStatements.join(' AND '))
             .setParameters(parameters);
 
-        return await query.getMany();
+        return await mainQuery.getMany();
     }
 
     /**
@@ -103,6 +122,34 @@ export class UserRepository extends BaseRepository
      */
     async findOneById(id: number, relation: any = []): Promise<User | undefined> {
         return await this.repository.findOne({where: { id, role: UserRole.user }, relations: ['company', 'zones']});
+    }
+
+    async findOneByUser(id: number, apiUser: any): Promise<User | undefined> {
+        let parameters: any = {id};
+
+        const query = this
+            .createQueryBuilder('u')
+            .innerJoinAndSelect('u.company', 'c')
+            .leftJoinAndSelect('u.zones', 'z')
+            .where('u.id = :id');
+
+        if (apiUser.role !== UserRole.admin) {
+            const companyRepository: Repository<Company> = this.em.getRepository(Company);
+            const company: Company | undefined = await companyRepository
+                .createQueryBuilder('c')
+                .innerJoin('c.users', 'u')
+                .where('u.id = :userId')
+                .setParameter('userId', apiUser.id)
+                .getOne();
+
+            query.andWhere('c.id = :companyId');
+
+            parameters.companyId = company?.id;
+        }
+
+        query.setParameters(parameters);
+
+        return query.getOne();
     }
 
     async findOneByUsername(username: string): Promise<User | undefined> {
@@ -137,6 +184,13 @@ export class UserRepository extends BaseRepository
         user.image = data.image;
         user.role = UserRole.user;
         user.company = data.company;
+
+        // await this.repository
+        //     .createQueryBuilder()
+        //     .relation(Company, 'users')
+        //     .of(user.company).add(user);
+        //
+        // await user.company.save();
 
         if (data.zones) {
             // assign the zones to the user

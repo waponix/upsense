@@ -93,6 +93,15 @@ export class CompanyRepository extends BaseRepository
         return await this.em.getRepository(Company).findOne({where: { id }, relations: ['users', 'zones']});
     }
 
+    async findOneBy(options: any, relations: any = null): Promise<User | undefined>
+    {
+        options = {where: options};
+        if (relations !== null) {
+            options.relations = relations;
+        }
+        return await this.repository.findOne(options);
+    }
+
     /**
      *
      * @param user
