@@ -162,7 +162,7 @@ export default class companyServices
     async create(request: Request): Promise<ReturnableResponse>
     {
         let apiResponse: ApiResponse = new ApiResponse();
-        let statusCode: number = 200;
+        let statusCode: number = 201;
 
         const {data} = request.body;
         const validation = companyCreateValidation(data);

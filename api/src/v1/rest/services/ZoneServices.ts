@@ -116,7 +116,7 @@ export default class ZoneServices
         }
 
         let apiResponse: ApiResponse = new ApiResponse();
-        let statusCode: number = 200;
+        let statusCode: number = 201;
         const {data} = request.body;
 
         data.company = parseInt(request.params.companyId);

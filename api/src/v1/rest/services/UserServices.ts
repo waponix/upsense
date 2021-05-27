@@ -83,7 +83,7 @@ export default class UserServices
      */
     async create(request: Request): Promise<ReturnableResponse> {
         let apiResponse: ApiResponse = new ApiResponse();
-        let statusCode: number = 200;
+        let statusCode: number = 201;
         const {data} = request.body;
 
         // do validation before proceed
