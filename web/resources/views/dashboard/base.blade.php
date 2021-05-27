@@ -34,23 +34,6 @@
     @yield('css')
     <script src="{{ asset('js/jquery.min.js') }}"></script>
 
-    <script>
-        $(document).ready(function() {
-            function showAlert(msg, type) {
-                let alertHtml = '<div id="alert-flash" class="alert alert-' + type +
-                    ' alert-dismissible fade show" role="alert">\n' +
-                    '                    <strong>' + type.toUpperCase() + '! </strong> <span id="alert-msg">' +
-                    msg + '</span>\n' +
-                    '                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">\n' +
-                    '                        <span aria-hidden="true">&times;</span>\n' +
-                    '                    </button>\n' +
-                    '                </div>';
-
-                $('#alert-flash').append(alertHtml);
-            }
-        });
-
-    </script>
 </head>
 
 <body class="c-app">
@@ -92,7 +75,7 @@
                 '                    </button>\n' +
                 '                </div>';
 
-            $('#alert-flash').append(alertHtml);
+            $('#alert-container').html('').append(alertHtml);
         }
 
     </script>
