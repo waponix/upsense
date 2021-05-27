@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <base href="./">
     <meta charset="utf-8">
@@ -34,10 +35,58 @@
     <script src="{{ asset('js/jquery.min.js') }}"></script>
 
     <script>
+        $(document).ready(function() {
+            function showAlert(msg, type) {
+                let alertHtml = '<div id="alert-flash" class="alert alert-' + type +
+                    ' alert-dismissible fade show" role="alert">\n' +
+                    '                    <strong>' + type.toUpperCase() + '! </strong> <span id="alert-msg">' +
+                    msg + '</span>\n' +
+                    '                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">\n' +
+                    '                        <span aria-hidden="true">&times;</span>\n' +
+                    '                    </button>\n' +
+                    '                </div>';
+
+                $('#alert-flash').append(alertHtml);
+            }
+        });
+
+    </script>
+</head>
+
+<body class="c-app">
+    <div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
+        @include('dashboard.shared.nav-left')
+        {{-- @include('dashboard.shared.nav-builder') --}}
+        @include('dashboard.shared.header')
+
+        <div class="c-body">
+            <main class="c-main">
+
+                <div class="col-lg-12" id="alert-container">
+
+                </div>
+                @yield('content')
+            </main>
+            @include('dashboard.shared.footer')
+        </div>
+    </div>
+
+    <script src="{{ asset('js/coreui.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/coreui-utils.js') }}"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.dataTables.js') }}"></script>
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.data-table').DataTable();
+        });
 
         function showAlert(msg, type) {
-            let alertHtml = '<div id="alert-flash" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">\n' +
-                '                    <strong>' + type.toUpperCase() + '! </strong> <span id="alert-msg">' + msg + '</span>\n' +
+            let alertHtml = '<div id="alert-flash" class="alert alert-' + type +
+                ' alert-dismissible fade show" role="alert">\n' +
+                '                    <strong>' + type.toUpperCase() + '! </strong> <span id="alert-msg">' + msg +
+                '</span>\n' +
                 '                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">\n' +
                 '                        <span aria-hidden="true">&times;</span>\n' +
                 '                    </button>\n' +
@@ -45,215 +94,101 @@
 
             $('#alert-flash').append(alertHtml);
         }
+
     </script>
-</head>
 
-<body class="c-app">
-<div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
-    @include('dashboard.shared.nav-left')
-    {{--    @include('dashboard.shared.nav-builder')--}}
-    @include('dashboard.shared.header')
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation');
 
-    <div class="c-body">
-        <main class="c-main">
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
 
-            <div class="col-lg-12" id="alert-container">
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+        })();
 
-            </div>
-            @yield('content')
-        </main>
-        @include('dashboard.shared.footer')
-    </div>
-</div>
+    </script>
 
-<script src="{{ asset('js/coreui.bundle.min.js') }}"></script>
-<script src="{{ asset('js/coreui-utils.js') }}"></script>
-<script src="{{ asset('js/axios.min.js') }}"></script>
-<script src="{{ asset('js/jquery.dataTables.js') }}"></script>
-<script src="{{ asset('js/moment.min.js') }}"></script>
-
-<script>
-    $(document).ready(function () {
-        $('.data-table').DataTable();
-    });
-    function showAlert(msg, type) {
-        let alertHtml = '<div id="alert-flash" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">\n' +
-            '                    <strong>' + type.toUpperCase() + '! </strong> <span id="alert-msg">' + msg + '</span>\n' +
-            '                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">\n' +
-            '                        <span aria-hidden="true">&times;</span>\n' +
-            '                    </button>\n' +
-            '                </div>';
-
-        $('#alert-flash').append(alertHtml);
-    }
-
-</script>
-
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
+    <script>
         'use strict';
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation');
-
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-
-                    form.classList.add('was-validated');
-                }, false);
-            });
-    })();
-</script>
-
-<script>
-    'use strict';
-    let api = axios.create({
-        baseURL: "{{$JWT_ISSUER}}",
-        timeout: 3000,
-        headers: {
-            'Authorization': 'Bearer  `{{session('accessToken')}}`',
-            'Content-Type': 'application/json',
-            'accept': 'application/json'
-        }
-    });
-
-    const token = "{{session('accessToken')}}";
-
-    api.interceptors.request.use(function (config) {
-        if (token) {
-            config.headers['Authorization'] = 'Bearer ' + token;
-        }
-        return config;
-    }, function (error) {
-        Promise.reject(error);
-    });
-
-    api.interceptors.response.use(function (response) {
-        return response;
-    }, function (error) {
-        var originalRequest = error.config;
-        if (typeof error !== 'undefined' && typeof error.response !== 'undefined' &&
-            error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-            refreshToken();
-
-            api.defaults.headers.common['Authorization'] = 'Bearer  `{{session('accessToken')}}`';
-            return api(originalRequest);
-        }
-
-        return Promise.reject(error);
-    });
-
-
-    function refreshToken() {
-        console.log("{{session('refreshToken')}}")
-        api.post('/auth/refresh', {
+        let api = axios.create({
+            baseURL: "{{ $JWT_ISSUER }}",
+            timeout: 5000,
             headers: {
-                'Authorization': 'Bearer  `{{session('refreshToken')}}`'
-                
+                'Authorization': `Bearer {{ session('accessToken') }}`,
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
             }
-        }).then((response) => {
-            if (response.resultCode === 0) {
-                console.log(response)
-                alert()
-                // axios.post('/refreshToken', {
-                //     headers: {
-                //         'Authorization': `Bearer ${refreshToken}`
-                //     }
-                // }).then((response) => {
-                //     console.log(response);
-                // });
-                // window.reload();
-
-            } else {
-                window.location.href = "/login";
-            }
-        }, (error) => {
-            window.location.href = "/login";
-            console.error(error);
         });
-    }
 
+        const token = "{{ session('accessToken') }}";
 
+        api.interceptors.request.use(function(config) {
+            if (token) {
+                config.headers['Authorization'] = 'Bearer ' + token;
+            }
+            return config;
+        }, function(error) {
+            Promise.reject(error);
+        });
 
-    {{--const api = axios.create({--}}
-    {{--        baseURL: "{{$JWT_ISSUER}}",--}}
-    {{--        timeout: 5000,--}}
-    {{--        headers: {--}}
-    {{--            'Authorization': 'Bearer ' + {{session('accessToken')}},--}}
-    {{--            'Content-Type': 'application/json',--}}
-    {{--            'accept': 'application/json'--}}
-    {{--        }--}}
-    {{--    });--}}
+        api.interceptors.response.use(function(response) {
+            return response;
+        }, function(error) {
+            var originalRequest = error.config;
+            if (typeof error !== 'undefined' && typeof error.response !== 'undefined' &&
+                error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+                refreshToken();
 
-    {{--api.interceptors.response.use(--}}
-    {{--    response => response,--}}
-    {{--    error => {--}}
-    {{--        const originalRequest = error.config;--}}
+                api.defaults.headers.common['Authorization'] = `Bearer {{ session('accessToken') }}`;
+                return api(originalRequest);
+            }
 
-    {{--        // Prevent infinite loops--}}
-    {{--        if (error.response.status === 401 && originalRequest.url === '{{$JWT_ISSUER}}/auth/refresh') {--}}
-    {{--            window.location.href = '/login';--}}
-    {{--            return Promise.reject(error);--}}
-    {{--        }--}}
+            return Promise.reject(error);
+        });
 
-    {{--        if (error.response.data.code === "token_not_valid" &&--}}
-    {{--            error.response.status === 401 &&--}}
-    {{--            error.response.statusText === "Unauthorized") {--}}
-    {{--            const refreshToken = {{session('refreshToken')}};--}}
+        function refreshToken() {
+            api.post('/auth/refresh', {
+                headers: {
+                    'Authorization': `Bearer {{ session('refreshToken') }}`
+                }
+            }).then((response) => {
+                if (response.resultCode === 0) {
+                    console.log(response)
+                    axios.post('/refreshToken', {
+                        headers: {
+                            'Authorization': `Bearer ${refreshToken}`
+                        }
+                    }).then((response) => {
+                        console.log(response);
+                    });
+                    alert()
 
-    {{--            if (refreshToken) {--}}
-    {{--                const tokenParts = JSON.parse(atob(refreshToken.split('.')[1]));--}}
+                    window.reload();
 
-    {{--                // exp date in token is expressed in seconds, while now() returns milliseconds:--}}
-    {{--                const now = Math.ceil(Date.now() / 1000);--}}
-    {{--                console.log(tokenParts.exp);--}}
+                } else {
+                    window.location.href = "/login";
+                }
+            }, (error) => {
+                window.location.href = "/login";
+                console.error(error);
+            });
+        }
 
-    {{--                if (tokenParts.exp > now) {--}}
-    {{--                    return api--}}
-    {{--                        .post('{{$JWT_ISSUER}}/auth/refresh',--}}
-    {{--                            {--}}
-    {{--                                headers: {--}}
-    {{--                                    'Authorization': `Bearer ${refreshToken}`--}}
-    {{--                                }--}}
-    {{--                            }--}}
-    {{--                        )--}}
-    {{--                        .then((response) => {--}}
-
-    {{--                            // localStorage.setItem('access_token', response.data.access);--}}
-    {{--                            // localStorage.setItem('refresh_token', response.data.refresh);--}}
-    {{--                            console.log(response.data)--}}
-    {{--                            api.defaults.headers['Authorization'] = "JWT " + response.data.access;--}}
-    {{--                            originalRequest.headers['Authorization'] = "JWT " + response.data.access;--}}
-
-    {{--                            return api(originalRequest);--}}
-    {{--                        })--}}
-    {{--                        .catch(err => {--}}
-    {{--                            console.log(err)--}}
-    {{--                        });--}}
-    {{--                } else {--}}
-    {{--                    console.log("Refresh token is expired", tokenParts.exp, now);--}}
-    {{--                    window.location.href = '/login';--}}
-    {{--                }--}}
-    {{--            } else {--}}
-    {{--                console.log("Refresh token not available.")--}}
-    {{--                window.location.href = '/login';--}}
-    {{--            }--}}
-    {{--        }--}}
-
-
-    {{--        // specific error handling done elsewhere--}}
-    {{--        return Promise.reject(error);--}}
-    {{--    }--}}
-    {{--);--}}
-
-</script>
-@yield('javascript')
+    </script>
+    @yield('javascript')
 </body>
+
 </html>

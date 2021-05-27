@@ -2,46 +2,46 @@
     <div class="row justify-content-md-center">
         <div class="col col-md-12 col-lg-12">
             <div class="animated fadeIn">
-                <form id="create{{ $role }}Form" autocomplete="off"
-                      method="POST" class="needs-validation" novalidate>
+                <form id="create{{ $role }}Form" autocomplete="off" method="POST" class="needs-validation"
+                    novalidate>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <svg class="c-icon c-icon-sm">
-                                  <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-user"></use>
-                              </svg>
+                                <svg class="c-icon c-icon-sm">
+                                    <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-user"></use>
+                                </svg>
                             </span>
                         </div>
-                        <input class="form-control" type="text" placeholder="{{ __('First Name') }}"
-                               id="firstName" name="firstName" value="" required>
+                        <input class="form-control" type="text" placeholder="{{ __('First Name') }}" 
+                            name="firstName" value="" required>
                         <div class="invalid-feedback">
                             Please provide first name.
                         </div>
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                      <svg class="c-icon c-icon-sm">
-                                          <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-user"></use>
-                                      </svg>
-                                    </span>
+                            <span class="input-group-text">
+                                <svg class="c-icon c-icon-sm">
+                                    <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-user"></use>
+                                </svg>
+                            </span>
                         </div>
                         <input class="form-control" type="text" placeholder="{{ __('Last Name') }}"
-                               id="lastName" name="lastName" value="" required>
+                            name="lastName" value="" required>
                         <div class="invalid-feedback">
                             Please provide last name.
                         </div>
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                      <svg class="c-icon c-icon-sm">
-                                          <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-mobile"></use>
-                                      </svg>
-                                    </span>
+                            <span class="input-group-text">
+                                <svg class="c-icon c-icon-sm">
+                                    <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-mobile"></use>
+                                </svg>
+                            </span>
                         </div>
                         <input class="form-control" type="text" placeholder="{{ __('Mobile') }}"
-                               id="mobile" name="mobile" value="" required>
+                            name="mobile" value="" required>
                         <div class="invalid-feedback">
                             Please provide a valid mobile number.
                         </div>
@@ -51,25 +51,26 @@
                             <span class="input-group-text">@</span>
                         </div>
                         <input class="form-control" type="email" placeholder="{{ __('E-Mail Address') }}"
-                               id="email" name="email" value="" required>
+                            name="email" value="" required>
                         <div class="invalid-feedback">
                             Please provide a valid email.
                         </div>
                     </div>
-                    @if ($role != "admin")
+                    @if ($role != 'admin')
                         <div class="form-group row">
                             <div class="col">
                                 <label>Assign to company</label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                            <span class="input-group-text">
-                            <svg class="c-icon c-icon-sm">
-                              <use
-                                  xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-building"></use>
-                            </svg>
-                            </span>
+                                        <span class="input-group-text">
+                                            <svg class="c-icon c-icon-sm">
+                                                <use
+                                                    xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-building">
+                                                </use>
+                                            </svg>
+                                        </span>
                                     </div>
-                                    <select class="form-control" name="company" id="company" required>
+                                    <select class="form-control" name="company" required>
                                     </select>
                                     <div class="invalid-feedback">
                                         Company is required.
@@ -81,7 +82,7 @@
                         <div class="form-group row">
                             <div class="col">
                                 <label>Assign to Zones</label>
-                                <select multiple class="form-control" id="zones" name="zones[]" required>
+                                <select multiple class="form-control" name="zones[]" required>
                                 </select>
                                 <div class="invalid-feedback">
                                     Zone is required.
@@ -90,7 +91,7 @@
                         </div>
                     @endif
                     <button id="create{{ $role }}Button" class="btn btn-block btn-success"
-                            type="submit">{{ __('Save') }}</button>
+                        type="submit">{{ __('Save') }}</button>
                     <a class="btn btn-block btn-secondary" data-dismiss="modal">{{ __('Return') }}</a>
                 </form>
             </div>
@@ -99,51 +100,53 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         let createForm = "create{{ $role }}Form";
-        $("#" + createForm).on("submit", function (e) {
+        $("#" + createForm).on("submit", function(e) {
             e.preventDefault();
             e.stopPropagation();
-            api.post('/{{$role}}s', {
-                data: {
-                    "username": $(this).find('[name="email"]').val(),
-                    "password": "admin",
-                    "firstName": $(this).find('[name="firstName"]').val(),
-                    "lastName": $(this).find('[name="lastName"]').val(),
-                    "mobile": $(this).find('[name="mobile"]').val(),
-                    "email": $(this).find('[name="email"]').val(),
-                    "role": "{{$role}}",
-                    "company": $(this).find('[name="company"]').val(),
-                    "zones": $(this).find('[name="zones[]"]').val()
-                }
-            })
+            console.info('submitting data')
+            api.post('/{{ $role }}s', {
+                    data: {
+                        "username": $(this).find('[name="email"]').val(),
+                        "password": "admin",
+                        "firstName": $(this).find('[name="firstName"]').val(),
+                        "lastName": $(this).find('[name="lastName"]').val(),
+                        "mobile": $(this).find('[name="mobile"]').val(),
+                        "email": $(this).find('[name="email"]').val(),
+                        "role": "{{ $role }}",
+                        "company": $(this).find('[name="company"]').val(),
+                        "zones": $(this).find('[name="zones[]"]').val()
+                    }
+                })
                 .then((response) => {
                     if (response.error) {
                         showAlert(response.error, 'error')
                     } else {
-                        getData("{{$role}}s");
+                        getData("{{ $role }}s");
                         showAlert('Successfully added user', 'success');
-                        $("#create{{$role}}Modal").modal('hide');
+                        $("#create{{ $role }}Modal").modal('hide');
                         $('.needs-validation').removeClass('was-validated');
                         $("#" + createForm).find('input:text, input:password, select')
-                            .each(function () {
+                            .each(function() {
                                 $(this).val('');
                             });
                     }
                 }, (error) => {
-                    $.each(error.response.data.error, function (i, v) {
-                        // $('.needs-validation').removeClass('was-validated');
-                        $("#" + i).addClass('is-invalid').next().text(v)
-                    });
-
-                    // error.response.data.error
+                    if (typeof error.response !== 'undefined') {
+                        $.each(error.response.data.error, function(i, v) {
+                            // $('.needs-validation').removeClass('was-validated');
+                            $("#" + i).addClass('is-invalid').next().text(v)
+                        });
+                    }
                 });
         });
 
         api.get('/companies/').then((res) => {
             let options = '<option>- select company -</option>';
-            $.each(res.data.result, function () {
-                options += '<option value="' + $(this)[0].id + '">' + $(this)[0].name + '</option>';
+            $.each(res.data.result, function() {
+                options += '<option value="' + $(this)[0].id + '">' + $(this)[0].name +
+                    '</option>';
             });
             $("#" + createForm).find('[name="company"]').html(options).trigger("change");
 
@@ -151,17 +154,21 @@
             console.error(error)
         });
 
-        $("#" + createForm).find('[name="company"]').on("change", function () {
-            let query = {"relations": ["users"]};
+        $("#" + createForm).find('[name="company"]').on("change", function() {
+            let query = {
+                "relations": ["users"]
+            };
             query = encodeURI(JSON.stringify(query));
 
-            api.get('/companies/' + $(this).val() + '/zones?query=' + query).then((res) => {
+            api.get('/companies/' + $(this).val() + '/zones?query=' + query)
+            .then((res) => {
                 let options = '';
-                $.each(res.data.result, function () {
-                    options += '<option value="' + $(this)[0].id + '">' + $(this)[0].name + '</option>';
+                $.each(res.data.result, function() {
+                    options += '<option value="' + $(this)[0].id + '">' + $(this)[0]
+                        .name + '</option>';
                 })
                 $("#" + createForm).find('[name="zones[]"]').html(options);
-            }).catch((error) => {
+            }, (error) => {
                 console.error(error)
             })
         })

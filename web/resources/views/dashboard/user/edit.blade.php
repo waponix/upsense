@@ -133,10 +133,10 @@
                 if ("{{ $role }}" != "admin") {
                     $.each(dt.zones, function(i, e) {
                         console.log(e.id)
-                        modal.find("#zones option[value='" + e.id + "']").prop(
+                        $("#" + editForm).find("#zones option[value='" + e.id + "']").prop(
                             "selected", true);
                     });
-                    modal.find("#company").val(dt.company.id);
+                    $("#" + editForm).find("#company").val(dt.company.id);
                 }
             }).catch((error) => {
                 console.error(error)
@@ -173,11 +173,14 @@
                                 });
                         }
                     }, (error) => {
-                        $.each(error.response.data.error, function(i, v) {
-                            // $('.needs-validation').removeClass('was-validated');
-                            $("#" + i).addClass('is-invalid').next().text(v)
-                        });
-                        // error.response.data.error
+                        if (typeof error.response !== 'undefined') {
+                            $.each(error.response.data.error, function(i, v) {
+                                // $('.needs-validation').removeClass('was-validated');
+                                $("#" + i).addClass('is-invalid').next().text(v)
+                            });
+                        } else {
+                            console.error(error);
+                        }
                     });
             });
         });

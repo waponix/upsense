@@ -2,25 +2,24 @@
     <div class="row justify-content-md-center">
         <div class="col col-md-12 col-lg-12">
             <div class="animated fadeIn">
-                <form id="editCompanyForm" autocomplete="off"
-                      method="POST" class="needs-validation" novalidate>
+                <form id="editCompanyForm" autocomplete="off" method="POST" class="needs-validation" novalidate>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <svg class="c-icon c-icon-sm">
-                                  <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-building"></use>
-                              </svg>
+                                <svg class="c-icon c-icon-sm">
+                                    <use xlink:href="/assets/icons/coreui/free-symbol-defs.svg#cui-building"></use>
+                                </svg>
                             </span>
                         </div>
-                        <input class="form-control" type="text" placeholder="{{ __('Company Name') }}"
-                               id="name" name="name" required>
+                        <input class="form-control" type="text" placeholder="{{ __('Company Name') }}" id="name"
+                            name="name" required>
                         <div class="invalid-feedback">
                             Please enter company name.
                         </div>
                     </div>
 
                     <button id="editCompanyButton" class="btn btn-block btn-success"
-                            type="submit">{{ __('Save') }}</button>
+                        type="submit">{{ __('Save') }}</button>
                     <a class="btn btn-block btn-secondary" data-dismiss="modal">{{ __('Return') }}</a>
                 </form>
             </div>
@@ -29,10 +28,10 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         let editForm = "editCompanyForm";
 
-        $('#editCompanyModal').on('show.coreui.modal', function (event) {
+        $('#editCompanyModal').on('show.coreui.modal', function(event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
             var id = button.data('id') // Extract info from data-* attributes
             let modal = $(this)
@@ -45,14 +44,14 @@
                 console.error(error)
             });
 
-            $("#" + editForm).on("submit", function (e) {
+            $("#" + editForm).on("submit", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 api.put('/companies/' + id, {
-                    data: {
-                        "name": $(this).find('[name="name"]').val(),
-                    }
-                })
+                        data: {
+                            "name": $(this).find('[name="name"]').val(),
+                        }
+                    })
                     .then((response) => {
                         if (response.error) {
                             showAlert(response.error, 'error')
@@ -62,16 +61,19 @@
                             $("#editCompanyModal").modal('hide');
                             $('.needs-validation').removeClass('was-validated');
                             $("#" + editForm).find('input:text, input:password, select')
-                                .each(function () {
+                                .each(function() {
                                     $(this).val('');
                                 });
                         }
                     }, (error) => {
-                        $.each(error.response.data.error, function (i, v) {
-                            // $('.needs-validation').removeClass('was-validated');
-                            $("#" + i).addClass('is-invalid').next().text(v)
-                        });
-                        // error.response.data.error
+                        if (typeof error.response !== 'undefined') {
+                            $.each(error.response.data.error, function(i, v) {
+                                // $('.needs-validation').removeClass('was-validated');
+                                $("#" + i).addClass('is-invalid').next().text(v)
+                            });
+                        } else {
+                            console.error(error);
+                        }
                     });
             });
         });
