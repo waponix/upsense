@@ -102,7 +102,7 @@
 <script>
     $(document).ready(function() {
         let createForm = "create{{ $role }}Form";
-        $("#" + createForm).on("submit", function(e) {
+        $("#" + createForm).off("submit").on("submit", function(e) {
             e.preventDefault();
             e.stopPropagation();
             console.info('submitting data')
@@ -124,7 +124,7 @@
                         showAlert(response.error, 'error')
                     } else {
                         getData("{{ $role }}s");
-                        showAlert('Successfully added user', 'success');
+                        showAlert('User added', 'success');
                         $("#create{{ $role }}Modal").modal('hide');
                         $('.needs-validation').removeClass('was-validated');
                         $("#" + createForm).find('input:text, input:password, select')
@@ -154,7 +154,7 @@
             console.error(error)
         });
 
-        $("#" + createForm).find('[name="company"]').on("change", function() {
+        $("#" + createForm).find('[name="company"]').off("change").on("change", function() {
             let query = {
                 "relations": ["users"]
             };

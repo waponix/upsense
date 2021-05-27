@@ -177,7 +177,7 @@
             if (confirmDelete) {
                 api.delete("/companies/" + cid + "/zones/" + id).then((res) => {
                     getData(cid);
-                    showAlert('Zone has been deleted.', 'success')
+                    showAlert(name + ' has been deleted.', 'success')
                 }).catch((error) => {
                     console.error(error)
                 });

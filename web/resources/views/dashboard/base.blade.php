@@ -44,8 +44,8 @@
 
         <div class="c-body">
             <main class="c-main">
-
-                <div class="col-lg-12" id="alert-container">
+                
+                <div class="container-fluid" id="alert-container">
 
                 </div>
                 @yield('content')

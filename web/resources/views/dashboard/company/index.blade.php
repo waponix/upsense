@@ -140,7 +140,7 @@
 
             if (confirmDelete) {
                 api.delete("/companies/" + id).then((res) => {
-                    console.log(res)
+                    showAlert('Company deleted', 'success');
                     getData();
                     // showAlert(role + ' has been deleted.', 'success')
                 }).catch((error) => {

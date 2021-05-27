@@ -44,7 +44,7 @@
                 console.error(error)
             });
 
-            $("#" + editForm).on("submit", function(e) {
+            $("#" + editForm).off("submit").on("submit", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 api.put('/companies/' + id, {
@@ -57,7 +57,7 @@
                             showAlert(response.error, 'error')
                         } else {
                             getData();
-                            showAlert('Successfully added user', 'success');
+                            showAlert('Company updated', 'success');
                             $("#editCompanyModal").modal('hide');
                             $('.needs-validation').removeClass('was-validated');
                             $("#" + editForm).find('input:text, input:password, select')

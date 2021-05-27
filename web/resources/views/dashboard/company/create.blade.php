@@ -18,7 +18,7 @@
 </div>
 
 <script>
-    $("#createCompanyForm").on("submit", function(e) {
+    $("#createCompanyForm").off("submit").on("submit", function(e) {
         e.preventDefault();
         e.stopPropagation();
         api.post('/companies', {
@@ -31,7 +31,7 @@
                     showAlert(response.error, 'error')
                 } else {
                     getData();
-                    showAlert('Successfully added company', 'success');
+                    showAlert('Company added', 'success');
                     $("#createCompanyModal").modal('hide');
                     $('.needs-validation').removeClass('was-validated');
                     $("#createCompanyForm").find('input:text, input:password, select')
