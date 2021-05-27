@@ -226,9 +226,6 @@ export default class NotificationSettingServices
                     // @ts-ignore
                     await this.notificationSettingRepository.update(notificationSetting, data);
                     await this.notificationSettingRepository.queryRunner.commitTransaction();
-                    // get updated notificationSetting
-                    //@ts-ignore
-                    notificationSetting = await this.notificationSettingRepository.findOneById(parseInt(notificationSetting.id));
                     apiResponse.result = notificationSetting?.serialize();
                 } catch {
                     await this.notificationSettingRepository.queryRunner.rollbackTransaction();
