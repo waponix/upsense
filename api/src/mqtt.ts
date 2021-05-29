@@ -189,19 +189,24 @@ export class SubscriberApp
     {
         let date = moment();
 
+
+        let html =
+                "" +
+                "<p>Dear User,</p><br>" +
+                `<p>The temperature limit has exceeded in ${zoneName} -  ${sensorName}.</p>` +
+                `<p>At <b>${date.format('DD-MM-YYYY hh:mm:ss a')}</b>, the temperature recorded was <b>${temperature}°C</b> for this location.</p>` +
+                "<p>Do check to ensure your operations are not affected.</p><br>" +
+                "<p>Thank you,</p>" +
+                "<p>Upsense Team</p>"; // html body
+
+
         // send mail with defined transport object
         try {
             let info = await this.transporter.sendMail({
                 from: `Upsense <${mailerConfig.user}>`, // sender address
                 to: emails, // list of receivers
                 subject: `Temperature Alert - ${zoneName} - ${sensorName}`, // Subject line
-                html: "" +
-                    "<p>Dear User,</p><br>" +
-                    `<p>The temperature limit has exceeded in ${zoneName} -  ${sensorName}.</p>` +
-                    `<p>At <b>${date.format('DD-MM-YYYY hh:mm:ss a')}</b>, the temperature recorded was <b>${temperature}°C</b> for this location.</p>` +
-                    "<p>Do check to ensure your operations are not affected.</p><br>" +
-                    "<p>Thank you,</p>" +
-                    "<p>Upsense Team</p>", // html body
+                html
             });
         } catch (e) {
             console.log(e);

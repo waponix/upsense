@@ -45,5 +45,8 @@ export const mailerConfig = {
     host: 'mail.upsense.co',
     port: 25,
     user: 'notice@upsense.co',
-    password: '00UpsenseAdmin12300'
+    password: '00UpsenseAdmin12300',
+    content: {
+
+    }
 }

@@ -4,18 +4,18 @@ services:
     app:
         # Upsense web app
         container_name: upsense_app
-        build: 
+        build:
             context: ./
             dockerfile: docker/development/app.dockerfile
         image: upsense_app:latest
         volumes:
             - ./storage:/var/www/storage
         env_file: '.env.dev'
-        environment: 
+        environment:
             - "DB_HOST=upsense"
         depends_on:
             - mysql
-    
+
     # nginx web server
     web:
         container_name: upsense_nginx
@@ -27,11 +27,11 @@ services:
             - ./storage/logs/:/var/log/nginx
             - ./:/var/www/html
         working_dir: /var/www/html
-        
-        ports: 
+
+        ports:
             - 8990:80
             # - 443:443
-    
+
     # mysql database
     mysql:
         container_name: upsense_mysql
@@ -51,5 +51,4 @@ services:
 volumes:
     dbdata:
         # driver: local
-        
-        
+

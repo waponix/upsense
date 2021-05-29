@@ -23,7 +23,14 @@ export class SensorRepository extends BaseRepository
                 's.id',
                 's.name',
                 's.serial',
-                's.lastSeen'
+                's.currentTemp',
+                's.batteryStatus',
+                's.isConnected',
+                's.lastSeen',
+                's.minTemp',
+                's.maxTemp',
+                's.createdAt',
+                's.updatedAt'
             ])
             .offset(offset)
             .limit(paginationConfig.limit);

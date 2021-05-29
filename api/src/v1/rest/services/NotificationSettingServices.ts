@@ -79,33 +79,12 @@ export default class NotificationSettingServices
      * @param request
      */
     async getOne(request: Request): Promise<ReturnableResponse> {
-        const companyServices = new CompanyServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await companyServices.validateCompany(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
-        const zoneServices = new ZoneServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await zoneServices.validateZone(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
         await this.notificationSettingRepository.init();
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode = 200;
         const {userId} = request.params;
 
+        await this.userRepository.init();
         const user: User | undefined = await this.userRepository.findOneBy({
             id: parseInt(userId)
         }, ['notificationSetting']);
@@ -120,6 +99,7 @@ export default class NotificationSettingServices
             apiResponse.result = notificationSetting.serialize();
         }
 
+        await this.userRepository.queryRunner.release();
         await this.notificationSettingRepository.queryRunner.release();
 
         return new ReturnableResponse(statusCode, apiResponse);
@@ -204,28 +184,6 @@ export default class NotificationSettingServices
      * @param request
      */
     async update(request: Request): Promise<ReturnableResponse> {
-        const companyServices = new CompanyServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await companyServices.validateCompany(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
-        const zoneServices = new ZoneServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await zoneServices.validateZone(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
         const {data} = request.body;
         const {userId} = request.params;
 
@@ -241,9 +199,11 @@ export default class NotificationSettingServices
 
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
+        await this.userRepository.init();
         let user: User | undefined = await this.userRepository.findOneBy({
             id: parseInt(userId)
         }, ['notificationSetting']);
+        await this.userRepository.queryRunner.release();
 
         let notificationSetting: NotificationSetting | undefined = user?.notificationSetting;
 
@@ -266,9 +226,6 @@ export default class NotificationSettingServices
                     // @ts-ignore
                     await this.notificationSettingRepository.update(notificationSetting, data);
                     await this.notificationSettingRepository.queryRunner.commitTransaction();
-                    // get updated notificationSetting
-                    //@ts-ignore
-                    notificationSetting = await this.notificationSettingRepository.findOneById(parseInt(notificationSetting.id));
                     apiResponse.result = notificationSetting?.serialize();
                 } catch {
                     await this.notificationSettingRepository.queryRunner.rollbackTransaction();

@@ -18,8 +18,5 @@ const rules = new ValidationRules({
 // };
 
 export const notificationSettingUpdateValidation = (data: any) => {
-    rules.fields
-        .removeRuleFromTypeField('required');
-
     return new Validator(data, rules.fields);
 };

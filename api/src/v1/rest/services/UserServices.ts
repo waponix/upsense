@@ -5,7 +5,7 @@ import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {userCreateValidation, userUpdateValidation} from "../validators/UserValidator";
-import {CommonMessages} from "../../../messages/messages";
+import {AuthMessages, CommonMessages} from "../../../messages/messages";
 import {CompanyRepository} from "../repositories/CompanyRepository";
 import {Company} from "../../shared/entities/Company";
 import {ZoneRepository} from "../repositories/ZoneRepository";
@@ -42,7 +42,7 @@ export default class UserServices
         }
 
         await this.userRepository.init();
-        let result: any[] = await this.userRepository.getList(query);
+        let result: any[] = await this.userRepository.getList(query, this.user);
         result = result.map((record: User) => record.serialize());
 
         apiResponse.result = result;
@@ -62,7 +62,14 @@ export default class UserServices
         let statusCode = 200;
         const {id} = request.params;
 
-        const user: User | undefined = await this.userRepository.findOneById(parseInt(id));
+        if (this.user.role === UserRole.user && parseInt(id) !== this.user.id) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('User');
+            statusCode = 404;
+            return new ReturnableResponse(statusCode, apiResponse);
+        }
+
+        const user: User | undefined = await this.userRepository.findOneByUser(parseInt(id), this.user);
 
         if (user === undefined) {
             apiResponse.status = Status.NotFound;
@@ -99,7 +106,7 @@ export default class UserServices
                 if (data.company) {
                     // query for company if user passes value
                     await this.companyRepository.init();
-                    data.company = await this.companyRepository.findOneById(data.company);
+                    data.company = await this.companyRepository.findOneBy({id: data.company});
                     await this.companyRepository.queryRunner.release();
                 }
 
