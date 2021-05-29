@@ -79,7 +79,7 @@
             api.get('/companies/' + $("#company").val() + '/zones/' + id + '?query=' + zoneQuery).then((
                 res) => {
                 let dt = res.data.result;
-                modal.find("#name").val(dt.name);
+                modal.find('[name="name"]').val(dt.name);
 
             }).catch((error) => {
                 console.error(error)
@@ -113,7 +113,7 @@
                                 $("#" + i).addClass('is-invalid').next().text(v)
                             });
                         } else {
-                            console.error(error);
+                                error(error);
                         }
                     });
             });

@@ -27,16 +27,15 @@
                     <div class="card text-white bg-warning">
                         <div class="card-body pb-0">
                             <div class="btn-group float-right">
-                                <button class="btn btn-transparent dropdown-toggle p-0" type="button"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-transparent dropdown-toggle p-0" type="button" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
                                     <svg class="c-icon">
                                         <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-settings"></use>
                                     </svg>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
-                                                                                  href="#">Action</a><a
-                                        class="dropdown-item" href="#">Another action</a><a class="dropdown-item"
-                                                                                            href="#">Something else
+                                        href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a
+                                        class="dropdown-item" href="#">Something else
                                         here</a></div>
                             </div>
                             <div class="text-value-lg">90</div>
@@ -53,16 +52,15 @@
                     <div class="card text-white bg-danger">
                         <div class="card-body pb-0">
                             <div class="btn-group float-right">
-                                <button class="btn btn-transparent dropdown-toggle p-0" type="button"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-transparent dropdown-toggle p-0" type="button" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
                                     <svg class="c-icon">
                                         <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-settings"></use>
                                     </svg>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
-                                                                                  href="#">Action</a><a
-                                        class="dropdown-item" href="#">Another action</a><a class="dropdown-item"
-                                                                                            href="#">Something else
+                                        href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a
+                                        class="dropdown-item" href="#">Something else
                                         here</a></div>
                             </div>
                             <div class="text-value-lg">2.5%</div>
@@ -97,10 +95,10 @@
                     <!-- /.row-->
                     <div class="c-chart-wrapper" style="height:450px;margin-top:40px;">
                         <div class="pull-right">
-                            {{--                          <button id="randomizeData" class="btn btn-primary">Randomize Data</button>--}}
+                            {{-- <button id="randomizeData" class="btn btn-primary">Randomize Data</button> --}}
                             <button id="addDataset" class="btn btn-primary">Add Sensor</button>
                             <button id="removeDataset" class="btn btn-primary">Remove Sensor</button>
-                            {{--                          <button id="addData" class="btn btn-primary">Add Data</button>--}}
+                            {{-- <button id="addData" class="btn btn-primary">Add Data</button> --}}
                         </div>
                         <canvas class="chart" id="main-chart" height="400"></canvas>
 
@@ -113,16 +111,16 @@
                             <div class="text-muted">Highest Point</div>
                             <span class="text-warning"><strong>0</strong><strong>°C</strong></span>
                             <div class="progress progress-xs mt-2">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"
-                                     aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="60"
+                                    aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md mb-sm-2 mb-0" id="lowest-point">
                             <div class="text-muted">Lowest Point</div>
                             <span class="text-info"><strong>0</strong><strong>°C</strong></span>
                             <div class="progress progress-xs mt-2">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: 0%"
-                                     aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="80"
+                                    aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
                     </div>
@@ -135,42 +133,38 @@
                 <div class="card">
                     <div class="card-header">
                         <svg class="c-icon progress-group-icon">
-                            <use
-                                xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-heart"></use>
+                            <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-heart"></use>
                         </svg>
-                        Sensors/Hub Health
+                        Devices Health
                     </div>
                     <div class="card-body">
                         <!-- /.row-->
-                        <table class="table table-responsive-sm table-hover table-outline mb-0">
+                        <table id="devices-table" class="table table-responsive-sm table-hover table-outline mb-0">
                             <thead class="thead-light">
-                            <tr>
-                                <th>
-                                    Device
-                                </th>
-                                <th>Serial</th>
-                                <th>Hub</th>
-                                <th>Current Temp</th>
-                                <th>Max Temp</th>
-                                <th>Min Temp</th>
-                                <th>Allowed Range</th>
-                                <th>Zone</th>
-                                <th>Company</th>
-                                <th>
-                                    <svg class="c-icon">
-                                        <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-bolt"></use>
-                                    </svg>
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                                <th>Wi-Fi</th>
-                                <th>Radio</th>
-                                <th>Uptime</th>
-                            </tr>
+                                <tr>
+                                    <th>
+                                        Device
+                                    </th>
+                                    <th>Serial</th>
+                                    <th>Hub</th>
+                                    <th>Current Temp</th>
+                                    <th>Max Temp</th>
+                                    <th>Min Temp</th>
+                                    <th>Zone</th>
+                                    <th>Company</th>
+                                    <th>
+                                        <svg class="c-icon">
+                                            <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-bolt"></use>
+                                        </svg>
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>Uptime</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {{-- @foreach($sensors as $sensor)
+                                {{-- @foreach ($sensors as $sensor)
                                 <tr>
                                     <td>
                                         {{$sensor->description}}
@@ -203,7 +197,7 @@
 
                                     </td>
                                     <td>
-                                        @if($sensor->battery_status > 70)
+                                        @if ($sensor->battery_status > 70)
 
                                             <svg class="c-icon c-icon-xl">
                                                 <use
@@ -225,7 +219,7 @@
 
                                     </td>
                                     <td>
-                                        @if($sensor->is_connected)
+                                        @if ($sensor->is_connected)
                                             <svg class="c-icon c-icon-xl">
                                                 <use
                                                     xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-link"></use>
@@ -242,7 +236,7 @@
                                     </td>
                                     <td>
 
-                                        @if($sensor->signal_strength > 70)
+                                        @if ($sensor->signal_strength > 70)
 
                                             <svg class="c-icon c-icon-xl">
                                                 <use
@@ -304,8 +298,7 @@
                             <div class="progress-group">
                                 <div class="progress-group-header">
                                     <svg class="c-icon progress-group-icon">
-                                        <use
-                                            xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-battery-slash"></use>
+                                        <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-battery-slash"></use>
                                     </svg>
                                     <div>No Battery</div>
                                     <div class="ml-auto font-weight-bold">6</div>
@@ -313,15 +306,15 @@
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-warning" role="progressbar" style="width: 60%"
-                                             aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="progress-group mb-5">
                                 <div class="progress-group-header">
                                     <svg class="c-icon progress-group-icon">
-                                        <use
-                                            xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-wifi-signal-off"></use>
+                                        <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-wifi-signal-off">
+                                        </use>
                                     </svg>
                                     <div>No Wifi</div>
                                     <div class="ml-auto font-weight-bold">4</div>
@@ -329,17 +322,17 @@
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                             aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
-                            {{-- @foreach($sensors as $sensor)
+                            {{-- @foreach ($sensors as $sensor)
                                 <div class="progress-group">
                                     <div class="progress-group-header align-items-end">
-                                        {{--                              <svg class="c-icon progress-group-icon">--}}
-                                        {{--                                <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-globe-alt"></use>--}}
-                                        {{--                              </svg>--}}
-                                        {{-- <div>{{$sensor->description}}</div>
+                                        {{--                              <svg class="c-icon progress-group-icon"> --}}
+                            {{-- <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-globe-alt"></use> --}}
+                            {{-- </svg> --}}
+                            {{-- <div>{{$sensor->description}}</div>
                                         <div class="ml-auto font-weight-bold mr-2">120</div>
                                         <div class="text-muted small">(56%)</div>
                                     </div>
@@ -350,21 +343,19 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach  --}}
+                            @endforeach --}}
                         </div>
                         <!-- /.col-->
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="c-callout c-callout-success"><small
-                                            class="text-muted">Connected</small>
+                                    <div class="c-callout c-callout-success"><small class="text-muted">Connected</small>
                                         <div class="text-value-lg">95</div>
                                     </div>
                                 </div>
                                 <!-- /.col-->
                                 <div class="col-6">
-                                    <div class="c-callout c-callout-danger"><small
-                                            class="text-muted">Disconnected</small>
+                                    <div class="c-callout c-callout-danger"><small class="text-muted">Disconnected</small>
                                         <div class="text-value-lg">5</div>
                                     </div>
                                 </div>
@@ -378,11 +369,11 @@
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-success" role="progressbar" style="width: 95%"
-                                             aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: 5%"
-                                             aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -392,39 +383,37 @@
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-success" role="progressbar" style="width: 96%"
-                                             aria-valuenow="96" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="96" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: 4%"
-                                             aria-valuenow="4" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="4" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="progress-group mb-4">
-                                <div class="progress-group-prepend"><span
-                                        class="progress-group-text">Wednesday</span></div>
+                                <div class="progress-group-prepend"><span class="progress-group-text">Wednesday</span></div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-success" role="progressbar" style="width: 93%"
-                                             aria-valuenow="93" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="93" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: 7%"
-                                             aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="progress-group mb-4">
-                                <div class="progress-group-prepend"><span
-                                        class="progress-group-text">Thursday</span></div>
+                                <div class="progress-group-prepend"><span class="progress-group-text">Thursday</span></div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-success" role="progressbar" style="width: 92%"
-                                             aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: 8%"
-                                             aria-valuenow="8" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="8" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -434,25 +423,24 @@
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-success" role="progressbar" style="width: 94%"
-                                             aria-valuenow="94" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="94" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: 6%"
-                                             aria-valuenow="6" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="6" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="progress-group mb-4">
-                                <div class="progress-group-prepend"><span
-                                        class="progress-group-text">Saturday</span></div>
+                                <div class="progress-group-prepend"><span class="progress-group-text">Saturday</span></div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-success" role="progressbar" style="width: 93%"
-                                             aria-valuenow="93" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="93" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: 7%"
-                                             aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -462,11 +450,11 @@
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-success" role="progressbar" style="width: 96%"
-                                             aria-valuenow="96" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="96" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: 4%"
-                                             aria-valuenow="4" aria-valuemin="0" aria-valuemax="100"></div>
+                                            aria-valuenow="4" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -488,5 +476,38 @@
     <script src="{{ asset('js/Chart.min.js') }}"></script>
     <script src="{{ asset('js/coreui-chartjs.bundle.js') }}"></script>
     <script src="{{ asset('js/chartjs-plugin-streaming.min.js') }}"></script>
+
+    <script>
+        // let socket = new WebSocket("ws://javascript.info/article/websocket/demo/hello");
+
+        // socket.onopen = function(e) {
+        //     alert("[open] Connection established");
+        //     alert("Sending to server");
+        //     socket.send("My name is John");
+        // };
+
+        // socket.onmessage = function(event) {
+        //     alert(`[message] Data received from server: ${event.data}`);
+        // };
+
+        // socket.onclose = function(event) {
+        //     if (event.wasClean) {
+        //         alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+        //     } else {
+        //         // e.g. server process killed or network down
+        //         // event.code is usually 1006 in this case
+        //         alert('[close] Connection died');
+        //     }
+        // };
+
+        // socket.onerror = function(error) {
+        //     alert(`[error] ${error.message}`);
+        // };
+
+            
+
+        
+
+    </script>
     <script src="{{ asset('js/dashboard.js') }}" defer></script>
 @endsection

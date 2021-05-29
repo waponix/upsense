@@ -29,8 +29,9 @@ class HubController extends Controller
      */
     public function index()
     {
-        $hubs = Hub::all();
-        return view('dashboard.hub.index', ['hubs' => $hubs]);
+        // $hubs = Hub::all();
+        // return view('dashboard.hub.index', ['hubs' => $hubs]);
+        return view('dashboard.hub.index');
     }
 
     /**
@@ -41,9 +42,9 @@ class HubController extends Controller
     public function create()
     {
 
-        $zones = Zone::all();
+        // $zones = Zone::all();
 
-        return view('dashboard.hub.create', compact('zones'));
+        // return view('dashboard.hub.create', compact('zones'));
     }
 
     /**
@@ -65,21 +66,21 @@ class HubController extends Controller
 //            'imei' => 'max:64',
 //        ]);
 
-        $hub = new Hub();
-        $hub->serial = $request->input('serial');
-        $hub->hw_version = $request->input('hw_version');
-        $hub->sw_version = $request->input('sw_version');
-        $hub->fw_version = $request->input('fw_version');
-        $hub->min_temp = $request->input('min_temp');
-        $hub->max_temp = $request->input('max_temp');
-        $hub->type = $request->input('type');
-        $hub->imei = $request->input('imei');
-        $hub->zone_id = $request->input('zone_id');
-        $hub->save();
+        // $hub = new Hub();
+        // $hub->serial = $request->input('serial');
+        // $hub->hw_version = $request->input('hw_version');
+        // $hub->sw_version = $request->input('sw_version');
+        // $hub->fw_version = $request->input('fw_version');
+        // $hub->min_temp = $request->input('min_temp');
+        // $hub->max_temp = $request->input('max_temp');
+        // $hub->type = $request->input('type');
+        // $hub->imei = $request->input('imei');
+        // $hub->zone_id = $request->input('zone_id');
+        // $hub->save();
 
 
-        $request->session()->flash('message', 'Successfully created hub');
-        return redirect()->route('hubs.index');
+        // $request->session()->flash('message', 'Successfully created hub');
+        // return redirect()->route('hubs.index');
     }
 
     /**
@@ -102,10 +103,10 @@ class HubController extends Controller
      */
     public function edit($id)
     {
-        $hub = Hub::find($id);
-        $zones = Zone::all();
+        // $hub = Hub::find($id);
+        // $zones = Zone::all();
 
-        return view('dashboard.hub.edit', ['hub' => $hub, 'zones'=> $zones]);
+        return view('dashboard.hub.edit');
     }
 
     /**
@@ -127,20 +128,20 @@ class HubController extends Controller
 //            'imei' => 'max:64',
 //        ]);
 
-        $hub = Hub::find($id);
-        $hub->serial = $request->input('serial');
-        $hub->hw_version = $request->input('hw_version');
-        $hub->sw_version = $request->input('sw_version');
-        $hub->fw_version = $request->input('fw_version');
-        $hub->type = $request->input('type');
-        $hub->imei = $request->input('imei');
-        $hub->min_temp = $request->input('min_temp');
-        $hub->max_temp = $request->input('max_temp');
-        $hub->zone_id = $request->input('zone_id');
-        $hub->save();
+        // $hub = Hub::find($id);
+        // $hub->serial = $request->input('serial');
+        // $hub->hw_version = $request->input('hw_version');
+        // $hub->sw_version = $request->input('sw_version');
+        // $hub->fw_version = $request->input('fw_version');
+        // $hub->type = $request->input('type');
+        // $hub->imei = $request->input('imei');
+        // $hub->min_temp = $request->input('min_temp');
+        // $hub->max_temp = $request->input('max_temp');
+        // $hub->zone_id = $request->input('zone_id');
+        // $hub->save();
 
-        $request->session()->flash('message', 'Successfully edited hub');
-        return redirect()->route('hubs.index');
+        // $request->session()->flash('message', 'Successfully edited hub');
+        // return redirect()->route('hubs.index');
     }
 
     /**
@@ -152,11 +153,11 @@ class HubController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $hub = Hub::find($id);
-        if ($hub) {
-            $hub->delete();
-        }
-        $request->session()->flash('message', 'Successfully deleted hub');
-        return redirect()->route('hubs.index');
+        // $hub = Hub::find($id);
+        // if ($hub) {
+        //     $hub->delete();
+        // }
+        // $request->session()->flash('message', 'Successfully deleted hub');
+        // return redirect()->route('hubs.index');
     }
 }

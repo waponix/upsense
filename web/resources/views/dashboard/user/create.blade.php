@@ -13,7 +13,7 @@
                             </span>
                         </div>
                         <input class="form-control" type="text" placeholder="{{ __('First Name') }}" 
-                            name="firstName" value="" required>
+                          id="firstName"  name="firstName" value="" required>
                         <div class="invalid-feedback">
                             Please provide first name.
                         </div>
@@ -27,7 +27,7 @@
                             </span>
                         </div>
                         <input class="form-control" type="text" placeholder="{{ __('Last Name') }}"
-                            name="lastName" value="" required>
+                        id="lastName"  name="lastName" value="" required>
                         <div class="invalid-feedback">
                             Please provide last name.
                         </div>
@@ -41,7 +41,7 @@
                             </span>
                         </div>
                         <input class="form-control" type="text" placeholder="{{ __('Mobile') }}"
-                            name="mobile" value="" required>
+                        id="mobile"   name="mobile" value="" required>
                         <div class="invalid-feedback">
                             Please provide a valid mobile number.
                         </div>
@@ -51,7 +51,7 @@
                             <span class="input-group-text">@</span>
                         </div>
                         <input class="form-control" type="email" placeholder="{{ __('E-Mail Address') }}"
-                            name="email" value="" required>
+                        id="email"    name="email" value="" required>
                         <div class="invalid-feedback">
                             Please provide a valid email.
                         </div>
@@ -70,7 +70,7 @@
                                             </svg>
                                         </span>
                                     </div>
-                                    <select class="form-control" name="company" required>
+                                    <select class="form-control" name="company" id="company" required>
                                     </select>
                                     <div class="invalid-feedback">
                                         Company is required.
@@ -82,7 +82,7 @@
                         <div class="form-group row">
                             <div class="col">
                                 <label>Assign to Zones</label>
-                                <select multiple class="form-control" name="zones[]" required>
+                                <select multiple class="form-control" name="zones[]" id="zones" required>
                                 </select>
                                 <div class="invalid-feedback">
                                     Zone is required.
@@ -105,7 +105,6 @@
         $("#" + createForm).off("submit").on("submit", function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.info('submitting data')
             api.post('/{{ $role }}s', {
                     data: {
                         "username": $(this).find('[name="email"]').val(),

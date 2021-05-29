@@ -1,90 +1,42 @@
 @extends('dashboard.base')
 
 @section('content')
-
     <div class="container-fluid">
         <div class="animated fadeIn">
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    @if(Session::has('message'))
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="alert alert-success" role="alert">{{ Session::get('message') }}</div>
-                            </div>
-                        </div>
-                    @endif
                     <div class="card">
                         <div class="card-header">
                             <h4><i class="cil-blur-circular"></i> {{ __('Sensors') }}</h4>
                         </div>
                         <div class="card-body">
                             <div class="col-lg-12 col-md-12">
+                                <div class="table-responsive">
+                                    <table id="sensor-table"
+                                        class="data-table table table-outline table-fixed table-hover mt-lg-5"
+                                        style="margin-top: 20px">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Serial</th>
+                                                <th>Status</th>
+                                                <th>Current Temp</th>
+                                                <th>Battery Status</th>
+                                                <th>Min Temp</th>
+                                                <th>Max Temp</th>
+                                                <th>Last Seen</th>
+                                                <th>Created At</th>
+                                                <th>Updated At</th>
+                                                <th class="text-right actions">
+                                                    <i class="cil-options"></i>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="text-center">
 
-                                <a class="btn btn-md btn-primary" href="{{ route('sensors.create') }}"><i
-                                        class="cil-plus"></i> {{__('Add Sensor') }}</a>
-                                <hr>
-                                <table class="table table-responsive-md table-hover table-outline mb-0">
-                                    <thead>
-                                    <tr>
-                                        <th>Serial Number</th>
-                                        <th>Description</th>
-                                        {{--                                        <th>Current Temp</th>--}}
-                                        {{--                                        <th>Status</th>--}}
-                                        {{--                                        <th>Last Seen</th>--}}
-                                        <th>Type</th>
-                                        <th>Zone</th>
-                                        <th>Company</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($sensors as $sensor)
-                                        <tr>
-                                            <td><strong>{{ $sensor->serial }}</strong></td>
-                                            <td>{{ $sensor->description }}</td>
-                                            {{--                                            <td>{{ $sensor->current_temp }}</td>--}}
-                                            {{--                                            <td>--}}
-                                            {{--                                                <strong>--}}
-                                            {{--                                                    @if($sensor->is_connected)--}}
-                                            {{--                                                        <svg class="c-icon c-icon-xl">--}}
-                                            {{--                                                            <use--}}
-                                            {{--                                                                xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-link"></use>--}}
-                                            {{--                                                        </svg>--}}
-
-                                            {{--                                                    @else--}}
-                                            {{--                                                        <svg class="c-icon c-icon-xl blink-danger">--}}
-                                            {{--                                                            <use--}}
-                                            {{--                                                                xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-link-broken"></use>--}}
-                                            {{--                                                        </svg>--}}
-                                            {{--                                                    @endif--}}
-                                            {{--                                                </strong>--}}
-                                            {{--                                            </td>--}}
-                                            {{--                                            <td>{{ \Carbon\Carbon::parse($sensor->last_seen)->diffForHumans([ 'parts' => 2 ]) }}</td>--}}
-                                            <td>{{ $sensor->type }}</td>
-                                            <td>{{ $sensor->hub->zone->name }}</td>
-                                            <td>{{ $sensor->hub->zone->company->name }}</td>
-                                            <td>
-                                                <a href="{{ url('/sensors/' . $sensor->id) }}"
-                                                   class="btn btn-block btn-primary">View</a>
-                                            </td>
-                                            <td>
-                                                <a href="{{ url('/sensors/' . $sensor->id . '/edit') }}"
-                                                   class="btn btn-block btn-primary">Edit</a>
-                                            </td>
-                                            <td>
-                                                <form action="{{ route('sensors.destroy', $sensor->id ) }}"
-                                                      method="POST">
-                                                    @method('DELETE')
-                                                    @csrf
-                                                    <button class="btn btn-block btn-danger">Delete</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -92,11 +44,69 @@
             </div>
         </div>
     </div>
+    </div>
 
 @endsection
 
 
 @section('javascript')
+    <script>
+        $(document).ready(function() {
+            getData();
+        });
+
+        function getData() {
+            let query = {
+                "relations": ["zones"]
+            };
+            query = encodeURI(JSON.stringify(query));
+            api.get('/sensors?query=' + query).then((res) => {
+                let uTable = $("#sensor-table").DataTable();
+                uTable.clear().draw();
+                $.each(res.data.result, function() {
+                    let dt = $(this)[0];
+                    if (typeof dt === 'undefined') return false;
+                    console.log(dt)
+                    let newData = [
+                        dt.name,
+                        dt.serial,
+                        dt.isConnected == 1 ? '<svg class="c-icon c-icon-xl text-success"><use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-link"></use></svg>' :
+                        '<svg class="c-icon c-icon-xl text-danger"><use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-link-broken"></use></svg>',
+                        dt.currentTemp,
+                        dt.batteryStatus,
+                        dt.minTemp,
+                        dt.maxTemp,
+                        moment.unix(dt.lastSeen).fromNow(true),
+                        moment.unix(dt.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+                        moment.unix(dt.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+                        // '<a href="/companies/' + dt.id + '"\n' +
+                        // '   class="btn inline-block btn-primary"\n' +
+                        // '   data-toggle="modal"\n' +
+                        // '   data-target="#showCompanyModal" ' +
+                        // '   data-id="' + dt.id + '">\n' +
+                        // '   <i class="cil-magnifying-glass"></i>\n' +
+                        // '</a>\n' +
+                        '<a href="/companies/' + dt.id + '/edit"\n' +
+                        '   class="btn inline-block btn-primary"\n' +
+                        '   data-toggle="modal"\n' +
+                        '   data-id="' + dt.id + '"\n' +
+                        '   data-target="#editCompanyModal">\n' +
+                        '   <i class="cil-pencil"></i>\n' +
+                        '</a>' 
+                        // '<button class="btn btn-danger" style="margin-left: 4px;" onclick="deleteCompany(' +
+                        // dt.id + ')">\n' +
+                        // '    <i class="cil-trash"></i>\n' +
+                        // '</button>\n'
+                    ];
+                    uTable.row.add(newData);
+                });
+
+                uTable.draw();
+            }).catch((error) => {
+                console.error(error)
+            });
+        }
+
+    </script>
 
 @endsection
-
