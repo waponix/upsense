@@ -25,11 +25,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY . /var/www/html
 
-RUN chown -R www-data:www-data \
-        /var/www/html/node_modules \
-        /var/www/html/storage \
-        /var/www/html/bootstrap/cache
-
 # RUN groupadd --force -g $WWWGROUP www-data
 # RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 www-data
 
@@ -45,4 +40,12 @@ RUN php artisan optimize
 RUN npm install
 RUN npm rebuild node-sass
 RUN npm install -g cross-env
+
+
+RUN chown -R www-data:www-data \
+        /var/www/html/public \
+        /var/www/html/storage \
+        /var/www/html/bootstrap/cache
+
+
 RUN npm run dev

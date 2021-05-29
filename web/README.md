@@ -1,14 +1,39 @@
 # Upsense web
 
-### Prerequisites (non-docker setup)
-php 7.4 with php-pdo-mysql php-mysql ext installed
 
-composer 2.0
+## Installation
+### Prerequisites (docker setup)
 
-nodejs 14.15.4
+> Docker and Docker Compose should be installed in the system. Refer to this link : https://support.netfoundry.io/hc/en-us/articles/360057865692-Installing-Docker-and-docker-compose-for-Ubuntu-20-04
+
+- nodejs 14.x should be installed in the server.
 
 ## Installation
 
+``` bash
+# clone the repo
+$ git clone https://github.com/ericbermejoreyes/upsense.git
+
+# go into web directory
+$ cd web
+
+# build container
+$ docker-compose -f docker-compose-prod.yml build --no-cache 
+
+# start running services
+$ docker-compose -f docker-compose-prod.yml up -d
+
+```
+
+
+#
+
+### Prerequisites (non-docker setup)
+php 8.x with php-pdo-mysql php-mysql ext installed
+
+composer 2.0
+
+nodejs 14.x
 ``` bash
 # clone the repo
 $ git clone https://github.com/ericbermejoreyes/upsense.git
@@ -32,8 +57,8 @@ Then in file ".env" complete this database configuration:
 * DB_HOST=127.0.0.1
 * DB_PORT=3306
 * DB_DATABASE=upsense
-* DB_USERNAME=root
-* DB_PASSWORD=admin
+* DB_USERNAME=admin
+* DB_PASSWORD=admin123
 
 ### Set APP_URL
 
@@ -51,54 +76,15 @@ To make it look like this:
 ### Next step
 
 ``` bash
-# in your app directory
-# generate laravel APP_KEY
-$ php artisan key:generate
-
-# run database migration and seed
-$ php artisan migrate:refresh --seed
-
 # generate mixing
-$ npm run dev
+$ npm run dev #for development
+$ npm run prod #for production
 
-# and repeat generate mixing
-$ npm run dev
 ```
 
-## Usage
-
-``` bash
-# start local server
-$ php artisan serve
-```
-
-Open your browser with address: [localhost:8000](localhost:8000) (change localhost with server ip)  
 
 * E-mail: _admin_
 * Password: _admin_
 
-This user has roles: _user_ and _admin_
-
 --- 
 
-
-### Prerequisites (docker setup)
-docker should be installed in the system
-
-## Installation
-
-``` bash
-# clone the repo
-$ git clone https://github.com/ericbermejoreyes/upsense.git
-
-# go into web directory
-$ cd web
-
-// initiate docker
-./vendor/bin/sail up -d
-
-
-
-
-
-```
