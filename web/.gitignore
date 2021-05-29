@@ -16,7 +16,6 @@
 /public/vendors
 /public/public
 /storage/*.key
-/storage/framework/views/*
 /vendor
 .env
 .env.backup
