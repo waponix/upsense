@@ -142,7 +142,7 @@
         });
 
         api.get('/companies/').then((res) => {
-            let options = '<option>- select company -</option>';
+            let options = '<option value="0">- select company -</option>';
             $.each(res.data.result, function() {
                 options += '<option value="' + $(this)[0].id + '">' + $(this)[0].name +
                     '</option>';
@@ -158,6 +158,8 @@
                 "relations": ["users"]
             };
             query = encodeURI(JSON.stringify(query));
+
+            if($(this).val() == 0) return false;
 
             api.get('/companies/' + $(this).val() + '/zones?query=' + query)
             .then((res) => {
