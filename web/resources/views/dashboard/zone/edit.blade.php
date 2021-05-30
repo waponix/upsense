@@ -29,7 +29,7 @@
 
 <script>
     $(document).ready(function() {
-        $("#editZoneForm").on("submit", function(e) {
+        $("#editZoneForm").off("submit").on("submit", function(e) {
             e.preventDefault();
             e.stopPropagation();
             api.post('/companies/' + $("#company").val() + '/zones', {
@@ -42,7 +42,7 @@
                         showAlert(response.error, 'error')
                     } else {
                         getData($("#company").val());
-                        showAlert('Successfully added zone', 'success');
+                        showAlert('Zone updated', 'success');
                         $("#createZoneModal").modal('hide');
                         $('.needs-validation').removeClass('was-validated');
                         $("#createZoneForm").find('input:text, input:password, select')
@@ -79,13 +79,13 @@
             api.get('/companies/' + $("#company").val() + '/zones/' + id + '?query=' + zoneQuery).then((
                 res) => {
                 let dt = res.data.result;
-                modal.find("#name").val(dt.name);
+                modal.find('[name="name"]').val(dt.name);
 
             }).catch((error) => {
                 console.error(error)
             });
 
-            $("#" + editForm).on("submit", function(e) {
+            $("#" + editForm).off("submit").on("submit", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 api.put('/companies/' + $("#company").val() + '/zones/' + id, {
@@ -98,7 +98,7 @@
                             showAlert(response.error, 'error')
                         } else {
                             getData($("#company").val());
-                            showAlert('Successfully updated zone', 'success');
+                            showAlert('Zone updated', 'success');
                             $("#editZoneModal").modal('hide');
                             $('.needs-validation').removeClass('was-validated');
                             $("#" + editForm).find('input:text, input:password, select')
@@ -113,7 +113,7 @@
                                 $("#" + i).addClass('is-invalid').next().text(v)
                             });
                         } else {
-                            console.error(error);
+                                error(error);
                         }
                     });
             });

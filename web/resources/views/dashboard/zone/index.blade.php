@@ -135,11 +135,9 @@
             if (typeof cid === 'undefined') return false;
 
             api.get('/companies/' + cid + '/zones?query=' + zoneQuery).then((res) => {
-                console.info(res.data.result)
                 uTable.clear().draw();
                 $.each(res.data.result, function () {
                     let dt = $(this)[0];
-                    console.log(dt)
                     uTable.row.add([
                         dt.name,
                         moment.unix(dt.createdAt).format('YYYY-MM-DD HH:mm:ss'),
@@ -177,7 +175,7 @@
             if (confirmDelete) {
                 api.delete("/companies/" + cid + "/zones/" + id).then((res) => {
                     getData(cid);
-                    showAlert('Zone has been deleted.', 'success')
+                    showAlert(name + ' has been deleted.', 'success')
                 }).catch((error) => {
                     console.error(error)
                 });

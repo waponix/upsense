@@ -124,7 +124,7 @@
                 },
             }).then((res) => {
                 let dt = res.data.result;
-                modal.find("#image").val("src", '/assets/img/avatars/' + dt.image);
+                // modal.find("#image").val("src", '/assets/img/avatars/' + dt.image);
                 modal.find("#firstName").val(dt.firstName);
                 modal.find("#lastName").val(dt.lastName);
                 modal.find("#mobile").val(dt.mobile);
@@ -143,7 +143,7 @@
             });
 
 
-            $("#" + editForm).on("submit", function(e) {
+            $("#" + editForm).off("submit").on("submit", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 api.put('/{{ $role }}s/' + id, {
@@ -164,7 +164,7 @@
                             showAlert(response.error, 'error')
                         } else {
                             getData("{{ $role }}s");
-                            showAlert('Successfully added user', 'success');
+                            showAlert('User updated', 'success');
                             $("#edit{{ $role }}Modal").modal('hide');
                             $('.needs-validation').removeClass('was-validated');
                             $("#" + editForm).find('input:text, input:password, select')
@@ -176,6 +176,7 @@
                         if (typeof error.response !== 'undefined') {
                             $.each(error.response.data.error, function(i, v) {
                                 // $('.needs-validation').removeClass('was-validated');
+                                console.log(i)
                                 $("#" + i).addClass('is-invalid').next().text(v)
                             });
                         } else {
@@ -184,7 +185,8 @@
                     });
             });
         });
-        $("#" + editForm).find('[name="company"]').on("change", function() {
+
+        $("#" + editForm).find('[name="company"]').off("change").on("change", function() {
             let query = {
                 "relations": ["users"]
             };

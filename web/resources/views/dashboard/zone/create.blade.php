@@ -29,7 +29,7 @@
 
 <script>
     $(document).ready(function() {
-        $("#createZoneForm").on("submit", function(e) {
+        $("#createZoneForm").off("submit").on("submit", function(e) {
             e.preventDefault();
             e.stopPropagation();
             api.post('/companies/' + $("#company").val() + '/zones', {
@@ -42,7 +42,7 @@
                         showAlert(response.error, 'error')
                     } else {
                         getData($("#company").val());
-                        showAlert('Successfully added zone', 'success');
+                        showAlert('Zone added', 'success');
 
                         $("#createZoneModal").modal('hide');
                         $('.needs-validation').removeClass('was-validated');

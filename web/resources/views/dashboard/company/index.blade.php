@@ -5,14 +5,6 @@
         <div class="animated fadeIn">
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-
-                    @if(Session::has('message'))
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="alert alert-success" role="alert">{{ Session::get('message') }}</div>
-                            </div>
-                        </div>
-                    @endif
                     <div class="card">
                         <div class="card-header">
                             <h4><i class="cil-building"></i> {{ __('Company') }}</div>
@@ -140,7 +132,7 @@
 
             if (confirmDelete) {
                 api.delete("/companies/" + id).then((res) => {
-                    console.log(res)
+                    showAlert('Company deleted', 'success');
                     getData();
                     // showAlert(role + ' has been deleted.', 'success')
                 }).catch((error) => {

@@ -29,48 +29,49 @@
                                                       href="{{ route('company.index')}}"><span
                                 class="c-sidebar-nav-icon"></span>{{ __('Company') }}</a></li>
 
-                    <li class="c-sidebar-nav-item">
-                        <a class="c-sidebar-nav-link" href="{{ route('hubs.index')}}">
-                            <i class="c-sidebar-nav-icon"></i>
-                            {{ __('Hubs') }}
-                        </a>
-                    </li>
-                    <li class="c-sidebar-nav-item">
-                        <a class="c-sidebar-nav-link" href="{{ route('sensors.index')}}">
-                            <i class="c-sidebar-nav-icon"></i>
-                            {{ __('Sensors') }}
-                        </a>
-                    </li>
                 @endif
             </ul>
         </li>
     @endif
 
-
+{{-- 
     <li class="c-sidebar-nav-item">
         <a class="c-sidebar-nav-link" href="{{ route('dashboard.devices')}}">
             <i class="cil-memory c-sidebar-nav-icon"></i>
             {{ __('Devices') }}
         </a>
+    </li> --}}
+    
+    <li class="c-sidebar-nav-item">
+        <a class="c-sidebar-nav-link" href="{{ route('hubs.index')}}">
+            <i class="cil-tablet c-sidebar-nav-icon"></i>
+            {{ __('Hubs') }}
+        </a>
     </li>
     <li class="c-sidebar-nav-item">
-        <a class="c-sidebar-nav-link" href="//192.168.0.111:3000/reports">
+        <a class="c-sidebar-nav-link" href="{{ route('sensors.index')}}">
+            <i class="cil-blur-circular c-sidebar-nav-icon"></i>
+            {{ __('Sensors') }}
+        </a>
+    </li>
+    <li class="c-sidebar-nav-item">
+        <a class="c-sidebar-nav-link" href="#">
             <i class="cil-chart-pie c-sidebar-nav-icon"></i>
             {{ __('Reports') }}
         </a>
     </li>
     <li class="c-sidebar-nav-item">
-        <a class="c-sidebar-nav-link" href="//192.168.0.111:3000/notifications/logs">
+        <a class="c-sidebar-nav-link" href="#">
             <i class="cil-book c-sidebar-nav-icon"></i>
             {{ __('Logs') }}
         </a>
     </li>
-    <li class="c-sidebar-nav-item">
+    {{-- <li class="c-sidebar-nav-item">
         <a class="c-sidebar-nav-link" href="//192.168.0.111:3000/notifications/alerts">
             <i class="cil-bell c-sidebar-nav-icon"></i>
             {{ __('Alerts') }}
         </a>
-    </li>
+    </li> --}}
     @if (session('user')->role == 'admin')
         <li class="c-sidebar-nav-dropdown"><a class="c-sidebar-nav-dropdown-toggle" href="#"><i
                     class="cil-calculator c-sidebar-nav-icon"></i>{{ __('Settings') }}</a>

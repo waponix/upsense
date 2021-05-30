@@ -31,8 +31,8 @@ class SensorController extends Controller
      */
     public function index()
     {
-        $sensors = Sensor::all();
-        return view('dashboard.sensor.index', ['sensors' => $sensors]);
+        // $sensors = Sensor::all();
+        return view('dashboard.sensor.index');
     }
 
     /**
@@ -43,10 +43,10 @@ class SensorController extends Controller
     public function create()
     {
 
-        $hubs = Hub::all();
-        $zones = Zone::all();
+    //     $hubs = Hub::all();
+    //     $zones = Zone::all();
 
-        return view('dashboard.sensor.create', compact('hubs'), compact('zones'));
+    //     return view('dashboard.sensor.create', compact('hubs'), compact('zones'));
     }
 
     /**
@@ -67,16 +67,16 @@ class SensorController extends Controller
 //            'type' => 'max:64',
 //            'imei' => 'max:64',
 //        ]);
-        $sensor = new Sensor();
-        $sensor->serial = $request->input('serial');
-        $sensor->description = $request->input('description');
-        $sensor->type = $request->input('type');
-        $sensor->hub_id = $request->input('hub_id');
-        $sensor->save();
+        // $sensor = new Sensor();
+        // $sensor->serial = $request->input('serial');
+        // $sensor->description = $request->input('description');
+        // $sensor->type = $request->input('type');
+        // $sensor->hub_id = $request->input('hub_id');
+        // $sensor->save();
 
 
-        $request->session()->flash('message', 'Successfully created sensor');
-        return redirect()->route('sensors.index');
+        // $request->session()->flash('message', 'Successfully created sensor');
+        // return redirect()->route('sensors.index');
     }
 
     /**
@@ -87,8 +87,8 @@ class SensorController extends Controller
      */
     public function show($id)
     {
-        $sensor = Sensor::find($id);
-        return view('dashboard.sensor.show', ['sensor' => $sensor]);
+        // $sensor = Sensor::find($id);
+        // return view('dashboard.sensor.show', ['sensor' => $sensor]);
     }
 
     /**
@@ -99,10 +99,10 @@ class SensorController extends Controller
      */
     public function edit($id)
     {
-        $sensor = Sensor::find($id);
-        $hubs = Hub::all();
+        // $sensor = Sensor::find($id);
+        // $hubs = Hub::all();
 
-        return view('dashboard.sensor.edit', ['sensor' => $sensor, 'hubs'=> $hubs]);
+        // return view('dashboard.sensor.edit', ['sensor' => $sensor, 'hubs'=> $hubs]);
     }
 
     /**
@@ -124,15 +124,15 @@ class SensorController extends Controller
 //            'imei' => 'max:64',
 //        ]);
 
-        $sensor = Sensor::find($id);
-        $sensor->serial = $request->input('serial');
-        $sensor->description = $request->input('description');
-        $sensor->type = $request->input('type');
-        $sensor->hub_id = $request->input('hub_id');
-        $sensor->save();
+        // $sensor = Sensor::find($id);
+        // $sensor->serial = $request->input('serial');
+        // $sensor->description = $request->input('description');
+        // $sensor->type = $request->input('type');
+        // $sensor->hub_id = $request->input('hub_id');
+        // $sensor->save();
 
-        $request->session()->flash('message', 'Successfully edited sensor');
-        return redirect()->route('sensors.index');
+        // $request->session()->flash('message', 'Successfully edited sensor');
+        // return redirect()->route('sensors.index');
     }
 
     /**
@@ -144,11 +144,11 @@ class SensorController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $sensor = Sensor::find($id);
-        if ($sensor) {
-            $sensor->delete();
-        }
-        $request->session()->flash('message', 'Successfully deleted sensor');
-        return redirect()->route('sensors.index');
+        // $sensor = Sensor::find($id);
+        // if ($sensor) {
+        //     $sensor->delete();
+        // }
+        // $request->session()->flash('message', 'Successfully deleted sensor');
+        // return redirect()->route('sensors.index');
     }
 }

@@ -44,8 +44,8 @@
 
         <div class="c-body">
             <main class="c-main">
-
-                <div class="col-lg-12" id="alert-container">
+                
+                <div class="container-fluid" id="alert-container">
 
                 </div>
                 @yield('content')
@@ -150,6 +150,8 @@
             }).then((response) => {
                 if (response.resultCode === 0) {
                     console.log(response)
+                    alert()
+
                     axios.post('/refreshToken', {
                         headers: {
                             'Authorization': `Bearer ${refreshToken}`
@@ -157,7 +159,6 @@
                     }).then((response) => {
                         console.log(response);
                     });
-                    alert()
 
                     window.reload();
 
