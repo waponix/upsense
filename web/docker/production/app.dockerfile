@@ -40,7 +40,7 @@ RUN chown -R www-data:www-data \
 RUN composer install
 
 # RUN php artisan migrate:fresh --seed
-# RUN php artisan view:clear
+RUN php artisan view:clear
 RUN php artisan optimize
 
 RUN chmod -R 775 /var/www/html/storage/framework
@@ -48,11 +48,10 @@ RUN chown -R www-data:www-data \
         /var/www/html/storage \
         /var/www/html/bootstrap/cache
 
-RUN npm cache clean -f \
-    && npm install \
+RUN npm install \
     && npm rebuild node-sass \
     && npm install -g cross-env 
-    
+
 RUN chown -R www-data:www-data \
         /var/www/html/public 
 

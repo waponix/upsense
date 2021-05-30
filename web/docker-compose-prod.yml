@@ -13,8 +13,6 @@ services:
         env_file: '.env.prod'
         environment: 
             - "DB_HOST=upsense"
-        depends_on:
-            - mysql
     
     # nginx web server
     web:
@@ -31,22 +29,6 @@ services:
         ports: 
             - 8990:80
             # - 4433:443
-    
-    # mysql database
-    mysql:
-        container_name: upsense_mysql
-        image: mysql:8.0
-        volumes:
-            - dbdata:/var/lib/mysql
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_HOST: '${DB_HOST}'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-        ports:
-            - 8991:3306
 
 volumes:
     dbdata:
