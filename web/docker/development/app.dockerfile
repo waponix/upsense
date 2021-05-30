@@ -19,33 +19,30 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY . /var/www/html
-
-# RUN groupadd --force -g $WWWGROUP www-data
-# RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 www-data
 
 RUN mv .env.dev .env
 
 # install php vendors
 RUN composer install
 
-# RUN php artisan migrate:fresh --seed
-RUN php artisan view:clear
+# RUN php artisan view:clear
 RUN php artisan optimize
 
-RUN npm install
-RUN npm rebuild node-sass
-RUN npm install -g cross-env
-
-
+RUN chmod -R 775 /var/www/html/storage/framework
 RUN chown -R www-data:www-data \
-        /var/www/html/public \
         /var/www/html/storage \
         /var/www/html/bootstrap/cache
 
+RUN npm cache clean -f \
+    && npm install \
+    && npm rebuild node-sass \
+    && npm install -g cross-env 
+
+RUN chown -R www-data:www-data \
+        /var/www/html/public
 
 RUN npm run dev
