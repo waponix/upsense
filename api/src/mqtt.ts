@@ -142,10 +142,11 @@ export class SubscriberApp
         }
 
         // Send realtime sensor udpates
-        this.client.publish(`sensors/${sensor.serial}`, JSON.stringify({
+        this.client.publish(`sensors/data`, JSON.stringify({
             temperature: data.temperature,
             humidity: data.humidity,
-            battery: data.battery || null
+            battery: data.battery || null,
+            serial: sensor.serial
         }));
 
         // Handle notifications
