@@ -16,7 +16,7 @@
 /public/vendors
 /public/public
 /storage/*.key
-/storage/framework/views/*
+# /storage/framework/views/*.php
 /vendor
 .env
 .env.backup
@@ -28,3 +28,4 @@ yarn-error.log
 composer.phar
 .idea
 .vscode
+.lh

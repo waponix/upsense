@@ -2,7 +2,7 @@
     <div class="row justify-content-md-center">
         <div class="col col-md-12 col-lg-12">
             <div class="animated fadeIn">
-                <form id="edit{{ $role }}Form" autocomplete="off" method="POST" class="needs-validation"
+                <form id="edit<?php echo e($role); ?>Form" autocomplete="off" method="POST" class="needs-validation"
                     novalidate>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -12,7 +12,7 @@
                                 </svg>
                             </span>
                         </div>
-                        <input class="form-control" type="text" placeholder="{{ __('First Name') }}" id="firstName"
+                        <input class="form-control" type="text" placeholder="<?php echo e(__('First Name')); ?>" id="firstName"
                             name="firstName" value="" required>
                         <div class="invalid-feedback">
                             Please provide first name.
@@ -26,7 +26,7 @@
                                 </svg>
                             </span>
                         </div>
-                        <input class="form-control" type="text" placeholder="{{ __('Last Name') }}" id="lastName"
+                        <input class="form-control" type="text" placeholder="<?php echo e(__('Last Name')); ?>" id="lastName"
                             name="lastName" value="" required>
                         <div class="invalid-feedback">
                             Please provide last name.
@@ -40,7 +40,7 @@
                                 </svg>
                             </span>
                         </div>
-                        <input class="form-control" type="text" placeholder="{{ __('Mobile') }}" id="mobile"
+                        <input class="form-control" type="text" placeholder="<?php echo e(__('Mobile')); ?>" id="mobile"
                             name="mobile" value="" required>
                         <div class="invalid-feedback">
                             Please provide a valid mobile number.
@@ -50,13 +50,13 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>
                         </div>
-                        <input class="form-control" type="email" placeholder="{{ __('E-Mail Address') }}" id="email"
+                        <input class="form-control" type="email" placeholder="<?php echo e(__('E-Mail Address')); ?>" id="email"
                             name="email" value="" required>
                         <div class="invalid-feedback">
                             Please provide a valid email.
                         </div>
                     </div>
-                    @if ($role != 'admin')
+                    <?php if($role != 'admin'): ?>
                         <div class="form-group row">
                             <div class="col">
                                 <label>Assign to company</label>
@@ -88,10 +88,10 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
-                    <button id="edit{{ $role }}Button" class="btn btn-block btn-success"
-                        type="submit">{{ __('Save') }}</button>
-                    <a class="btn btn-block btn-secondary" data-dismiss="modal">{{ __('Return') }}</a>
+                    <?php endif; ?>
+                    <button id="edit<?php echo e($role); ?>Button" class="btn btn-block btn-success"
+                        type="submit"><?php echo e(__('Save')); ?></button>
+                    <a class="btn btn-block btn-secondary" data-dismiss="modal"><?php echo e(__('Return')); ?></a>
                 </form>
             </div>
         </div>
@@ -100,9 +100,9 @@
 
 <script>
     $(document).ready(function() {
-        let editForm = "edit{{ $role }}Form";
+        let editForm = "edit<?php echo e($role); ?>Form";
 
-        $('#edit{{ $role }}Modal').on('show.coreui.modal', function(event) {
+        $('#edit<?php echo e($role); ?>Modal').on('show.coreui.modal', function(event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
             var id = button.data('id') // Extract info from data-* attributes
             let modal = $(this)
@@ -118,7 +118,7 @@
                 console.error(error)
             });
 
-            api.get('/{{ $role }}s/' + id, {
+            api.get('/<?php echo e($role); ?>s/' + id, {
                 "query": {
                     "relations": ["company", "zones"]
                 },
@@ -130,7 +130,7 @@
                 modal.find("#mobile").val(dt.mobile);
                 modal.find("#email").val(dt.email);
 
-                if ("{{ $role }}" != "admin") {
+                if ("<?php echo e($role); ?>" != "admin") {
                     $.each(dt.zones, function(i, e) {
                         console.log(e.id)
                         $("#" + editForm).find("#zones option[value='" + e.id + "']").prop(
@@ -146,7 +146,7 @@
             $("#" + editForm).off("submit").on("submit", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                api.put('/{{ $role }}s/' + id, {
+                api.put('/<?php echo e($role); ?>s/' + id, {
                         data: {
                             "username": $(this).find('[name="email"]').val(),
                             "password": "admin",
@@ -154,7 +154,7 @@
                             "lastName": $(this).find('[name="lastName"]').val(),
                             "mobile": $(this).find('[name="mobile"]').val(),
                             "email": $(this).find('[name="email"]').val(),
-                            "role": "{{ $role }}",
+                            "role": "<?php echo e($role); ?>",
                             "company": $(this).find('[name="company"]').val(),
                             "zones": $(this).find('[name="zones[]"]').val()
                         }
@@ -163,9 +163,9 @@
                         if (response.error) {
                             showAlert(response.error, 'error')
                         } else {
-                            getData("{{ $role }}s");
+                            getData("<?php echo e($role); ?>s");
                             showAlert('User updated', 'success');
-                            $("#edit{{ $role }}Modal").modal('hide');
+                            $("#edit<?php echo e($role); ?>Modal").modal('hide');
                             $('.needs-validation').removeClass('was-validated');
                             $("#" + editForm).find('input:text, input:password, select')
                                 .each(function() {
@@ -207,3 +207,4 @@
     });
 
 </script>
+<?php /**PATH /home/kevin/upsense/web/resources/views/dashboard/user/edit.blade.php ENDPATH**/ ?>
