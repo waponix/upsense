@@ -13,7 +13,7 @@ import {Zone} from "./v1/shared/entities/Zone";
 
 const nodeMailer = require('nodemailer');
 
-const MQTT_OPTIONS = {
+let MQTT_OPTIONS = {
     port: mqttConfig.port,
     host: mqttConfig.host,
     protocol: mqttConfig.protocol,
@@ -22,9 +22,12 @@ const MQTT_OPTIONS = {
     rejectUnauthorized: false,
 };
 
+let alarmingSensors: any = {};
+
 export class SubscriberApp
 {
     private client: any = null;
+    private clientLocal: any = null;
     private sensorRepository: SensorRepository;
     private sensorReadingRepository: SensorReadingRepository;
     private zoneRepsoitory: ZoneRepository;
@@ -39,6 +42,10 @@ export class SubscriberApp
         this.hubRepository = new HubRepository(Hub);
 
         this.client = mqtt.connect(MQTT_OPTIONS);
+
+        //connect to local mqtt
+        MQTT_OPTIONS.host = 'broker';
+        this.clientLocal = mqtt.connect(MQTT_OPTIONS);
 
         this.transporter = nodeMailer.createTransport({
             host: mailerConfig.host,
@@ -142,7 +149,7 @@ export class SubscriberApp
         }
 
         // Send realtime sensor udpates
-        this.client.publish(`sensors/data`, JSON.stringify({
+        this.clientLocal.publish('sensors/data', JSON.stringify({
             temperature: data.temperature,
             humidity: data.humidity,
             battery: data.battery || null,
@@ -160,6 +167,9 @@ export class SubscriberApp
         }
 
         if (triggerSendNotification) {
+            if (!alarmingSensors[sensor.serial]) {
+                alarmingSensors[sensor.serial] = sensor.serial;
+            }
             // send email notification to all users
             await this.hubRepository.init();
             let result: string[] = await this.hubRepository.findUserEmailsForNotification(sensor.hub);
@@ -181,6 +191,19 @@ export class SubscriberApp
             }
 
             await this.hubRepository.queryRunner.release();
+        } else {
+            if (alarmingSensors[sensor.serial]) {
+                delete alarmingSensors[sensor.serial];
+
+                // send notification that the sensor returned to normal temperatures
+                // Dear User,
+                //
+                //     The temperature has gone back to acceptable levels at this location
+                //
+                // Thank you,
+                //
+                //     Upsense Team
+            }
         }
 
         // await this.mailer();
