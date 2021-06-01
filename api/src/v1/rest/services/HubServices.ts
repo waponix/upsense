@@ -50,7 +50,10 @@ export default class HubServices
         const {id} = request.params;
 
         await this.hubRepository.init();
-        const hub: Hub | undefined = await this.hubRepository.findOneBy({id: parseInt(id)}, ['zone', 'sensors']);
+        let hub: Hub | undefined = undefined;
+        if (!isNaN(parseInt(id))) {
+            hub = await this.hubRepository.findOneBy({id: parseInt(id)}, ['zone', 'sensors']);
+        }
 
         if (hub === undefined) {
             apiResponse.status = Status.NotFound;
@@ -73,7 +76,11 @@ export default class HubServices
         const {data} = request.body;
 
         await this.hubRepository.init();
-        let hub: Hub | undefined = await this.hubRepository.findOneBy({id: parseInt(id)});
+
+        let hub: Hub | undefined = undefined;
+        if (!isNaN(parseInt(id))) {
+            hub = await this.hubRepository.findOneBy({id: parseInt(id)});
+        }
 
         if (hub === undefined) {
             apiResponse.status = Status.NotFound;

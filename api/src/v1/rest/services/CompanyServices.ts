@@ -61,8 +61,11 @@ export default class companyServices
 
         const {id} = request.params;
 
+        let company: Company | undefined = undefined;
         await this.companyRepository.init();
-        const company: Company | undefined = await this.companyRepository.findOneById(parseInt(id));
+        if (!isNaN(parseInt(id))) {
+            company = await this.companyRepository.findOneBy({id: parseInt(id)}, ['zones', 'users']);
+        }
 
         if (company === undefined) {
             apiResponse.status = Status.NotFound;
@@ -89,7 +92,11 @@ export default class companyServices
         const {userId} = request.params;
 
         await this.userRepository.init();
-        const user: User | undefined = await this.userRepository.findOneById(parseInt(userId));
+
+        let user: User | undefined = undefined;
+        if (!isNaN(parseInt(userId))) {
+            user = await this.userRepository.findOneBy({id: parseInt(userId)}, ['zones', 'company']);
+        }
         await this.userRepository.queryRunner.release();
 
         if (user === undefined) {
@@ -101,6 +108,7 @@ export default class companyServices
         }
 
         await this.companyRepository.init();
+
         const company: Company | undefined = await this.companyRepository.findOneByUser(user);
 
         if (company === undefined) {
@@ -128,7 +136,10 @@ export default class companyServices
         const {managerId} = request.params;
 
         await this.managerRepository.init();
-        const manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(managerId));
+        let manager: Manager | undefined = undefined;
+        if (!isNaN(parseInt(managerId))) {
+            manager = await this.managerRepository.findOneBy({id: parseInt(managerId)}, ['zones', 'company']);
+        }
         await this.managerRepository.queryRunner.release();
 
         if (manager === undefined) {
@@ -210,7 +221,11 @@ export default class companyServices
         const {data} = request.body;
 
         await this.companyRepository.init();
-        let company: Company | undefined = await this.companyRepository.findOneById(parseInt(id));
+
+        let company: Company | undefined = undefined
+        if (!isNaN(parseInt(id))) {
+            company = await this.companyRepository.findOneBy({id: parseInt(id)}, ['zones', 'users']);
+        }
 
         if (company === undefined) {
             apiResponse.status = Status.NotFound;
@@ -263,7 +278,12 @@ export default class companyServices
 
         await this.companyRepository.init();
         const {id} = request.params;
-        const company: Company | undefined = await this.companyRepository.findOneById(parseInt(id));
+
+        let company: Company | undefined = undefined;
+
+        if (!isNaN(parseInt(id))) {
+            company = await this.companyRepository.findOneBy({id: parseInt(id)});
+        }
 
         if (company === undefined) {
             apiResponse.status = Status.NotFound;
@@ -277,7 +297,6 @@ export default class companyServices
         try {
             await this.companyRepository.delete(company);
         } catch (e) {
-            console.log(e);
             await this.companyRepository.queryRunner.rollbackTransaction();
             apiResponse.status = Status.Error;
             apiResponse.message = CommonMessages.UnableToDelete('Company');
@@ -295,7 +314,10 @@ export default class companyServices
 
         // validate if company do exist
         await this.companyRepository.init();
-        let company: Company | undefined = await this.companyRepository.findOneById(companyId);
+        let company: Company | undefined = undefined
+        if (!isNaN(companyId)) {
+            company = await this.companyRepository.findOneBy({id: companyId});
+        }
         await this.companyRepository.queryRunner.release();
 
         if (company === undefined) {

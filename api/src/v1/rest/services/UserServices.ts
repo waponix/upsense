@@ -69,7 +69,10 @@ export default class UserServices
             return new ReturnableResponse(statusCode, apiResponse);
         }
 
-        const user: User | undefined = await this.userRepository.findOneByUser(parseInt(id), this.user);
+        let user: User | undefined = undefined;
+        if (!isNaN(parseInt(id))) {
+            user = await this.userRepository.findOneByUser(parseInt(id), this.user);
+        }
 
         if (user === undefined) {
             apiResponse.status = Status.NotFound;
@@ -165,7 +168,11 @@ export default class UserServices
 
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
-        let user: User | undefined = await this.userRepository.findOneById(parseInt(id));
+
+        let user: User | undefined = undefined
+        if (!isNaN(parseInt(id))) {
+            user = await this.userRepository.findOneById(parseInt(id));
+        }
 
         if (user === undefined) {
             apiResponse.status = Status.NotFound;
@@ -246,7 +253,10 @@ export default class UserServices
         await this.userRepository.init();
 
         // get the user to be deleted
-        let user: User | undefined = await this.userRepository.findOneById(parseInt(id));
+        let user: User | undefined = undefined;
+        if (!isNaN(parseInt(id))) {
+            user = await this.userRepository.findOneById(parseInt(id));
+        }
 
         if (user === undefined) {
             apiResponse.status = Status.NotFound;

@@ -43,10 +43,6 @@ export class SubscriberApp
 
         this.client = mqtt.connect(MQTT_OPTIONS);
 
-        //connect to local mqtt
-        MQTT_OPTIONS.host = 'broker';
-        this.clientLocal = mqtt.connect(MQTT_OPTIONS);
-
         this.transporter = nodeMailer.createTransport({
             host: mailerConfig.host,
             port: mailerConfig.port,
@@ -61,7 +57,7 @@ export class SubscriberApp
         });
 
         this.client.on('connect', () => {
-            console.log('Receiver connection to the MQTT broker: OK')
+            console.log('Connection to the MQTT broker: OK')
             // subscribe to a topic
             this.client.subscribe(this.topic);
 
@@ -149,7 +145,7 @@ export class SubscriberApp
         }
 
         // Send realtime sensor udpates
-        this.clientLocal.publish('sensors/data', JSON.stringify({
+        this.client.publish('sensors/data', JSON.stringify({
             temperature: data.temperature,
             humidity: data.humidity,
             battery: data.battery || null,

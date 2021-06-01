@@ -56,7 +56,10 @@ export default class AdminServices
         let statusCode = 200;
         const {id} = request.params;
 
-        const admin: Admin | undefined = await this.adminRepository.findOneById(parseInt(id));
+        let admin: Admin | undefined = undefined
+        if (!isNaN(parseInt(id))) {
+            admin = await this.adminRepository.findOneById(parseInt(id));
+        }
 
         if (admin === undefined) {
             apiResponse.status = Status.NotFound;
@@ -89,7 +92,6 @@ export default class AdminServices
                 // success callback
                 await this.adminRepository.init();
                 await this.adminRepository.queryRunner.startTransaction();
-
 
                 try {
                     const admin: Admin = await this.adminRepository.create(data);
@@ -131,7 +133,11 @@ export default class AdminServices
 
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
-        let admin: Admin | undefined = await this.adminRepository.findOneById(parseInt(id));
+        let admin: Admin | undefined = undefined;
+
+        if (!isNaN(parseInt(id))) {
+            admin = await this.adminRepository.findOneById(parseInt(id));
+        }
 
         if (admin === undefined) {
             apiResponse.status = Status.NotFound;
@@ -189,8 +195,12 @@ export default class AdminServices
 
         await this.adminRepository.init();
 
-        // get the admin to be deleted
-        let admin: Admin | undefined = await this.adminRepository.findOneById(parseInt(id));
+        let admin: Admin | undefined = undefined;
+
+        if (!isNaN(parseInt(id))) {
+            // get the admin to be deleted
+            admin = await this.adminRepository.findOneById(parseInt(id));
+        }
 
         if (admin === undefined) {
             apiResponse.status = Status.NotFound;

@@ -8,8 +8,6 @@ import {
 } from "../validators/NotificationSettingValidator";
 import {NotificationSettingRepository} from "../repositories/NotificationSettingRepository";
 import {NotificationSetting} from "../../shared/entities/NotificationSetting";
-import CompanyServices from "./CompanyServices";
-import ZoneServices from "./ZoneServices";
 import {UserRepository} from "../repositories/UserRepository";
 import {User} from "../../shared/entities/User";
 
@@ -32,51 +30,6 @@ export default class NotificationSettingServices
     /**
      *
      * @param request
-    async getList(request: Request): Promise<ReturnableResponse> {
-        const companyServices = new CompanyServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await companyServices.validateCompany(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
-        const zoneServices = new ZoneServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await zoneServices.validateZone(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
-        let apiResponse: ApiResponse = new ApiResponse();
-        let query: any = {};
-        if ((<any>request).query.query !== undefined) {
-            query = JSON.parse((<any>request).query.query);
-        }
-
-        const { zoneId } = request.params;
-
-        await this.notificationSettingRepository.init();
-        let result: any[] = await this.notificationSettingRepository.getList(parseInt(zoneId), query);
-        result = result.map((record: NotificationSetting) => record.serialize());
-
-        apiResponse.result = result;
-
-        await this.notificationSettingRepository.queryRunner.release();
-
-        return new ReturnableResponse(200, apiResponse);
-    }*/
-
-    /**
-     *
-     * @param request
      */
     async getOne(request: Request): Promise<ReturnableResponse> {
         await this.notificationSettingRepository.init();
@@ -85,9 +38,12 @@ export default class NotificationSettingServices
         const {userId} = request.params;
 
         await this.userRepository.init();
-        const user: User | undefined = await this.userRepository.findOneBy({
-            id: parseInt(userId)
-        }, ['notificationSetting']);
+        let user: User | undefined = undefined;
+        if (!isNaN(parseInt(userId))) {
+            user = await this.userRepository.findOneBy({
+                id: parseInt(userId)
+            }, ['notificationSetting']);
+        }
 
         let notificationSetting: NotificationSetting | undefined = user?.notificationSetting;
 
@@ -104,80 +60,6 @@ export default class NotificationSettingServices
 
         return new ReturnableResponse(statusCode, apiResponse);
     }
-
-    /*/!**
-     *
-     * @param request
-     *!/
-    async create(request: Request): Promise<ReturnableResponse> {
-        const companyServices = new CompanyServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await companyServices.validateCompany(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
-        const zoneServices = new ZoneServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await zoneServices.validateZone(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
-        let apiResponse: ApiResponse = new ApiResponse();
-        let statusCode: number = 200;
-        const {data} = request.body;
-
-        // do validation before proceed
-        let validation = notificationSettingCreateValidation(data);
-
-        return new Promise(resolve => {
-            validation.checkAsync(async () => {
-                // success callback
-                await this.notificationSettingRepository.init();
-
-                await this.notificationSettingRepository.queryRunner.startTransaction();
-
-                await this.userRepository.init();
-                const {userId} = request.params;
-                const user: User | undefined = await this.userRepository.findOneBy({id: parseInt(userId)});
-                data.user = user;
-                await this.userRepository.queryRunner.release();
-
-                try {
-                    const notificationSetting: NotificationSetting = await this.notificationSettingRepository.create(data);
-                    await this.notificationSettingRepository.queryRunner.commitTransaction();
-
-                    apiResponse.result = notificationSetting.serialize();
-                } catch (e) {
-                    apiResponse.status = Status.Error;
-                    apiResponse.message = CommonMessages.UnableToSave('Notification Setting');
-                    await this.notificationSettingRepository.queryRunner.rollbackTransaction();
-                    statusCode = 500;
-                } finally {
-                    await this.notificationSettingRepository.queryRunner.release();
-                }
-
-                resolve(new ReturnableResponse(statusCode, apiResponse));
-            }, () => {
-                // fail callback
-                apiResponse.status = Status.BadRequest;
-                apiResponse.message = CommonMessages.ArgumentValuesIncorrect;
-                apiResponse.error = validation.errors.all();
-                statusCode = 400;
-
-                resolve(new ReturnableResponse(statusCode, apiResponse));
-            });
-        });
-    }*/
 
     /**
      *
@@ -200,9 +82,12 @@ export default class NotificationSettingServices
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
         await this.userRepository.init();
-        let user: User | undefined = await this.userRepository.findOneBy({
-            id: parseInt(userId)
-        }, ['notificationSetting']);
+        let user: User | undefined = undefined;
+        if (!isNaN(parseInt(userId))) {
+            user = await this.userRepository.findOneBy({
+                id: parseInt(userId)
+            }, ['notificationSetting']);
+        }
         await this.userRepository.queryRunner.release();
 
         let notificationSetting: NotificationSetting | undefined = user?.notificationSetting;
@@ -248,68 +133,4 @@ export default class NotificationSettingServices
             });
         });
     }
-
-    /*/!**
-     *
-     * @param request
-     *!/
-    async delete(request: Request): Promise<ReturnableResponse> {
-        const companyServices = new CompanyServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await companyServices.validateCompany(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
-        const zoneServices = new ZoneServices(this.user);
-        // validate the company id if it belongs to the currently logged in user
-        // @ts-ignore
-        const validateResponse: boolean | ReturnableResponse = await zoneServices.validateZone(request);
-
-        // @ts-ignore
-        if (validateResponse !== true) {
-            //@ts-ignore
-            return validateResponse;
-        }
-
-        let apiResponse: ApiResponse = new ApiResponse();
-        let statusCode: number = 200;
-
-        const {id}: any = request.params;
-
-        await this.notificationSettingRepository.init();
-
-        // get the notification setting to be deleted
-        let notificationSetting: NotificationSetting | undefined = await this.notificationSettingRepository.findOneById(parseInt(id));
-
-        if (notificationSetting === undefined) {
-            apiResponse.status = Status.NotFound;
-            apiResponse.message = CommonMessages.NotFound('Notification Setting');
-            statusCode = 404;
-
-            return new ReturnableResponse(statusCode, apiResponse);
-        }
-
-        await this.notificationSettingRepository.init();
-        await this.notificationSettingRepository.queryRunner.startTransaction();
-
-        try {
-            //@ts-ignore
-            await this.notificationSettingRepository.delete(notificationSetting);
-            await this.notificationSettingRepository.queryRunner.commitTransaction();
-        } catch {
-            await this.notificationSettingRepository.queryRunner.rollbackTransaction();
-            apiResponse.status = Status.Error;
-            apiResponse.message = CommonMessages.UnableToDelete('Notification Setting');
-            statusCode = 500;
-        } finally {
-            await this.notificationSettingRepository.queryRunner.release();
-        }
-
-        return new ReturnableResponse(statusCode, apiResponse);
-    }*/
 }

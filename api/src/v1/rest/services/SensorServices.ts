@@ -47,7 +47,10 @@ export default class SensorServices
         const {id} = request.params;
 
         await this.sensorRepository.init();
-        const sensor: Sensor | undefined = await this.sensorRepository.findOneBy({id: parseInt(id)}, ['hub']);
+        let sensor: Sensor | undefined = undefined;
+        if (!isNaN(parseInt(id))) {
+            sensor = await this.sensorRepository.findOneBy({id: parseInt(id)}, ['hub']);
+        }
 
         if (sensor === undefined) {
             apiResponse.status = Status.NotFound;
@@ -70,7 +73,10 @@ export default class SensorServices
         const {data} = request.body;
 
         await this.sensorRepository.init();
-        let sensor: Sensor | undefined = await this.sensorRepository.findOneBy({id: parseInt(id)});
+        let sensor: Sensor | undefined = undefined;
+        if (!isNaN(parseInt(id))) {
+            sensor = await this.sensorRepository.findOneBy({id: parseInt(id)});
+        }
 
         if (sensor === undefined) {
             apiResponse.status = Status.NotFound;

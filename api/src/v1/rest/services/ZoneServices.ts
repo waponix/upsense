@@ -266,13 +266,17 @@ export default class ZoneServices
     }
 
     async validateZone(request: Request): Promise<boolean | ReturnableResponse> {
-        const companyId: number = parseInt(request.params.companyId);
+        const companyId: number = isNaN(parseInt(request.params.companyId)) ? 0 : parseInt(request.params.companyId);
         const zoneId: number = parseInt(request.params.zoneId);
         let apiResponse: ApiResponse = new ApiResponse();
 
         // validate if company do exist
         await this.zoneRepository.init();
-        let zone: Zone | undefined = await this.zoneRepository.findOneById(zoneId);
+        let zone: Zone | undefined = undefined;
+        if (!isNaN(zoneId)) {
+            zone = await this.zoneRepository.findOneBy({id: zoneId});
+        }
+
         await this.zoneRepository.queryRunner.release();
 
         if (zone === undefined) {

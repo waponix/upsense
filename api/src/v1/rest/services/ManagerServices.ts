@@ -69,7 +69,10 @@ export default class ManagerServices
             return new ReturnableResponse(statusCode, apiResponse);
         }
 
-        const manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(id));
+        let manager: Manager | undefined = undefined;
+        if (!isNaN(parseInt(id))) {
+            manager = await this.managerRepository.findOneById(parseInt(id));
+        }
 
         if (manager === undefined) {
             apiResponse.status = Status.NotFound;
@@ -159,7 +162,11 @@ export default class ManagerServices
 
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
-        let manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(id));
+        let manager: Manager | undefined = undefined;
+
+        if (!isNaN(parseInt(id))) {
+            manager = await this.managerRepository.findOneById(parseInt(id));
+        }
 
         if (manager === undefined) {
             apiResponse.status = Status.NotFound;
@@ -239,7 +246,11 @@ export default class ManagerServices
 
         await this.managerRepository.init();
         // get the manager to be deleted
-        let manager: Manager | undefined = await this.managerRepository.findOneById(parseInt(id));
+        let manager: Manager | undefined = undefined;
+
+        if (!isNaN(parseInt(id))) {
+            manager = await this.managerRepository.findOneById(parseInt(id));
+        }
 
         if (manager === undefined) {
             apiResponse.status = Status.NotFound;
