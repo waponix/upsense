@@ -24,10 +24,12 @@ let MQTT_OPTIONS = {
 
 let alarmingSensors: any = {};
 
+const NOTIF_SENSOR_NORMAL = 0;
+const NOTIF_SENSOR_ABNORMAL = 0;
+
 export class SubscriberApp
 {
     private client: any = null;
-    private clientLocal: any = null;
     private sensorRepository: SensorRepository;
     private sensorReadingRepository: SensorReadingRepository;
     private zoneRepsoitory: ZoneRepository;
@@ -162,63 +164,82 @@ export class SubscriberApp
             triggerSendNotification = true;
         }
 
-        if (triggerSendNotification) {
-            if (!alarmingSensors[sensor.serial]) {
-                alarmingSensors[sensor.serial] = sensor.serial;
-            }
-            // send email notification to all users
-            await this.hubRepository.init();
-            let result: string[] = await this.hubRepository.findUserEmailsForNotification(sensor.hub);
+        await this.hubRepository.init();
+        // send email notification to all users
+        let result: string[] = await this.hubRepository.findUserEmailsForNotification(sensor.hub);
+        let emails: string[] = [];
+        for(const row of result) {
+            emails.push((<any>row).email);
+        }
 
-            let emails: string[] = [];
-            for(const row of result) {
-                emails.push((<any>row).email);
+        do {
+            if (emails.length <= 0) {
+                break;
             }
 
-            if (emails.length > 0) {
+            if (triggerSendNotification) {
+                if (!alarmingSensors[sensor.serial]) {
+                    // cache the sensor that has abnormal reading
+                    alarmingSensors[sensor.serial] = true;
+                }
+
                 await this.zoneRepsoitory.init();
                 const zone: Zone | undefined = await this.zoneRepsoitory.findOneByHub(sensor.hub);
                 let zoneName = 'N/A'
                 if (zone !== undefined) {
                     zoneName = zone.name;
                 }
-                this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature);
+                this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_ABNORMAL);
                 await this.zoneRepsoitory.queryRunner.release();
+            } else {
+                // if sensor came back to normal operation send another notification
+                if (alarmingSensors[sensor.serial]) {
+                    delete alarmingSensors[sensor.serial];
+
+                    await this.zoneRepsoitory.init();
+                    const zone: Zone | undefined = await this.zoneRepsoitory.findOneByHub(sensor.hub);
+                    let zoneName = 'N/A'
+                    if (zone !== undefined) {
+                        zoneName = zone.name;
+                    }
+                    this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_NORMAL);
+                    await this.zoneRepsoitory.queryRunner.release();
+                }
             }
 
-            await this.hubRepository.queryRunner.release();
-        } else {
-            if (alarmingSensors[sensor.serial]) {
-                delete alarmingSensors[sensor.serial];
+            break;
+        } while (true);
 
-                // send notification that the sensor returned to normal temperatures
-                // Dear User,
-                //
-                //     The temperature has gone back to acceptable levels at this location
-                //
-                // Thank you,
-                //
-                //     Upsense Team
-            }
-        }
-
-        // await this.mailer();
+        await this.hubRepository.queryRunner.release();
     }
 
-    private async sendEmailNotification(emails: string, zoneName: string, sensorName: string, temperature: number)
+    private async sendEmailNotification(emails: string, zoneName: string, sensorName: string, temperature: number, notifType: number)
     {
         let date = moment();
 
+        const message1 =
+            "" +
+            "<p>Dear User,</p><br>" +
+            `<p>The temperature has gone back to acceptable levels in ${zoneName} -  ${sensorName}.</p>` +
+            `<p>At <b>${date.format('DD-MM-YYYY hh:mm:ss a')}</b>, the temperature recorded was <b>${temperature}°C</b> for this location.</p>` +
+            "<p>Thank you,</p>" +
+            "<p>Upsense Team</p>"; // html body
 
-        let html =
-                "" +
-                "<p>Dear User,</p><br>" +
-                `<p>The temperature limit has exceeded in ${zoneName} -  ${sensorName}.</p>` +
-                `<p>At <b>${date.format('DD-MM-YYYY hh:mm:ss a')}</b>, the temperature recorded was <b>${temperature}°C</b> for this location.</p>` +
-                "<p>Do check to ensure your operations are not affected.</p><br>" +
-                "<p>Thank you,</p>" +
-                "<p>Upsense Team</p>"; // html body
+        const message2 =
+            "" +
+            "<p>Dear User,</p><br>" +
+            `<p>The temperature limit has exceeded in ${zoneName} -  ${sensorName}.</p>` +
+            `<p>At <b>${date.format('DD-MM-YYYY hh:mm:ss a')}</b>, the temperature recorded was <b>${temperature}°C</b> for this location.</p>` +
+            "<p>Do check to ensure your operations are not affected.</p><br>" +
+            "<p>Thank you,</p>" +
+            "<p>Upsense Team</p>"; // html body
 
+        let content: string = '';
+
+        switch (notifType) {
+            case NOTIF_SENSOR_NORMAL: content = message1; break;
+            case NOTIF_SENSOR_ABNORMAL: content = message2; break;
+        }
 
         // send mail with defined transport object
         try {
@@ -226,7 +247,7 @@ export class SubscriberApp
                 from: `Upsense <${mailerConfig.user}>`, // sender address
                 to: emails, // list of receivers
                 subject: `Temperature Alert - ${zoneName} - ${sensorName}`, // Subject line
-                html
+                html: content
             });
         } catch (e) {
             console.log(e);
