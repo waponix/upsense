@@ -15,7 +15,8 @@ export class ZoneRepository extends BaseRepository
     async getList(companyId: number, options: QueryOptions = {}): Promise<Zone[]> {
         let parameters: any = { companyId };
         let whereStatements: any = [
-            'z.company = :companyId'
+            'z.company = :companyId',
+            'z.deletedAt IS NOT NULL'
         ];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;

@@ -94,7 +94,7 @@ export default class ManagerServices
     async create(request: Request): Promise<ReturnableResponse> {
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 201;
-        const {data} = request.body;
+        const data = request.body.data || {};
         await this.managerRepository.init();
 
         // do validation before proceed
@@ -155,7 +155,7 @@ export default class ManagerServices
      * @param request
      */
     async update(request: Request): Promise<ReturnableResponse> {
-        const {data} = request.body;
+        const data = request.body.data || {};
         const {id} = request.params;
 
         await this.managerRepository.init();

@@ -18,9 +18,15 @@ export class Log extends BaseEntity
     @Column({name: 'max_temp', type: 'mediumint', default: 0})
     maxTemp!: number
 
+    @Column({name: 'recorded_temp', type: 'mediumint', default: 0})
+    recordedTemp!: number
+
     @Field()
     @Column({name: 'alert_datetime', type: 'datetime', nullable: true})
     alertDatetime!: string
+
+    @Column({type: 'text', default: ''})
+    message!: string
 
     @ManyToOne(() => Sensor, sensor => sensor.logs, { onDelete: 'SET NULL'})
     sensor!: Sensor;

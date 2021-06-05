@@ -5,7 +5,7 @@ import {ApiResponse} from "../objects/ApiResponse";
 import {Hub} from "../../shared/entities/Hub";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {CommonMessages} from "../../../messages/messages";
-import {hubUpdateValidation} from "../validators/HubValidator";
+import {hubCreateValidation, hubUpdateValidation} from "../validators/HubValidator";
 import {Zone} from "../../shared/entities/Zone";
 import {ZoneRepository} from "../repositories/ZoneRepository";
 
@@ -68,12 +68,54 @@ export default class HubServices
         return new ReturnableResponse(statusCode, apiResponse);
     }
 
+    async create(request: Request): Promise<ReturnableResponse>
+    {
+        let apiResponse: ApiResponse = new ApiResponse();
+        let statusCode: number = 201;
+        const data = request.body.data || {};
+
+        // do validation before proceed
+        let validation = hubCreateValidation(data);
+
+        return new Promise(resolve => {
+            validation.checkAsync(async () => {
+                // success callback
+                await this.hubRepository.init();
+                await this.hubRepository.queryRunner.startTransaction();
+
+                try {
+                    const hub: Hub = await this.hubRepository.create(data);
+                    await this.hubRepository.queryRunner.commitTransaction();
+
+                    apiResponse.result = hub.serialize();
+                } catch (e) {
+                    apiResponse.status = Status.Error;
+                    apiResponse.message = CommonMessages.UnableToSave('Hub');
+                    await this.hubRepository.queryRunner.rollbackTransaction();
+                    statusCode = 500;
+                } finally {
+                    await this.hubRepository.queryRunner.release();
+                }
+
+                resolve(new ReturnableResponse(statusCode, apiResponse));
+            }, () => {
+                // fail callback
+                apiResponse.status = Status.BadRequest;
+                apiResponse.message = CommonMessages.ArgumentValuesIncorrect;
+                apiResponse.error = validation.errors.all();
+                statusCode = 400;
+
+                resolve(new ReturnableResponse(statusCode, apiResponse));
+            });
+        });
+    }
+
     async update(request: Request): Promise<ReturnableResponse>
     {
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
         const {id} = request.params;
-        const {data} = request.body;
+        const data = request.body.data || {};
 
         await this.hubRepository.init();
 

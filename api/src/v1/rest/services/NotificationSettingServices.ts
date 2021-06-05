@@ -66,7 +66,7 @@ export default class NotificationSettingServices
      * @param request
      */
     async update(request: Request): Promise<ReturnableResponse> {
-        const {data} = request.body;
+        const data = request.body.data || {};
         const {userId} = request.params;
 
         if (data.sendEmail) {

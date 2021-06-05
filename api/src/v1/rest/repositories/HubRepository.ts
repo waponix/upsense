@@ -11,7 +11,7 @@ export class HubRepository extends BaseRepository
     ];
     async getList(options: QueryOptions = {}): Promise<Hub[]> {
         let parameters: any = {};
-        let whereStatements: any = [];
+        let whereStatements: any = ['h.deletedAt IS NOT NULL'];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 
@@ -97,6 +97,20 @@ export class HubRepository extends BaseRepository
         }
 
         return true;
+    }
+
+    async create(data: Partial<Hub>):Promise<Hub> {
+        let hub: Hub = new Hub();
+
+        hub.serial = data.serial!;
+
+        if (data.zone) {
+            hub.zone = data.zone;
+        }
+
+        await this.repository.save(hub);
+
+        return hub;
     }
 
     async findOneById(id: number): Promise<Hub | undefined>

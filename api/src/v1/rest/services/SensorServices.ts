@@ -70,7 +70,7 @@ export default class SensorServices
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
         const {id} = request.params;
-        const {data} = request.body;
+        const data = request.body.data || {};
 
         await this.sensorRepository.init();
         let sensor: Sensor | undefined = undefined;

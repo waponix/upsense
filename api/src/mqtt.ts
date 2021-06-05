@@ -10,6 +10,8 @@ import {HubRepository} from "./v1/rest/repositories/HubRepository";
 import {Hub} from "./v1/shared/entities/Hub";
 import {ZoneRepository} from "./v1/rest/repositories/ZoneRepository";
 import {Zone} from "./v1/shared/entities/Zone";
+import {LogRepository} from "./v1/rest/repositories/LogRepository";
+import {Log} from "./v1/shared/entities/Log";
 
 const nodeMailer = require('nodemailer');
 
@@ -33,6 +35,7 @@ export class SubscriberApp
     private sensorRepository: SensorRepository;
     private sensorReadingRepository: SensorReadingRepository;
     private zoneRepsoitory: ZoneRepository;
+    private logRepository: LogRepository;
     private hubRepository: HubRepository;
     private topic: string = 'iot/+/sensor';
     private transporter: any;
@@ -42,6 +45,7 @@ export class SubscriberApp
         this.sensorReadingRepository = new SensorReadingRepository(SensorReading);
         this.zoneRepsoitory = new ZoneRepository(Zone);
         this.hubRepository = new HubRepository(Hub);
+        this.logRepository = new LogRepository(Log);
 
         this.client = mqtt.connect(MQTT_OPTIONS);
 
@@ -165,6 +169,7 @@ export class SubscriberApp
         }
 
         await this.hubRepository.init();
+        await this.logRepository.init();
         // send email notification to all users
         let result: string[] = await this.hubRepository.findUserEmailsForNotification(sensor.hub);
         let emails: string[] = [];
@@ -175,6 +180,14 @@ export class SubscriberApp
         do {
             if (emails.length <= 0) {
                 break;
+            }
+
+            const logData = {
+                sensor,
+                message: '',
+                maxtemp: sensor.maxTemp,
+                minTemp: sensor.minTemp,
+                recordedTemp: data.temperature
             }
 
             if (triggerSendNotification) {
@@ -191,6 +204,9 @@ export class SubscriberApp
                 }
                 this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_ABNORMAL);
                 await this.zoneRepsoitory.queryRunner.release();
+
+                logData.message = 'Sensor temperature levels exceeded the set limit';
+                await this.logRepository.create(logData);
             } else {
                 // if sensor came back to normal operation send another notification
                 if (alarmingSensors[sensor.serial]) {
@@ -204,6 +220,9 @@ export class SubscriberApp
                     }
                     this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_NORMAL);
                     await this.zoneRepsoitory.queryRunner.release();
+
+                    logData.message = 'Sensor temperature levels went back to normal';
+                    await this.logRepository.create(logData);
                 }
             }
 
@@ -211,6 +230,7 @@ export class SubscriberApp
         } while (true);
 
         await this.hubRepository.queryRunner.release();
+        await this.logRepository.queryRunner.release();
     }
 
     private async sendEmailNotification(emails: string, zoneName: string, sensorName: string, temperature: number, notifType: number)

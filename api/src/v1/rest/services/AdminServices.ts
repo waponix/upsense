@@ -82,7 +82,7 @@ export default class AdminServices
     {
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 201;
-        const {data} = request.body;
+        const data = request.body.data || {};
 
         // do validation before proceed
         let validation = adminCreateValidation(data);
@@ -126,7 +126,7 @@ export default class AdminServices
      */
     async update(request: Request): Promise<ReturnableResponse>
     {
-        const {data} = request.body;
+        const data = request.body.data || {};
         const {id} = request.params;
 
         await this.adminRepository.init();

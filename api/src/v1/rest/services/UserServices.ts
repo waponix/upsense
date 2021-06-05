@@ -156,7 +156,7 @@ export default class UserServices
      * @param request
      */
     async update(request: Request): Promise<ReturnableResponse> {
-        const {data} = request.body;
+        const data = request.body.data || {};
         const {id} = request.params;
 
         if (this.user.role === UserRole.user && data.zones) {

@@ -10,6 +10,7 @@ services:
       MYSQL_DATABASE: upsense
     volumes:
       - ./mysql/default.sql:/docker-entrypoint-initdb.d/default.sql
+      - ./mysql:/var/mysql
     restart: unless-stopped
 
   influxdb:

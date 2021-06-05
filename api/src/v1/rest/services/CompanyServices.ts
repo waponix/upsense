@@ -175,7 +175,7 @@ export default class companyServices
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 201;
 
-        const {data} = request.body;
+        const data = request.body.data || {};
         const validation = companyCreateValidation(data);
 
         return new Promise(resolve => {
@@ -218,7 +218,7 @@ export default class companyServices
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
         const {id} = request.params;
-        const {data} = request.body;
+        const data = request.body.data || {};
 
         await this.companyRepository.init();
 

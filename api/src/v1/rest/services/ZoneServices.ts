@@ -117,7 +117,7 @@ export default class ZoneServices
 
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 201;
-        const {data} = request.body;
+        const data = request.body.data || {};
 
         data.company = parseInt(request.params.companyId);
 
@@ -172,7 +172,7 @@ export default class ZoneServices
         let apiResponse: ApiResponse = new ApiResponse();
         let statusCode: number = 200;
         const {id, companyId} = request.params;
-        const {data} = request.body;
+        const data = request.body.data || {};
         data.company = parseInt(companyId);
 
         await this.zoneRepository.init();
