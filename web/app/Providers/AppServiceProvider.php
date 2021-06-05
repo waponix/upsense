@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::share('JWT_ISSUER', Config::get('app.JWT_ISSUER'));
+        View::share('WS_ISSUER', Config::get('app.WS_ISSUER'));
         View::share('ROLES', self::ROLES);
         Paginator::useBootstrap();
     }

@@ -9,7 +9,6 @@
                     <div class="card p-4">
                         <div class="card-body">
                             <h1>Login</h1>
-                            {{$JWT_ISSUER}}
                             <p class="text-muted">Sign In to your account </p>
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf

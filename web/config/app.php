@@ -231,5 +231,6 @@ return [
     'JWT_SECRET' => env('JWT_SECRET', '49asg84va1as5298f$#48afv521'),
     'JWT_REFRESH_SECRET' => env('JWT_REFRESH_SECRET', '951a!@44a8g_284321ss6'),
     'JWT_ALGORITHM' => env('JWT_ALGORITHM', 'HS256'),
-    'JWT_ISSUER' => env('JWT_ISSUER', 'http://192.168.0.111:8442/v1'),
+    'JWT_ISSUER' => env('API_HOST', 'http://192.168.0.111') . ':' . env('API_PORT', '8443') . '/' . env('API_VERSION', 'v1'),
+    'WS_ISSUER' => env('WS_HOST', 'http://192.168.0.111') . ':' . env('WS_PORT', '1884'),
 ];

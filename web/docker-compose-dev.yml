@@ -13,7 +13,10 @@ services:
         env_file: '.env.dev'
         environment:
             - "DB_HOST=upsense"
-            
+        restart:
+            on-failure
+
+
     # nginx web server
     web:
         container_name: upsense_nginx
@@ -25,12 +28,20 @@ services:
             - ./storage/logs/:/var/log/nginx
             - ./:/var/www/html
         working_dir: /var/www/html
-
+        extra_hosts:
+            - "dockerhost:127.0.0.1"
         ports:
             - 8990:80
             # - 443:443
+        restart:
+            on-failure
 
 volumes:
     dbdata:
         # driver: local
 
+networks:
+    default:
+        external:
+            name: upsense_default
+        
