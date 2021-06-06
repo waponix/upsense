@@ -107,7 +107,7 @@
             e.stopPropagation();
             api.post('/{{ $role }}s', {
                     data: {
-                        "username": $(this).find('[name="email"]').val(),
+                        // "username": $(this).find('[name="email"]').val(),
                         "password": "admin",
                         "firstName": $(this).find('[name="firstName"]').val(),
                         "lastName": $(this).find('[name="lastName"]').val(),
