@@ -108,7 +108,7 @@ export default class ManagerServices
                 if (data.company) {
                     // query for company if user passes value
                     await this.companyRepository.init();
-                    data.company = await this.companyRepository.findOneById(data.company);
+                    data.company = await this.companyRepository.findOneBy({id: data.company});
                     await this.companyRepository.queryRunner.release();
                 }
 

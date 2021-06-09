@@ -23,7 +23,7 @@ export class AuthResolver
 
     @Query(() => String)
     help() {
-        return 'Use the login mutation for requesting token'
+        return 'Use the auth mutation for requesting token'
     }
 
     @Mutation(() => AuthResponse)

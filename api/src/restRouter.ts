@@ -1,6 +1,9 @@
-import express, { Router } from 'express';
+import express, {Request, Response, Router} from 'express';
 import Routes from './components/Routes';
 import path from 'path';
+import {ApiResponse} from "./v1/rest/objects/ApiResponse";
+import {CommonMessages} from "./messages/messages";
+import {Status} from "./components/types/ResponseStatusTypes";
 
 const restRouter: Router = express.Router();
 
@@ -27,5 +30,15 @@ do {
         restRouter.use(path.posix.join('/v1', route.getPath()), route.getRouter());
     }
 } while(routes.length > 0);
+
+restRouter.use((request: Request, response: Response) => {
+    let apiResponse: ApiResponse = new ApiResponse();
+    apiResponse.message = 'Endpoint does not exist';
+    apiResponse.status = Status.NotFound;
+
+    response
+        .status(404)
+        .json(apiResponse);
+});
 
 export default restRouter;

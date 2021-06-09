@@ -6,7 +6,6 @@ import {AuthMessages, CommonMessages} from "../../../messages/messages";
 import {Status} from "../../../components/types/ResponseStatusTypes";
 import {ApiResponse} from "../objects/ApiResponse";
 import {RefreshToken} from "../../shared/entities/RefreshToken";
-import {Request} from "express";
 
 export default class AuthServices
 {

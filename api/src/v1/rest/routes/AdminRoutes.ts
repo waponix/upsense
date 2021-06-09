@@ -12,13 +12,13 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // get admin list
         .get('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getAdminsAction)
         // get one admin
-        .get('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getAdminAction)
+        .get('/:id(\d+)', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getAdminAction)
         // add admin
         .post('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.postAdminAction)
         // update admin
-        .put('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putAdminAction)
+        .put('/:id(\d+)', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putAdminAction)
         // delete admin
-        .delete('/:id', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.deleteAdminAction);
+        .delete('/:id(\d+)', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.deleteAdminAction);
 });
 
 module.exports = routes;
