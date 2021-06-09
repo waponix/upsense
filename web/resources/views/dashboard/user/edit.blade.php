@@ -113,16 +113,16 @@
                     options += '<option value="' + $(this)[0].id + '">' + $(this)[0]
                         .name + '</option>';
                 });
-                $("#" + editForm).find('[name="company"]').html(options).trigger("change");
+                modal.find('#company').html(options).trigger("change");
             }).catch((error) => {
                 console.error(error)
             });
 
-            api.get('/{{ $role }}s/' + id, {
-                "query": {
-                    "relations": ["company", "zones"]
-                },
-            }).then((res) => {
+            let query = {
+                "relations": ["company", "zones"]
+            };
+            query = encodeURI(JSON.stringify(query));
+            api.get('/{{ $role }}s/' + id + '?query=' + query).then((res) => {
                 let dt = res.data.result;
                 // modal.find("#image").val("src", '/assets/img/avatars/' + dt.image);
                 modal.find("#firstName").val(dt.firstName);
@@ -131,25 +131,26 @@
                 modal.find("#email").val(dt.email);
 
                 if ("{{ $role }}" != "admin") {
-                    $.each(dt.zones, function(i, e) {
-                        console.log(e.id)
-                        $("#" + editForm).find("#zones option[value='" + e.id + "']").prop(
+                    userZones = dt.zones;
+                    modal.find("#company").val(dt.company.id).trigger("change");
+
+                    $.each(userZones, function(i, e) {
+                        modal.find("#zones option[value='" + e.id + "']").prop(
                             "selected", true);
                     });
-                    $("#" + editForm).find("#company").val(dt.company.id);
+                    console.log(dt)
                 }
             }).catch((error) => {
                 console.error(error)
             });
-
 
             $("#" + editForm).off("submit").on("submit", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 api.put('/{{ $role }}s/' + id, {
                         data: {
-                            "username": $(this).find('[name="email"]').val(),
-                            "password": "admin",
+                            // "username": $(this).find('[name="email"]').val(),
+                            // "password": "admin",
                             "firstName": $(this).find('[name="firstName"]').val(),
                             "lastName": $(this).find('[name="lastName"]').val(),
                             "mobile": $(this).find('[name="mobile"]').val(),
@@ -176,7 +177,6 @@
                         if (typeof error.response !== 'undefined') {
                             $.each(error.response.data.error, function(i, v) {
                                 // $('.needs-validation').removeClass('was-validated');
-                                console.log(i)
                                 $("#" + i).addClass('is-invalid').next().text(v)
                             });
                         } else {
@@ -191,7 +191,7 @@
                 "relations": ["users"]
             };
             query = encodeURI(JSON.stringify(query));
-            if($(this).val() == 0) return false;
+            if ($(this).val() == 0) return false;
 
             api.get('/companies/' + $(this).val() + '/zones?query=' + query).then((res) => {
                 let options = '';
@@ -200,10 +200,14 @@
                         .name + '</option>';
                 })
                 $("#" + editForm).find('[name="zones[]"]').html(options);
+                $.each(userZones, function(i, e) {
+                    $("#" + editForm).find("#zones option[value='" + e.id + "']").prop(
+                        "selected", true);
+                });
             }).catch((error) => {
                 console.error(error)
-            })
-        })
+            });
+        });
     });
 
 </script>

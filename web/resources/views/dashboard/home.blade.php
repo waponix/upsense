@@ -13,7 +13,7 @@
                                     <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-location-pin"></use>
                                 </svg>
                             </button>
-                            <div class="text-value-lg">30</div>
+                            <div id="no-of-active-sensors" class="text-value-lg">0</div>
                             <div>Active Sensors</div>
                             <small class="text-muted">Number of sensors connected</small>
                         </div>
@@ -33,12 +33,11 @@
                                         <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-settings"></use>
                                     </svg>
                                 </button>
-                                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
-                                        href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a
-                                        class="dropdown-item" href="#">Something else
-                                        here</a></div>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="#">Show All</a>
+                                </div>
                             </div>
-                            <div class="text-value-lg">90</div>
+                            <div class="text-value-lg">0</div>
                             <div>Alerts</div>
                             <small class="text-muted">no. of alerts over the past week</small>
                         </div>
@@ -58,14 +57,13 @@
                                         <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-settings"></use>
                                     </svg>
                                 </button>
-                                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
-                                        href="#">Action</a><a class="dropdown-item" href="#">Another action</a><a
-                                        class="dropdown-item" href="#">Something else
-                                        here</a></div>
+                                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="#">View
+                                        Logs</a>
+                                </div>
                             </div>
-                            <div class="text-value-lg">2.5%</div>
+                            <div class="text-value-lg">0%</div>
                             <div>System Downtime</div>
-                            <small class="text-muted">Downtime frequency</small>
+                            <small class="text-muted">Downtime frequency over past months</small>
                         </div>
                         <div class="c-chart-wrapper mt-3 mx-3" style="height:70px;">
                             <canvas class="chart" id="card-chart3" height="70"></canvas>
@@ -96,8 +94,8 @@
                     <div class="c-chart-wrapper" style="height:450px;margin-top:40px;">
                         <div class="pull-right">
                             {{-- <button id="randomizeData" class="btn btn-primary">Randomize Data</button> --}}
-                            <button id="addDataset" class="btn btn-primary">Add Sensor</button>
-                            <button id="removeDataset" class="btn btn-primary">Remove Sensor</button>
+                            {{-- <button id="addDataset" class="btn btn-primary">Add Sensor</button>
+                            <button id="removeDataset" class="btn btn-primary">Remove Sensor</button> --}}
                             {{-- <button id="addData" class="btn btn-primary">Add Data</button> --}}
                         </div>
                         <canvas class="chart" id="main-chart" height="400"></canvas>
@@ -150,13 +148,7 @@
                                     <th>Current Temp</th>
                                     <th>Max Temp</th>
                                     <th>Min Temp</th>
-                                    <th>Zone</th>
-                                    <th>Company</th>
-                                    <th>
-                                        <svg class="c-icon">
-                                            <use xlink:href="assets/icons/coreui/free-symbol-defs.svg#cui-bolt"></use>
-                                        </svg>
-                                    </th>
+                                    <th>Battery</th>
                                     <th>
                                         Status
                                     </th>
@@ -281,14 +273,14 @@
                                 <div class="col-6">
                                     <div class="c-callout c-callout-warning"><small class="text-muted">Critical
                                             Status</small>
-                                        <div class="text-value-lg">10</div>
+                                        <div class="text-value-lg">0</div>
                                     </div>
                                 </div>
                                 <!-- /.col-->
                                 <div class="col-6">
                                     <div class="c-callout c-callout-info"><small class="text-muted">Longest
                                             Uptime</small>
-                                        <div class="text-value-lg">120 hours</div>
+                                        <div class="text-value-lg">0 hours</div>
                                     </div>
                                 </div>
                                 <!-- /.col-->
@@ -305,8 +297,8 @@
                                 </div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 60%"
-                                            aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -321,8 +313,8 @@
                                 </div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                            aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -350,13 +342,13 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="c-callout c-callout-success"><small class="text-muted">Connected</small>
-                                        <div class="text-value-lg">95</div>
+                                        <div class="text-value-lg">0</div>
                                     </div>
                                 </div>
                                 <!-- /.col-->
                                 <div class="col-6">
                                     <div class="c-callout c-callout-danger"><small class="text-muted">Disconnected</small>
-                                        <div class="text-value-lg">5</div>
+                                        <div class="text-value-lg">0</div>
                                     </div>
                                 </div>
                                 <!-- /.col-->
@@ -368,12 +360,12 @@
                                 </div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 95%"
-                                            aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 5%"
-                                            aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -382,12 +374,12 @@
                                 </div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 96%"
-                                            aria-valuenow="96" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 4%"
-                                            aria-valuenow="4" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -395,12 +387,12 @@
                                 <div class="progress-group-prepend"><span class="progress-group-text">Wednesday</span></div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 93%"
-                                            aria-valuenow="93" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 7%"
-                                            aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -408,12 +400,12 @@
                                 <div class="progress-group-prepend"><span class="progress-group-text">Thursday</span></div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 92%"
-                                            aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 8%"
-                                            aria-valuenow="8" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -422,11 +414,11 @@
                                 </div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 94%"
-                                            aria-valuenow="94" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 6%"
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
                                             aria-valuenow="6" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
@@ -435,12 +427,12 @@
                                 <div class="progress-group-prepend"><span class="progress-group-text">Saturday</span></div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 93%"
-                                            aria-valuenow="93" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 7%"
-                                            aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -449,12 +441,12 @@
                                 </div>
                                 <div class="progress-group-bars">
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 96%"
-                                            aria-valuenow="96" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <div class="progress progress-xs">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 4%"
-                                            aria-valuenow="4" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -478,7 +470,41 @@
     <script src="{{ asset('js/chartjs-plugin-streaming.min.js') }}"></script>
 
     <script>
-        // let socket = new WebSocket("ws://javascript.info/article/websocket/demo/hello");
+        //       var socket = io.connect("http://192.168.0.111:1884");
+        // // use your socket
+        // socket.on("connect", function(data) {
+        //     console.log("connected")
+        //     socket.emit('sensors/data', 'Hello World from client');
+        // })
+
+        // socket.on('sensors/data', function(data) {
+        //     alert(data)
+        // });
+
+        let ws = new WebSocket("{{ $WS_ISSUER }}");
+
+        ws.onopen = function() {
+            console.log('Connected to websocket')
+            //Subscribe to the channel
+            const msg = {
+                type: 'subscribe',
+                channel: 'sensors/data',
+                interval: 500,
+            };
+            ws.send(JSON.stringify(msg))
+        }
+
+        ws.onmessage = function(msg) {
+            console.log(msg)
+            console.log(JSON.parse(msg.data).message);
+        }
+
+        // ws.onmessage = function(event) {
+        //     consoel.log(event)
+        //     alert(`[message] Data received from server: ${event.data}`);
+        // };
+
+        // let socket = new WebSocket("{{ $WS_ISSUER }}");
 
         // socket.onopen = function(e) {
         //     alert("[open] Connection established");
@@ -487,6 +513,7 @@
         // };
 
         // socket.onmessage = function(event) {
+        //     consoel.log(event)
         //     alert(`[message] Data received from server: ${event.data}`);
         // };
 
@@ -503,10 +530,6 @@
         // socket.onerror = function(error) {
         //     alert(`[error] ${error.message}`);
         // };
-
-            
-
-        
 
     </script>
     <script src="{{ asset('js/dashboard.js') }}" defer></script>

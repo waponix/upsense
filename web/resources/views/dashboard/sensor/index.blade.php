@@ -57,7 +57,7 @@
 
         function getData() {
             let query = {
-                "relations": ["zones"]
+                "relations": ["hub"]
             };
             query = encodeURI(JSON.stringify(query));
             api.get('/sensors?query=' + query).then((res) => {
