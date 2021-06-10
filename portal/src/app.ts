@@ -110,7 +110,7 @@ class Portal
                     .render('404.html.twig');
             });
 
-        this.server.listen(/*portalConfig.port*/3000, () => console.log(`Portal is running at port ${portalConfig.port}`));
+        this.server.listen(portalConfig.port, () => console.log(`Portal is running at port ${portalConfig.port}`));
     }
 }
 
