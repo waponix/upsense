@@ -9,7 +9,7 @@ const rules = new ValidationRules({
     firstName: ['required', 'string', 'max:50'],
     lastName: ['string', 'max:50'],
     email: ['required', 'email', 'email_available'],
-    mobileNumber: ['max:20'],
+    mobile: ['required', 'max:20', 'mobile_available'],
     picture: ['string', 'url', 'max:255']
 });
 
@@ -22,14 +22,17 @@ export const adminCreateValidation = (data: any) => {
 
 export const adminUpdateValidation = (data: any, admin: Admin) => {
     rules.removeField('username');
-    rules.fields
-        .removeRuleFromPasswordField('required')
-        .removeRuleFromFirstNameField('required')
-        .removeRuleFromEmailField('required');
 
-    if (data.email && data.email === admin.email) {
+    rules.fields.removeRuleFromPasswordField('required');
+
+    if (data.email === admin.email) {
         // only validate email if it is not the same with old email
         rules.fields.removeRuleFromEmailField('email_available');
+    }
+
+    if (data.mobile === admin.mobile) {
+        // only validate mobile if it is not the same with old mobile
+        rules.fields.removeRuleFromMobileField('mobile_available');
     }
 
     return new Validator(data, rules.fields);
@@ -43,6 +46,17 @@ Validator.registerAsync('username_available', async (username: string, attribute
         passes();
     } else {
         passes(false, 'Username has already been taken');
+    }
+});
+
+Validator.registerAsync('mobile_available', async (mobile: string, attribute: any, req: any, passes: any) => {
+    const adminRepository = getRepository(Admin);
+    const admin: Admin | undefined = await adminRepository.findOne({where: {mobile}});
+
+    if (!admin) {
+        passes();
+    } else {
+        passes(false, 'Mobile is already connected to an existing account');
     }
 });
 

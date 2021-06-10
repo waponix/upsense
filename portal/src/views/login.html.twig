@@ -1,0 +1,82 @@
+{% extends './layout/blank.html.twig' %}
+
+{% block stylesheets %}
+    <link href="/assets/css/theme.css" rel="stylesheet">
+{% endblock %}
+
+{% block pageBody %}
+    <body class="bg-gradient-primary">
+
+    <div class="container">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none bg-login-image d-flex justify-content-center align-items-center">
+                                <img src="/assets/img/logo_blue.png" alt="upsense-logo" style="width: 70%">
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                    </div>
+                                    <form class="user" id="user-login" action="#" method="POST">
+                                        <div class="form-group">
+                                            <input name="username" type="text" class="form-control form-control-user"
+                                                   id="input-username" aria-describedby="username-help"
+                                                   placeholder="Username / Email Address" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input  name="password" type="password" class="form-control form-control-user"
+                                                   id="input-password" placeholder="Password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="remember-me">
+                                                <label class="custom-control-label" for="remember-me">Remember Me</label>
+                                            </div>
+                                        </div>
+                                        {% if loginError is defined and loginError is not empty %}
+                                        <div class="small text-center alert alert-danger">
+                                            {{ loginError }}
+                                        </div>
+                                        {% endif %}
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            Sign In
+                                        </button>
+                                        <hr>
+                                    </form>
+                                    <div class="text-center">
+                                        <a class="small" href="/assets/forgot-password.html">Forgot Password?</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="assets/vendor/jquery/jquery.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="assets/js/sb-admin-2.min.js"></script>
+    <script src="/assets/js/shared/main.js"></script>
+    <script src="/assets/js/login.js"></script>
+    </body>
+{% endblock %}

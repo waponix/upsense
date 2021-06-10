@@ -12,9 +12,9 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         // get hub list
         .get('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getHubsAction)
         // get one hub
-        .get('/:id(\d+)', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getHubAction)
+        .get('/:id(\\d+)', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getHubAction)
         // update hub
-        .put('/:id(\d+)', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putHubAction);
+        .put('/:id(\\d+)', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putHubAction);
 });
 
 module.exports = routes;

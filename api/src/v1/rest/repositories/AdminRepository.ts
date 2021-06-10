@@ -20,10 +20,11 @@ export class AdminRepository extends BaseRepository
      */
     async getList (options: QueryOptions = {}): Promise<Admin[]> {
         let parameters: any = {
-            role: UserRole.admin
+            role: UserRole.admin,
         };
         let whereStatements = [
-            'a.role = :role'
+            'a.role = :role',
+            'a.id != 1'
         ];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;

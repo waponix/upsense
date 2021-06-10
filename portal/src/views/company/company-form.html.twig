@@ -1,0 +1,15 @@
+{% spaceless %}
+    <form id="company-form">
+        <div class="form-group">
+            <input type="text" name="name" class="form-control" id="company-name" placeholder="Company Name*" required>
+            <div class="invalid-feedback" id="error-company-name"></div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <a href="/company/list" type="submit" class="btn btn-outline-dark mnw-100 mr-2">Cancel</a>
+            <button type="submit" class="btn btn-primary mnw-100">Save</button>
+        </div>
+        {% if id is defined %}
+            <input type="hidden" id="data-id" value="{{ id }}">
+        {% endif %}
+    </form>
+{% endspaceless %}

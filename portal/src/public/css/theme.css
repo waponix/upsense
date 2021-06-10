@@ -1,0 +1,9 @@
+.mnw-100 {
+    min-width: 100px;
+}
+
+.bg-login-image {
+    background: url("../img/login_image.jpg") !important;
+    background-position: center;
+    background-size: 100% 100% !important;
+}

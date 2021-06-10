@@ -128,7 +128,8 @@ export default class ManagerServices
                     await this.managerRepository.queryRunner.commitTransaction();
 
                     apiResponse.result = manager.serialize();
-                } catch {
+                } catch (e) {
+                    console.log(e);
                     apiResponse.status = Status.Error;
                     apiResponse.message = CommonMessages.UnableToSave('Manager');
                     await this.managerRepository.queryRunner.rollbackTransaction();

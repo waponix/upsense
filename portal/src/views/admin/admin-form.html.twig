@@ -1,0 +1,56 @@
+{% spaceless %}
+    {% if new is not defined %}
+        {% set new = 1 %}
+    {% endif %}
+    <form id="admin-form">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" name="username" class="form-control" id="admin-username" placeholder="Username" {% if new == 0 %}disabled{% endif %}>
+                    <div class="invalid-feedback" id="error-admin-username"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" id="admin-password" {% if new == 1 %}placeholder="Password*" required{% else %}placeholder="Password"{% endif %}>
+                    <div class="invalid-feedback" id="error-admin-password"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="email" name="email" class="form-control" id="admin-email" placeholder="Email*" required>
+                    <div class="invalid-feedback" id="error-admin-email"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="firstName" class="form-control" id="admin-firstName" placeholder="First Name*" required>
+                    <div class="invalid-feedback" id="error-admin-firstName"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="lastName" class="form-control" id="admin-lastName" placeholder="Last Name">
+                    <div class="invalid-feedback" id="error-admin-lastName"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="mobile" class="form-control" id="admin-mobile" placeholder="Mobile*">
+                    <div class="invalid-feedback" id="error-admin-mobile"></div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <a href="/accounts/admin/list" type="submit" class="btn btn-outline-dark mnw-100 mr-2">Cancel</a>
+            <button type="submit" class="btn btn-primary mnw-100">Save</button>
+        </div>
+        {% if id is defined %}
+            <input type="hidden" id="data-id" value="{{ id }}">
+        {% endif %}
+    </form>
+{% endspaceless %}

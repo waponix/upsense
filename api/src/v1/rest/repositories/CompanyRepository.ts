@@ -99,7 +99,6 @@ export class CompanyRepository extends BaseRepository
         if (relations !== null) {
             options.relations = relations;
         }
-        console.log(options);
         return await this.repository.findOne(options);
     }
 

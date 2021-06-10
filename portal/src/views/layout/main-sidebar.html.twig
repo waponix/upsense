@@ -1,0 +1,56 @@
+{% spaceless %}
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">
+        <div class="sidebar-brand-logo mx-3">
+            <img src="/assets/img/logo.png" alt="upsense-logo" style="width: 100%">
+        </div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+
+    {% for menuName, menu in sideMenu  %}
+        {% if menu.divider is defined and menu.divider is not empty %}
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                {{ menu.divider }}
+            </div>
+        {% endif %}
+        {% if _user.role in menu.role %}
+            <li class="nav-item {% if activeMenu == menu.link or activeMenu in menu.links %}active{% endif %}">
+                {% if menu.subMenu is defined and menu.subMenu is not empty %}
+                    <a class="nav-link {% if activeMenu not in menu.links %}collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#{{ menu.id }}"
+                       aria-expanded="{% if activeMenu not in menu.links %}false{% else %}true{% endif %}" aria-controls="collapseTwo">
+                        <i class="{{ menu.icon }}"></i>
+                        <span>{{ menuName }}</span>
+                    </a>
+                    <div id="{{ menu.id }}" class="collapse {% if activeMenu in menu.links %}show{% endif %}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            {% for subMenuName, subMenu in menu.subMenu %}
+                                {% if _user.role in subMenu.role %}
+                                <a class="collapse-item {% if activeMenu == subMenu.link %}active{% endif %}" href="{{ subMenu.link }}">{{ subMenuName }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    {% if menu.link is defined and menu.link is not null %}
+                        <a class="nav-link" href="{{ menu.link }}">
+                    {% endif %}
+                    <i class="{{ menu.icon }}"></i>
+                    <span>{{ menuName }}</span></a>
+                {% endif %}
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+<!-- End of Sidebar -->
+{% endspaceless %}

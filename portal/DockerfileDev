@@ -1,0 +1,17 @@
+FROM node:14.15.4-slim
+
+EXPOSE 3000
+
+WORKDIR /var/www
+
+ADD ./.env /var/www
+
+RUN mkdir portal
+
+COPY ./portal/package.json /var/www/portal
+
+COPY ./portal /var/www/portal
+
+WORKDIR /var/www/portal
+
+CMD ["npm", "run", "dev"]

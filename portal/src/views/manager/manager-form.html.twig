@@ -1,0 +1,66 @@
+{% spaceless %}
+    {% if new is not defined %}
+        {% set new = 1 %}
+    {% endif %}
+    <form id="manager-form">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" name="username" class="form-control" id="manager-username" placeholder="Username" {% if new == 0 %}disabled{% endif %}>
+                    <div class="invalid-feedback" id="error-manager-username"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" id="manager-password" {% if new == 1 %}placeholder="Password*" required{% else %}placeholder="Password"{% endif %}>
+                    <div class="invalid-feedback" id="error-manager-password"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="email" name="email" class="form-control" id="manager-email" placeholder="Email*" required>
+                    <div class="invalid-feedback" id="error-manager-email"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="firstName" class="form-control" id="manager-firstName" placeholder="First Name*" required>
+                    <div class="invalid-feedback" id="error-manager-firstName"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="lastName" class="form-control" id="manager-lastName" placeholder="Last Name">
+                    <div class="invalid-feedback" id="error-manager-lastName"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% if new == 1 %}
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select name="company" class="form-control" id="manager-company">
+                        <option>Company*</option>
+                    </select>
+                    <div class="invalid-feedback" id="error-manager-company"></div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="mobile" class="form-control" id="manager-mobile" placeholder="Mobile*">
+                    <div class="invalid-feedback" id="error-manager-mobile"></div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <a href="/accounts/manager/list" type="submit" class="btn btn-outline-dark mnw-100 mr-2">Cancel</a>
+            <button type="submit" class="btn btn-primary mnw-100">Save</button>
+        </div>
+        {% if id is defined %}
+            <input type="hidden" id="data-id" value="{{ id }}">
+        {% endif %}
+    </form>
+{% endspaceless %}
