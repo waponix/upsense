@@ -52,3 +52,16 @@ services:
     links:
       - influxdb
     restart: unless-stopped
+
+  portal:
+    build:
+      dockerfile: ./portal/DockerfileDev
+      context: ./
+    image: upsense_portal_dev:latest
+    ports:
+      - 3000:3000
+    volumes: # Use this when in development
+      - ./portal:/var/www/portal
+    links:
+      - api
+    restart: unless-stopped
