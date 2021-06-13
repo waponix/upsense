@@ -25,6 +25,16 @@ export default class HubController extends Controller
             .json(data.body);
     }
 
+    async postHubAction(request: Request, response: Response)
+    {
+        const hubServices: HubServices = new HubServices((<any>request).user);
+        const data: ReturnableResponse = await hubServices.create(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
+
     async putHubAction(request: Request, response: Response)
     {
         const hubServices: HubServices = new HubServices((<any>request).user);

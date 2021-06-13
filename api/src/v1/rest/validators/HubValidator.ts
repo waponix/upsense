@@ -7,8 +7,8 @@ import {Hub} from "../../shared/entities/Hub";
 const Validator = require('validatorjs');
 
 const rules = new ValidationRules({
-    serial: ['required', 'string', 'serial_not_exit'],
-    zone: ['integer', 'zone_not_exist']
+    serial: ['required', 'string', 'serial_not_exist'],
+    zone: ['integer', 'zone_exist']
 });
 
 export const hubCreateValidation = (data: any) => {
@@ -20,13 +20,13 @@ export const hubUpdateValidation = (data: any) => {
     return new Validator(data, rules.fields);
 };
 
-Validator.registerAsync('zone_not_exist', async function (zones: any[], attribute: any, req: any, passes: any) {
+Validator.registerAsync('zone_exist', async function (zones: any[], attribute: any, req: any, passes: any) {
     const zoneRepository = getRepository(Zone);
 
     for (let zoneId of zones) {
         const zone: Zone | undefined = await zoneRepository.findOne({where: {id: parseInt(zoneId)}});
 
-        if (!zone) {
+        if (zone === undefined) {
             passes(false, `There is no zone with id ${zoneId}`);
         }
     }

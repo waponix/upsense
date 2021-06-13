@@ -15,7 +15,7 @@ $(() => {
                 mobile: $(this).find('input[name="mobile"]').val() || null
             };
 
-            if ($(this).find('select[name="company"]').val()) {
+            if ($(this).find('select[name="company"]').val() != 0) {
                 formData.company = parseInt($(this).find('select[name="company"]').val())
             }
 

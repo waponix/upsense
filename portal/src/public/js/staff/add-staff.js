@@ -14,8 +14,18 @@ $(() => {
             mobile: $(this).find('input[name="mobile"]').val() || null
         };
 
-        if ($(this).find('select[name="company"]').val()) {
-            formData.company = parseInt($(this).find('select[name="company"]').val());
+        if ($(this).find('select[name="company"]').val() != 0) {
+            formData.company = parseInt($(this).find('select[name="company"]').val())
+        }
+
+        let selectedZones = [];
+
+        $(this).find('input.zone-select:checked').each(function () {
+            selectedZones.push(parseInt($(this).val()));
+        });
+
+        if (selectedZones.length) {
+            formData.zones = selectedZones;
         }
 
         $.ajax({
@@ -39,6 +49,44 @@ $(() => {
             }
         });
     });
+
+    $('form#staff-form select[name="company"]').on('change', function (e) {
+        if ($(this).val() != 0) {
+            loadZoneChoices($(this).val(), $('section#zone-section div.zone-selection > div'), function () {
+                $('section#zone-section').show();
+            });
+        } else {
+            $(this).find('section#zone-section').hide();
+        }
+    });
+
+    function loadZoneChoices(companyId, target, callback = null)
+    {
+        $.ajax({
+            url: `/company/${companyId}/zone/list`,
+            method: 'post',
+            success: response => {
+                console.log(response);
+                const zones = response.data;
+
+                target.html('');
+
+                for (const zone of zones) {
+                    const option = $(`
+                        <div class="form-check form-check-inline mr-5">
+                          <input class="form-check-input zone-select" type="checkbox" value="${zone.id}" id="zone-${zone.id}">
+                          <label class="form-check-label" for="zone-${zone.id}">
+                            ${zone.name}
+                          </label>
+                        </div>
+                    `);
+                    target.append(option);
+                }
+
+                if (callback) callback();
+            }
+        })
+    }
 
     function loadCompanyOptions(target)
     {

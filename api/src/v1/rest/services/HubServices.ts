@@ -83,6 +83,15 @@ export default class HubServices
                 await this.hubRepository.init();
                 await this.hubRepository.queryRunner.startTransaction();
 
+                if (data.zone) {
+                    await this.zoneRepository.init();
+                    const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(data.zone)});
+                    data.zone = zone;
+                    await this.zoneRepository.queryRunner.release();
+                }
+
+                console.log(data);
+
                 try {
                     const hub: Hub = await this.hubRepository.create(data);
                     await this.hubRepository.queryRunner.commitTransaction();

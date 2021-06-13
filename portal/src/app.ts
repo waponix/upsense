@@ -117,11 +117,15 @@ class Portal
             .get('/company/:companyId(\\d+)/zone/new', Authenticate, ZoneController.createView)
             .post('/company/:companyId(\\d+)/zone/new', Authenticate, ZoneController.createAction)
             .get('/company/:companyId(\\d+)/zone/:id(\\d+)/edit', Authenticate, ZoneController.editView)
-            .post('/company/:companyId(\\d+)zone/:id(\\d+)/edit', Authenticate, ZoneController.editAction)
+            .post('/company/:companyId(\\d+)/zone/:id(\\d+)/edit', Authenticate, ZoneController.editAction)
 
             // Hub route
             .get('/devices/hub/list', Authenticate, HubController.indexView)
             .post('/devices/hub/list', Authenticate, HubController.indexAction)
+            .get('/devices/hub/new', Authenticate, HubController.createView)
+            .post('/devices/hub/new', Authenticate, HubController.createAction)
+            .get('/devices/hub/:id(\\d+)/edit', Authenticate, HubController.editView)
+            .post('/devices/hub/:id(\\d+)/edit', Authenticate, HubController.editAction)
 
             // Sensor route
             .get('/devices/sensor/list', Authenticate, SensorController.indexView)

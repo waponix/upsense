@@ -32,7 +32,7 @@ $(() => {
             {data: 'lastName'},
             {data: 'username'},
             {data: 'email'},
-            {data: 'mobile', defaultContent: 'n/a'},
+            {data: 'mobile', defaultContent: 'N/A'},
             {data: null, defaultContent: '<a href="#" class="btn btn-edit-admin btn-primary btn-circle btn-sm">\n' +
                     '                                    <i class="fas fa-pen"></i>\n' +
                     '                                </a>\n' +

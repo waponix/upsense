@@ -64,7 +64,7 @@ export default class ZoneServices
      *
      * @param request
      */
-    async getOne(request: Request): Promise<ReturnableResponse>
+    async getOneByCompany(request: Request): Promise<ReturnableResponse>
     {
         const companyServices = new CompanyServices(this.user);
         // validate the company id if it belongs to the currently logged in user
@@ -83,7 +83,34 @@ export default class ZoneServices
         const {id, companyId} = request.params;
 
         await this.zoneRepository.init();
-        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(id), company: parseInt(companyId)}, ['users']);
+        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(id), company: parseInt(companyId)}, ['users', 'company']);
+
+        if (zone === undefined) {
+            apiResponse.status = Status.NotFound;
+            apiResponse.message = CommonMessages.NotFound('Zone');
+            statusCode = 404;
+        } else {
+            apiResponse.result = zone.serialize();
+        }
+
+        await this.zoneRepository.queryRunner.release();
+
+        return new ReturnableResponse(statusCode, apiResponse);
+    }
+
+    /**
+     *
+     * @param request
+     */
+    async getOne(request: Request): Promise<ReturnableResponse>
+    {
+        let statusCode: number = 200;
+        let apiResponse: ApiResponse = new ApiResponse();
+
+        const id = request.params.id || '';
+
+        await this.zoneRepository.init();
+        const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(id)}, ['users', 'company']);
 
         if (zone === undefined) {
             apiResponse.status = Status.NotFound;

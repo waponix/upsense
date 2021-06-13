@@ -1,0 +1,35 @@
+{% extends '../layout/main-layout.html.twig' %}
+
+{% block pageContent %}
+    <!-- Page Heading -->
+{#    <div class="d-sm-flex align-items-center justify-content-between mb-4">#}
+{#        <h1 class="h3 mb-0 text-gray-800">Companies</h1>#}
+{#    </div>#}
+
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="m-0 font-weight-bold text-primary">Hub Form</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Add the form here -->
+                        {% include './hub-form.html.twig' %}
+                    </div>
+                </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="/assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
+{% endblock %}
+
+{% block scripts %}
+    <script src="/assets/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/assets/js/hub/add-hub.js"></script>
+{% endblock %}

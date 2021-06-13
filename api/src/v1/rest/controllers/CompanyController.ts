@@ -71,7 +71,7 @@ export default class CompanyController extends Controller
     async getZoneAction (request: Request, response: Response)
     {
         const zoneServices: ZoneServices = new ZoneServices((<any>request).user);
-        const data: ReturnableResponse = await zoneServices.getOne(request);
+        const data: ReturnableResponse = await zoneServices.getOneByCompany(request);
 
         return response
             .status(data.statusCode)

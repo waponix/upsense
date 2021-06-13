@@ -38,8 +38,17 @@ export class SensorRepository extends BaseRepository
         // create filters if provided
         if (options.filters !== undefined) {
             for (const [field, value] of Object.entries(options.filters)) {
-                whereStatements.push(`s.${field} = :${field}`);
-                parameters[field] = value;
+                if (field === 'hub') {
+                    switch (value) {
+                        case null: whereStatements.push('s.hub IS NULL'); break;
+                        default:
+                            whereStatements.push('s.hub = :hubId');
+                            parameters.hubId = value;
+                    }
+                } else {
+                    whereStatements.push(`s.${field} = :${field}`);
+                    parameters[field] = value;
+                }
             }
         }
 

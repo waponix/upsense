@@ -39,8 +39,6 @@ $(() => {
             formData.removeZones = unselectedZones;
         }
 
-        console.log(formData);
-
         $.ajax({
             url: `/accounts/manager/${managerId}/edit`,
             method: 'post',

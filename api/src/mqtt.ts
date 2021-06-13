@@ -155,7 +155,8 @@ export class SubscriberApp
             temperature: data.temperature,
             humidity: data.humidity,
             battery: data.battery || sensor.batteryStatus,
-            serial: sensor.serial
+            serial: sensor.serial,
+            timestamp: dataTimestamp
         }));
 
         // Handle notifications

@@ -2,10 +2,10 @@ $(() => {
     const zoneId = $('input#data-id').val();
     const companyId = $('input#data-company-id').val();
 
-    // load company data
-    loadCompanyData();
+    // load zone data
+    loadZoneData();
 
-    $('form#company-form').on('submit', function (e) {
+    $('form#zone-form').on('submit', function (e) {
         e.preventDefault();
 
         const formData = {
@@ -32,7 +32,7 @@ $(() => {
         });
     });
 
-    function loadCompanyData() {
+    function loadZoneData() {
         $.ajax({
             url: `/company/${companyId}/zone/${zoneId}/edit`,
             method: 'get',
