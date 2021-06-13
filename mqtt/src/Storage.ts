@@ -57,14 +57,14 @@ export class Storage
 
     // constructor()
     // {
-    //     this.client = new InfluxDB({url: `${influxConfig.protocol}://${influxConfig.host}:${influxConfig.port}`, token: influxConfig.token});
+    //     this.portal = new InfluxDB({url: `${influxConfig.protocol}://${influxConfig.host}:${influxConfig.port}`, token: influxConfig.token});
     //
     //     return this;
     // }
     //
     // save(reading: any)
     // {
-    //     const writeApi = this.client.getWriteApi(influxConfig.org, influxConfig.database);
+    //     const writeApi = this.portal.getWriteApi(influxConfig.org, influxConfig.database);
     //     writeApi.useDefaultTags({host: 'host2'});
     //
     //     const point = new Point('reading');

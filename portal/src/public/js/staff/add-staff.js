@@ -5,15 +5,18 @@ $(() => {
     $('form#staff-form').on('submit', function (e) {
         e.preventDefault();
 
-        const formData = {
+        let formData = {
             username: $(this).find('input[name="username"]').val(),
             password: $(this).find('input[name="password"]').val(),
             firstName: $(this).find('input[name="firstName"]').val(),
             lastName: $(this).find('input[name="lastName"]').val(),
             email: $(this).find('input[name="email"]').val(),
-            mobile: $(this).find('input[name="mobile"]').val() || null,
-            company: parseInt($(this).find('select[name="company"]').val())
+            mobile: $(this).find('input[name="mobile"]').val() || null
         };
+
+        if ($(this).find('select[name="company"]').val()) {
+            formData.company = parseInt($(this).find('select[name="company"]').val());
+        }
 
         $.ajax({
             url: '/accounts/staff/new',

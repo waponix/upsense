@@ -16,7 +16,7 @@ export class ZoneRepository extends BaseRepository
         let parameters: any = { companyId };
         let whereStatements: any = [
             'z.company = :companyId',
-            'z.deletedAt IS NOT NULL'
+            'z.deletedAt IS NULL'
         ];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;

@@ -177,6 +177,8 @@ export class ManagerRepository extends BaseRepository
             .createQueryBuilder()
             .relation(Manager, 'zones');
 
+        console.log(data);
+
         //@ts-ignore
         if (data.removeZones) {
             //@ts-ignore

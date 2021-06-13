@@ -31,6 +31,7 @@ services:
     image: upsense_api_dev:latest
     ports:
       - 8442:8443
+      - 1884:1884
     volumes: # Use this when in development
       - ./api:/var/www/api
     links:
@@ -46,7 +47,6 @@ services:
     image: upsense_broker_dev:latest
     ports:
       - 1883:1883
-      - 1884:1884
     volumes: # Use this when in development
       - ./mqtt:/var/www/mqtt_broker
     links:

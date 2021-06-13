@@ -51,7 +51,6 @@ class ManagerController
         } catch (error) {
             // @ts-ignore
             console.log(error);
-            console.log(request.body.data);
             return response.json({status: 'error', error: error.description.error});
         }
     }

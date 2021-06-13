@@ -154,7 +154,7 @@ export class SubscriberApp
         this.client.publish('sensors/data', JSON.stringify({
             temperature: data.temperature,
             humidity: data.humidity,
-            battery: data.battery || null,
+            battery: data.battery || sensor.batteryStatus,
             serial: sensor.serial
         }));
 
@@ -190,20 +190,20 @@ export class SubscriberApp
                 recordedTemp: data.temperature
             }
 
+            await this.zoneRepsoitory.init();
+
             if (triggerSendNotification) {
                 if (!alarmingSensors[sensor.serial]) {
                     // cache the sensor that has abnormal reading
                     alarmingSensors[sensor.serial] = true;
                 }
 
-                await this.zoneRepsoitory.init();
                 const zone: Zone | undefined = await this.zoneRepsoitory.findOneByHub(sensor.hub);
                 let zoneName = 'N/A'
                 if (zone !== undefined) {
                     zoneName = zone.name;
                 }
                 this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_ABNORMAL);
-                await this.zoneRepsoitory.queryRunner.release();
 
                 logData.message = 'Sensor temperature levels exceeded the set limit';
                 await this.logRepository.create(logData);
@@ -219,12 +219,13 @@ export class SubscriberApp
                         zoneName = zone.name;
                     }
                     this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_NORMAL);
-                    await this.zoneRepsoitory.queryRunner.release();
 
                     logData.message = 'Sensor temperature levels went back to normal';
                     await this.logRepository.create(logData);
                 }
             }
+
+            await this.zoneRepsoitory.queryRunner.release();
 
             break;
         } while (true);

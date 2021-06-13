@@ -11,7 +11,7 @@ export class HubRepository extends BaseRepository
     ];
     async getList(options: QueryOptions = {}): Promise<Hub[]> {
         let parameters: any = {};
-        let whereStatements: any = ['h.deletedAt IS NOT NULL'];
+        let whereStatements: any = [];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;
 

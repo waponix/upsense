@@ -38,7 +38,7 @@ mix.copy('node_modules/@coreui/coreui/dist/js/coreui.min.js', 'public/js');
 // views scripts
 mix.copy('node_modules/chart.js/dist/Chart.min.js', 'public/js');
 mix.copy('node_modules/chartjs-plugin-streaming/dist/chartjs-plugin-streaming.min.js', 'public/js');
-mix.copy('node_modules/moment/min/moment.min.js', 'public/js');
+mix.copy('node_modules/moment/min/moment.js', 'public/js');
 mix.copy('node_modules/@coreui/chartjs/dist/js/coreui-chartjs.bundle.js', 'public/js');
 mix.copy('node_modules/cropperjs/dist/cropper.js', 'public/js');
 

@@ -6,7 +6,7 @@ import {Zone} from "../../shared/entities/Zone";
 const Validator = require('validatorjs');
 
 const rules = new ValidationRules({
-    username: ['string', 'max:50', 'username_available'],
+    username: ['required', 'string', 'max:50', 'username_available'],
     password: ['required', 'string', 'max:100'],
     firstName: ['required', 'string', 'max:50'],
     lastName: ['string', 'max:50'],
@@ -18,9 +18,6 @@ const rules = new ValidationRules({
 });
 
 export const userCreateValidation = (data: any) => {
-    if (!data.username) {
-        rules.fields.removeRuleFromUsernameField('username_available')
-    }
     return new Validator(data, rules.fields);
 };
 

@@ -35,7 +35,6 @@ $(() => {
         $.ajax({
             url: `/company/${companyId}/edit`,
             method: 'get',
-            data: {id: companyId},
             success: response => {
                 console.log(response);
                 const companyData = response.data.result || {};

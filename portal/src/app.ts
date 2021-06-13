@@ -1,6 +1,7 @@
 import express, {Request, Response} from "express";
 import http from "http";
-import {portalConfig} from "./config";
+import mqtt from 'mqtt';
+import {mqttConfig, portalConfig} from "./config";
 import bodyParser from 'body-parser';
 import path from "path";
 // @ts-ignore
@@ -13,6 +14,9 @@ import AdminController from "./controllers/AdminController";
 import ManagerController from "./controllers/ManagerController";
 import StaffController from "./controllers/StaffController";
 import {GlobalVariablesHandler} from "./middlewares/Twig";
+import HubController from "./controllers/HubController";
+import SensorController from "./controllers/SensorController";
+import ZoneController from "./controllers/ZoneController";
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -20,11 +24,14 @@ class Portal
 {
     private app: any;
     private server: any;
+    private io: any;
+    private mqttClient: any;
 
     constructor()
     {
         this.app = express();
         this.server = http.createServer(this.app);
+        this.io = require('socket.io')(this.server, {cors: 'http://localhost'});
 
         this.app
             .set('view engine', 'twig')
@@ -103,6 +110,22 @@ class Portal
             .post('/company/new', Authenticate, CompanyController.createAction)
             .get('/company/:id(\\d+)/edit', Authenticate, CompanyController.editView)
             .post('/company/:id(\\d+)/edit', Authenticate, CompanyController.editAction)
+            .get('/company/:id(\\d+)/view', Authenticate, CompanyController.detailView)
+
+            // Zone route
+            .post('/company/:companyId(\\d+)/zone/list', Authenticate, ZoneController.indexAction)
+            .get('/company/:companyId(\\d+)/zone/new', Authenticate, ZoneController.createView)
+            .post('/company/:companyId(\\d+)/zone/new', Authenticate, ZoneController.createAction)
+            .get('/company/:companyId(\\d+)/zone/:id(\\d+)/edit', Authenticate, ZoneController.editView)
+            .post('/company/:companyId(\\d+)zone/:id(\\d+)/edit', Authenticate, ZoneController.editAction)
+
+            // Hub route
+            .get('/devices/hub/list', Authenticate, HubController.indexView)
+            .post('/devices/hub/list', Authenticate, HubController.indexAction)
+
+            // Sensor route
+            .get('/devices/sensor/list', Authenticate, SensorController.indexView)
+            .post('/devices/sensor/list', Authenticate, SensorController.indexAction)
 
             .use(Authenticate, (request: Request, response: Response) => {
                 response
@@ -110,9 +133,35 @@ class Portal
                     .render('404.html.twig');
             });
 
+        // websocket/mqtt connection
+        let MQTT_OPTIONS = {
+            port: mqttConfig.port,
+            host: mqttConfig.host,
+            protocol: mqttConfig.protocol,
+            // username: mqttConfig.username,
+            // password: mqttConfig.password,
+            rejectUnauthorized: false,
+        };
+
+        this.mqttClient = mqtt.connect(MQTT_OPTIONS);
+
+        this.mqttClient.on('connect', () => {
+            // make sure mqtt connection stablished before listening to ws connections
+            console.log('Websocket connection to MQTT broker: OK');
+
+            // this.io.on('connection', (socket: any) => {
+            //     console.log(`Client ${socket.id} has connected`);
+            // });
+
+            this.mqttClient.subscribe('sensors/data');
+
+            this.mqttClient.on('message', (topic: string, data: Buffer) => {
+                this.io.emit('sdu', data.toString());
+            });
+        });
+
         this.server.listen(portalConfig.port, () => console.log(`Portal is running at port ${portalConfig.port}`));
     }
 }
-
 
 new Portal();

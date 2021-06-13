@@ -10,7 +10,7 @@ $(() => {
                 '         </a>',
             infoEmpty: 'No entries to show'
         },
-        dom: '<"datatable-extra">frtip',
+        dom: '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>',
         columnDefs: [
             {
                 targets: 0,

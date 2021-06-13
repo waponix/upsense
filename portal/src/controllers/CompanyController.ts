@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import {Api} from "../components/api";
 import moment from "moment";
+import CompanyServices from "../services/CompanyServices";
 
 class CompanyController
 {
@@ -24,6 +25,20 @@ class CompanyController
         } catch (error) {
             return response.json({status: 'error'});
         }
+    }
+
+    public async detailView(request: Request, response: Response)
+    {
+        if (request.xhr) {
+            const details = await CompanyServices.getCompanyDetails(request, response);
+            return response.json(details);
+        }
+
+        let viewData: any = {
+            title: 'Upsense Portal | Company Details',
+            companyId: request.params.id
+        };
+        return response.render('company/detail.html.twig', viewData);
     }
 
     public async createView(request: Request, response: Response)
@@ -55,20 +70,8 @@ class CompanyController
     public async editView(request: Request, response: Response)
     {
         if (request.xhr) {
-            try {
-                console.log(`/companies/${request.query.id}`);
-                const apiResponse = await Api(request, response).get(`/companies/${request.query.id}`, {
-                    data: request.body.data || {}
-                });
-
-                return response.json({
-                    status: 'success',
-                    data: apiResponse.data
-                });
-            } catch (error) {
-                // @ts-ignore
-                return response.json({status: 'error', error: error.description.error});
-            }
+            const details = await CompanyServices.getCompanyDetails(request, response);
+            return response.json(details);
         }
 
         let viewData: any = {

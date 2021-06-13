@@ -44,7 +44,7 @@
 
         <div class="c-body">
             <main class="c-main">
-                
+
                 <div class="container-fluid" id="alert-container">
 
                 </div>
@@ -58,7 +58,7 @@
     <script src="{{ asset('js/coreui-utils.js') }}"></script>
     <script src="{{ asset('js/axios.min.js') }}"></script>
     <script src="{{ asset('js/jquery.dataTables.js') }}"></script>
-    <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ asset('js/moment.js') }}"></script>
 
     <script>
         $(document).ready(function() {

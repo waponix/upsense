@@ -3,24 +3,11 @@ import express, {Router} from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import restRouter from "./restRouter";
-import { buildSchema } from 'type-graphql';
 import { appConfig } from './config';
 import { JwtAuth } from './components/security/JwtAuth';
-import { ApiAuthChecker } from './components/security/ApiAuthChecker';
-import { ApolloServer } from 'apollo-server-express';
-import { SubscriptionServer } from 'subscriptions-transport-ws';
-import { execute, subscribe } from 'graphql';
 import { createServer } from 'http';
 import {initConnection} from './components/Connection';
 
-// Import Graphql Endpoints
-import {AuthEndpoints} from "./v1/graphql/endpoints/AuthEndpoints";
-import {AdminEndpoints} from "./v1/graphql/endpoints/AdminEndpoints";
-import {ManagerEndpoints} from "./v1/graphql/endpoints/ManagerEndpoints";
-import {UserEndpoints} from "./v1/graphql/endpoints/UserEndpoint";
-
-import { SensorResolver } from './v1/graphql/resolvers/SensorResolver';
-import {SubscriptionEndpoints} from "./v1/graphql/endpoints/SubscriptionEndpoints";
 import {SubscriberApp} from "./mqtt";
 
 class App
@@ -52,19 +39,10 @@ class App
         try {
             // listen to the configured port number
             await this.httpServer.listen(appConfig.port);
-
             initConnection();
-
             console.log(`API Server running at port ${appConfig.port}`);
 
             this.registerRoutes(restRouter);
-
-            // Add GraphQL endpoints here
-            await AuthEndpoints(this.app).init();
-            await AdminEndpoints(this.app).init();
-            await ManagerEndpoints(this.app).init();
-            await UserEndpoints(this.app).init();
-            await SubscriptionEndpoints(this.app, this.httpServer).init();
 
             new SubscriberApp();
         } catch (e) {

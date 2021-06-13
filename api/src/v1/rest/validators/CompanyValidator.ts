@@ -13,7 +13,7 @@ export const companyCreateValidation = (data: Partial<Company>) => {
 
 export const companyUpdateValidation = (data: Partial<Company>, company: Company) => {
     if (data.name === company.name) {
-        rules.fields.removeRuleFromNameField(['required', 'company_name_available']);
+        rules.fields.removeRuleFromNameField('company_name_available');
     }
 
     return new Validator(data, rules.fields);

@@ -1,0 +1,59 @@
+{% extends '../layout/main-layout.html.twig' %}
+
+{% block pageContent %}
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h5 class="m-0 font-weight-bold text-primary float-left pt-1">Company Details</h5>
+                    <a data-toggle="tooltip" data-placement="top" title="Edit details" href="/company/{{companyId}}/edit" class="btn btn-edit-company btn-outline-primary btn-circle btn-sm float-right">
+                        <i class="fas fa-pen"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <span class="font-weight-bold">Name: </span><span id="company-name"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h5 class="m-0 font-weight-bold text-primary pt-1">Zones</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="zone-list-table" class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th class="col-1 text-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input position-static" type="checkbox" id="select-all-items">
+                                    </div>
+                                </th>
+                                <th>Name</th>
+                                <th class="col-1 text-center">Options</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="data-id" value="{{ companyId }}">
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="/assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/assets/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/assets/js/company/company-detail.js"></script>
+{% endblock %}

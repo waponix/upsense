@@ -93,10 +93,10 @@
                     <!-- /.row-->
                     <div class="c-chart-wrapper" style="height:450px;margin-top:40px;">
                         <div class="pull-right">
-                            
+
                             <button id="addDataset" class="btn btn-primary">Add Sensor</button>
                             <button id="removeDataset" class="btn btn-primary">Remove Sensor</button>
-                            
+
                         </div>
                         <canvas class="chart" id="main-chart" height="400"></canvas>
 
@@ -162,7 +162,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+
 
                             </tbody>
                         </table>
@@ -219,10 +219,10 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            
-                            
-                            
+
+
+
+
                         </div>
                         <!-- /.col-->
                         <div class="col-sm-6">
@@ -351,7 +351,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('javascript'); ?>
-    <script src="<?php echo e(asset('js/moment.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/moment.js')); ?>"></script>
     <script src="<?php echo e(asset('js/Chart.min.js')); ?>"></script>
     <script src="<?php echo e(asset('js/coreui-chartjs.bundle.js')); ?>"></script>
     <script src="<?php echo e(asset('js/chartjs-plugin-streaming.min.js')); ?>"></script>
@@ -383,9 +383,9 @@
         //     alert(`[error] ${error.message}`);
         // };
 
-            
 
-        
+
+
 
     </script>
     <script src="<?php echo e(asset('js/dashboard.js')); ?>" defer></script>

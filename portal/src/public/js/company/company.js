@@ -10,7 +10,7 @@ $(() => {
                 '         </a>',
             infoEmpty: 'No entries to show'
         },
-        dom: '<"datatable-extra">frtip',
+        dom: '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>',
         columnDefs: [
             {
                 targets: 0,
@@ -25,19 +25,23 @@ $(() => {
         ],
         order: [[1, 'asc']],
         columns: [
-            {data: null, defaultContent: '<div class="form-check">\n' +
-                    '                                <input class="form-check-input position-static select-item" type="checkbox">\n' +
-                    '                            </div>'},
+            {data: null, defaultContent: `<div class="form-check">
+                                                    <input class="form-check-input position-static select-item" type="checkbox">
+                                                </div>`},
             {data: 'name'},
-            {data: null, defaultContent: '<a href="#" class="btn btn-edit-company btn-primary btn-circle btn-sm">\n' +
-                    '                                    <i class="fas fa-pen"></i>\n' +
-                    '                                </a>\n' +
-                    '                                <a href="#" class="btn btn-delete-company btn-outline-dark btn-circle btn-sm">\n' +
-                    '                                    <i class="fas fa-trash"></i>\n' +
-                    '                                </a>'}
+            {data: null, defaultContent: `<a data-toggle="tooltip" data-placement="top" title="View details" href="#" class="btn btn-view-company btn-info btn-circle btn-sm">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a data-toggle="tooltip" data-placement="top" title="Edit details" href="#" class="btn btn-edit-company btn-primary btn-circle btn-sm">
+                                                        <i class="fas fa-pen"></i>
+                                                    </a>
+                                                    <a data-toggle="tooltip" data-placement="top" title="Delete" href="#" class="btn btn-delete-company btn-outline-dark btn-circle btn-sm">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>`}
         ],
         fnCreatedRow: (row, data) => {
             $(row).find('input.select-item').data({id: data.id});
+            $(row).find('a.btn-view-company').attr({href: `/company/${data.id}/view`});
             $(row).find('a.btn-edit-company').attr({href: `/company/${data.id}/edit`});
             $(row).find('a.btn-delete-company').attr({href: `/company/${data.id}/delete`});
         }

@@ -26,7 +26,7 @@ algolia:
 amazon-web-services:
   icons:
     - aws
-  label: Amazon Web Services
+  label: Amazon Web services
   url: 'https://aws.amazon.com'
 amilia:
   icons:

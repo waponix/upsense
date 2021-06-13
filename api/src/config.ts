@@ -31,12 +31,13 @@ export const jwtConfig = {
  * MQTT config
  */
 export const mqttConfig = {
-    host: process.env.MQTT_HOST,
     port: process.env.MQTT_PORT,
+    wsPort: process.env.MQTT_WS_PORT,
+    host: process.env.MQTT_HOST,
     protocol: process.env.MQTT_PROTOCOL,
     username: process.env.MQTT_USERNAME,
-    password: process.env.MQTT_PASSWORD
-}
+    password: process.env.MQTT_PASSWORD,
+};
 
 /**
  * Mailer config

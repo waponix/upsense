@@ -39,12 +39,12 @@
 <body class="c-app">
     <div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
         <?php echo $__env->make('dashboard.shared.nav-left', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-        
+
         <?php echo $__env->make('dashboard.shared.header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
         <div class="c-body">
             <main class="c-main">
-                
+
                 <div class="container-fluid" id="alert-container">
 
                 </div>
@@ -58,7 +58,7 @@
     <script src="<?php echo e(asset('js/coreui-utils.js')); ?>"></script>
     <script src="<?php echo e(asset('js/axios.min.js')); ?>"></script>
     <script src="<?php echo e(asset('js/jquery.dataTables.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/moment.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/moment.js')); ?>"></script>
 
     <script>
         $(document).ready(function() {

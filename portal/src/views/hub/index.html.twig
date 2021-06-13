@@ -1,0 +1,38 @@
+{% extends '../layout/main-layout.html.twig' %}
+
+{% block pageContent %}
+    <!-- Page Heading -->
+{#    <div class="d-sm-flex align-items-center justify-content-between mb-4">#}
+{#        <h1 class="h3 mb-0 text-gray-800">Companies</h1>#}
+{#    </div>#}
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h5 class="m-0 font-weight-bold text-primary">Hubs</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="hub-list-table" class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Serial</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="/assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/assets/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/assets/js/hub/hub.js"></script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% spaceless %}
+    <form id="zone-form">
+        <div class="form-group">
+            <input type="text" name="name" class="form-control" id="zone-name" placeholder="Zone Name*">
+            <div class="invalid-feedback" id="error-zone-name"></div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <a href="/company/{{ companyId }}/view" type="submit" class="btn btn-outline-dark mnw-100 mr-2">Cancel</a>
+            <button type="submit" class="btn btn-primary mnw-100">Save</button>
+        </div>
+        {% if id is defined %}
+            <input type="hidden" id="data-id" value="{{ id }}">
+        {% endif %}
+        {% if companyId is defined %}
+            <input type="hidden" id="data-company-id" value="{{ companyId }}">
+        {% endif %}
+    </form>
+{% endspaceless %}
