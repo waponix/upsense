@@ -13,7 +13,9 @@ routes.registerRoutes((router: Router, controller: Controller) => {
         .get('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager', 'user']), controller.getSensorsAction)
         // get one sensor
         .get('/:id(\\d+)', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.getSensorAction)
-        // // update sensor
+        // add sensor
+        .post('/', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.postSensorAction)
+        // update sensor
         .put('/:id(\\d+)', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin']), controller.putSensorAction);
 });
 

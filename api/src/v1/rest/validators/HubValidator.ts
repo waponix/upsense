@@ -7,6 +7,7 @@ import {Hub} from "../../shared/entities/Hub";
 const Validator = require('validatorjs');
 
 const rules = new ValidationRules({
+    name: ['required', 'string'],
     serial: ['required', 'string', 'serial_not_exist'],
     zone: ['integer', 'zone_exist']
 });
@@ -16,7 +17,9 @@ export const hubCreateValidation = (data: any) => {
 };
 
 export const hubUpdateValidation = (data: any) => {
-    rules.removeField('serial');
+    rules
+        .removeField('name')
+        .removeField('serial');
     return new Validator(data, rules.fields);
 };
 

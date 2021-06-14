@@ -11,11 +11,11 @@
         <div class="col-md-8">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h5 class="m-0 font-weight-bold text-primary">Manager Form</h5>
+                    <h5 class="m-0 font-weight-bold text-primary">Sensor Form</h5>
                 </div>
                 <div class="card-body">
                     <!-- Add the form here -->
-                    {% include './manager-form.html.twig' with {new: 0, id: managerId} %}
+                    {% include './sensor-form.html.twig' with {new: 0, id: sensorId} %}
                 </div>
             </div>
             <div class="col-md-2"></div>
@@ -30,5 +30,5 @@
 {% block scripts %}
     <script src="/assets/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="/assets/js/manager/edit-manager.js"></script>
+    <script src="/assets/js/sensor/edit-sensor.js"></script>
 {% endblock %}

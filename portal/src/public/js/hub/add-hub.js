@@ -7,10 +7,17 @@ $(() => {
             e.preventDefault();
 
             let formData = {
+                name: $(this).find('input[name="name"]').val() || null,
                 serial: $(this).find('input[name="serial"]').val() || null,
             };
 
             let submit = true;
+
+            if (!$(this).find('input[name="name"]').val()) {
+                $('#hub-name').addClass('is-invalid');
+                $('#error-hub-name').text('The name field is required');
+                submit = false;
+            }
 
             if (!$(this).find('input[name="serial"]').val()) {
                 $('#hub-serial').addClass('is-invalid');
@@ -31,6 +38,8 @@ $(() => {
                 $('#error-hub-zone').text('The zone field is required');
                 submit = false;
             }
+
+            console.log(submit);
 
             if (!submit) return false;
 

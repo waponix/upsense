@@ -130,6 +130,10 @@ class Portal
             // Sensor route
             .get('/devices/sensor/list', Authenticate, SensorController.indexView)
             .post('/devices/sensor/list', Authenticate, SensorController.indexAction)
+            .get('/devices/sensor/new', Authenticate, SensorController.createView)
+            .post('/devices/sensor/new', Authenticate, SensorController.createAction)
+            .get('/devices/sensor/:id(\\d+)/edit', Authenticate, SensorController.editView)
+            .post('/devices/sensor/:id(\\d+)/edit', Authenticate, SensorController.editAction)
 
             .use(Authenticate, (request: Request, response: Response) => {
                 response

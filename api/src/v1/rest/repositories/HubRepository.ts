@@ -89,11 +89,9 @@ export class HubRepository extends BaseRepository
             .relation(Hub, 'zone');
 
         //@ts-ignore
-        if (data.zone.id && data.zone.createdAt) {
+        if (data.zone && data.zone.id) {
             //@ts-ignore
             await relationQueryBuilder.of(hub).set(data.zone);
-        } else {
-            await relationQueryBuilder.of(hub).set(null);
         }
 
         return true;
@@ -102,6 +100,7 @@ export class HubRepository extends BaseRepository
     async create(data: Partial<Hub>):Promise<Hub> {
         let hub: Hub = new Hub();
 
+        hub.name = data.name!;
         hub.serial = data.serial!;
 
         if (data.zone) {

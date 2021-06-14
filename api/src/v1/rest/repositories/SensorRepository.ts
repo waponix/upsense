@@ -1,6 +1,7 @@
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {Sensor} from "../../shared/entities/Sensor";
 import {paginationConfig} from "../../../config";
+import {Hub} from "../../shared/entities/Hub";
 
 export class SensorRepository extends BaseRepository
 {
@@ -94,12 +95,35 @@ export class SensorRepository extends BaseRepository
     }
 
     async update(sensor: Sensor, data: Partial<Sensor>): Promise<boolean> {
-        sensor.maxTemp = data.maxTemp || sensor.maxTemp;
-        sensor.minTemp = data.minTemp || sensor.minTemp;
+        //@ts-ignore
+        sensor.maxTemp = parseInt(data.maxTemp) || sensor.maxTemp;
+        //@ts-ignore
+        sensor.minTemp = parseInt(data.minTemp) || sensor.minTemp;
+
+        if (data.hub) {
+            sensor.hub = data.hub;
+        }
 
         await this.repository.save(sensor);
 
         return true;
+    }
+
+    async create(data: Partial<Sensor>):Promise<Sensor> {
+        let sensor: Sensor = new Sensor();
+
+        sensor.name = data.name!;
+        sensor.serial = data.serial!;
+        sensor.maxTemp = data.maxTemp!;
+        sensor.minTemp = data.minTemp!;
+
+        if (data.hub) {
+            sensor.hub = data.hub;
+        }
+
+        await this.repository.save(sensor);
+
+        return sensor;
     }
 
     async findOneBy(options: any, relations: any = null): Promise<Sensor | undefined> {

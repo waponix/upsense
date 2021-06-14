@@ -27,7 +27,7 @@ let MQTT_OPTIONS = {
 let alarmingSensors: any = {};
 
 const NOTIF_SENSOR_NORMAL = 0;
-const NOTIF_SENSOR_ABNORMAL = 0;
+const NOTIF_SENSOR_ABNORMAL = 1;
 
 export class SubscriberApp
 {
@@ -237,31 +237,30 @@ export class SubscriberApp
                 } finally {
                     await this.logRepository.queryRunner.release();
                 }
-            } else {
+            } else if (!triggerSendNotification && alarmingSensors[sensor.serial]) {
                 // if sensor came back to normal operation send another notification
-                if (alarmingSensors[sensor.serial]) {
-                    delete alarmingSensors[sensor.serial];
+                delete alarmingSensors[sensor.serial];
 
-                    await this.zoneRepository.init();
-                    const zone: Zone | undefined = await this.zoneRepository.findOneByHub(sensor.hub);
-                    await this.zoneRepository.queryRunner.release();
-                    let zoneName = 'N/A'
-                    if (zone !== undefined) {
-                        zoneName = zone.name;
-                    }
-                    this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_NORMAL);
-
-                    await this.logRepository.init();
-                    await this.logRepository.queryRunner.startTransaction();
-                    try {
-                        logData.message = 'Sensor temperature levels went back to normal';
-                        await this.logRepository.create(logData);await this.logRepository.queryRunner.commitTransaction();
-                    } catch {
-                        await this.logRepository.queryRunner.rollbackTransaction();
-                    } finally {
-                        await this.logRepository.queryRunner.release();
-                    }
+                await this.zoneRepository.init();
+                const zone: Zone | undefined = await this.zoneRepository.findOneByHub(sensor.hub);
+                await this.zoneRepository.queryRunner.release();
+                let zoneName = 'N/A'
+                if (zone !== undefined) {
+                    zoneName = zone.name;
                 }
+                this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_NORMAL);
+
+                await this.logRepository.init();
+                await this.logRepository.queryRunner.startTransaction();
+                try {
+                    logData.message = 'Sensor temperature levels went back to normal';
+                    await this.logRepository.create(logData);await this.logRepository.queryRunner.commitTransaction();
+                } catch {
+                    await this.logRepository.queryRunner.rollbackTransaction();
+                } finally {
+                    await this.logRepository.queryRunner.release();
+                }
+
             }
 
             break;
