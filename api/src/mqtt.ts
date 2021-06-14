@@ -34,7 +34,7 @@ export class SubscriberApp
     private client: any = null;
     private sensorRepository: SensorRepository;
     private sensorReadingRepository: SensorReadingRepository;
-    private zoneRepsoitory: ZoneRepository;
+    private zoneRepository: ZoneRepository;
     private logRepository: LogRepository;
     private hubRepository: HubRepository;
     private topic: string = 'iot/+/sensor';
@@ -43,7 +43,7 @@ export class SubscriberApp
     constructor() {
         this.sensorRepository = new SensorRepository(Sensor);
         this.sensorReadingRepository = new SensorReadingRepository(SensorReading);
-        this.zoneRepsoitory = new ZoneRepository(Zone);
+        this.zoneRepository = new ZoneRepository(Zone);
         this.hubRepository = new HubRepository(Hub);
         this.logRepository = new LogRepository(Log);
 
@@ -90,23 +90,29 @@ export class SubscriberApp
         const dataTimestamp: number = moment(data.obj?.time).unix();
 
         await this.hubRepository.init();
+        await this.hubRepository.queryRunner.startTransaction();
         let hub: Hub | undefined = await this.hubRepository.findOneBy({serial: data.obj?.rxInfo[0].mac});
+        try {
+            if (hub === undefined) {
+                hub = new Hub();
+                hub.serial = data.obj?.rxInfo[0].mac;
+            }
 
-        if (hub === undefined) {
-            hub = new Hub();
-            hub.serial = data.obj?.rxInfo[0].mac;
+            // update hub data
+            hub.isConnected = 1;
+            hub.name = data.obj?.rxInfo[0].name;
+            hub.lastSeen = dataTimestamp;
+
+            await this.hubRepository.save(hub);
+        } catch {
+            await this.hubRepository.queryRunner.rollbackTransaction();
+        } finally {
+            await this.hubRepository.queryRunner.release();
         }
-
-        // update hub data
-        hub.isConnected = 1;
-        hub.name = data.obj?.rxInfo[0].name;
-        hub.lastSeen = dataTimestamp;
-
-        await this.hubRepository.save(hub);
-        await this.hubRepository.queryRunner.release();
 
 
         await this.sensorRepository.init();
+        await this.sensorRepository.queryRunner.startTransaction();
         let sensor: Sensor | undefined = await this.sensorRepository.findOneBy({serial: data.obj?.devEUI}, ['hub']);
 
         if (sensor === undefined) {
@@ -117,40 +123,51 @@ export class SubscriberApp
             sensor.serial = data.obj?.devEUI;
         }
 
-        sensor.name = data.obj?.deviceName;
-        sensor.currentTemp = data.temperature;
+        try {
+            sensor.name = data.obj?.deviceName;
+            sensor.currentTemp = data.temperature;
 
-        if (data.battery) {
-            sensor.batteryStatus = data.battery;
+            if (data.battery) {
+                sensor.batteryStatus = data.battery;
+            }
+            //@ts-ignore
+            sensor.lastSeen = dataTimestamp;
+            sensor.isConnected = 1;
+
+            await this.sensorRepository.save(sensor);
+        } catch {
+            await this.sensorRepository.queryRunner.rollbackTransaction();
+        } finally {
+            await this.sensorRepository.queryRunner.release();
         }
-        //@ts-ignore
-        sensor.lastSeen = dataTimestamp;
-        sensor.isConnected = 1;
-
-        await this.sensorRepository.save(sensor);
-        await this.sensorRepository.queryRunner.release();
 
         if (data.temperature && data.humidity) {
             await this.sensorReadingRepository.init();
+            await this.sensorReadingRepository.queryRunner.startTransaction();
 
             let sensorReading = new SensorReading();
-            sensorReading.temperature = data.temperature;
-            sensorReading.humidity = data.humidity;
-            sensorReading.timestamp = dataTimestamp;
+            try {
+                sensorReading.temperature = data.temperature;
+                sensorReading.humidity = data.humidity;
+                sensorReading.timestamp = dataTimestamp;
 
-            if (data.battery) {
-                sensorReading.battery = data.battery;
+                if (data.battery) {
+                    sensorReading.battery = data.battery;
+                }
+
+                if (sensor) {
+                    sensorReading.sensor = sensor;
+                }
+
+                await this.sensorReadingRepository.save(sensorReading);
+            } catch {
+                await this.sensorReadingRepository.queryRunner.rollbackTransaction();
+            } finally {
+                await this.sensorReadingRepository.queryRunner.release();
             }
-
-            if (sensor) {
-                sensorReading.sensor = sensor;
-            }
-
-            await this.sensorReadingRepository.save(sensorReading);
-            await this.sensorReadingRepository.queryRunner.release();
         }
 
-        // Send realtime sensor udpates
+        // Send realtime sensor updates
         this.client.publish('sensors/data', JSON.stringify({
             temperature: data.temperature,
             humidity: data.humidity,
@@ -170,7 +187,6 @@ export class SubscriberApp
         }
 
         await this.hubRepository.init();
-        await this.logRepository.init();
         // send email notification to all users
         let result: string[] = await this.hubRepository.findUserEmailsForNotification(sensor.hub);
         let emails: string[] = [];
@@ -191,7 +207,7 @@ export class SubscriberApp
                 recordedTemp: data.temperature
             }
 
-            await this.zoneRepsoitory.init();
+            await this.zoneRepository.init();
 
             if (triggerSendNotification) {
                 if (!alarmingSensors[sensor.serial]) {
@@ -199,40 +215,56 @@ export class SubscriberApp
                     alarmingSensors[sensor.serial] = true;
                 }
 
-                const zone: Zone | undefined = await this.zoneRepsoitory.findOneByHub(sensor.hub);
+                const zone: Zone | undefined = await this.zoneRepository.findOneByHub(sensor.hub);
                 let zoneName = 'N/A'
                 if (zone !== undefined) {
                     zoneName = zone.name;
                 }
                 this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_ABNORMAL);
 
-                logData.message = 'Sensor temperature levels exceeded the set limit';
-                await this.logRepository.create(logData);
+                await this.logRepository.init();
+                await this.logRepository.queryRunner.startTransaction();
+                try {
+                    logData.message = 'Sensor temperature levels exceeded the set limit';
+                    await this.logRepository.create(logData);
+                    await this.logRepository.queryRunner.commitTransaction();
+                } catch {
+                    await this.logRepository.queryRunner.rollbackTransaction();
+                } finally {
+                    await this.logRepository.queryRunner.release();
+                }
             } else {
                 // if sensor came back to normal operation send another notification
                 if (alarmingSensors[sensor.serial]) {
                     delete alarmingSensors[sensor.serial];
 
-                    await this.zoneRepsoitory.init();
-                    const zone: Zone | undefined = await this.zoneRepsoitory.findOneByHub(sensor.hub);
+                    await this.zoneRepository.init();
+                    const zone: Zone | undefined = await this.zoneRepository.findOneByHub(sensor.hub);
                     let zoneName = 'N/A'
                     if (zone !== undefined) {
                         zoneName = zone.name;
                     }
                     this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_NORMAL);
 
-                    logData.message = 'Sensor temperature levels went back to normal';
-                    await this.logRepository.create(logData);
+                    await this.logRepository.init();
+                    await this.logRepository.queryRunner.startTransaction();
+                    try {
+                        logData.message = 'Sensor temperature levels went back to normal';
+                        await this.logRepository.create(logData);await this.logRepository.queryRunner.commitTransaction();
+                    } catch {
+                        await this.logRepository.queryRunner.rollbackTransaction();
+                    } finally {
+                        await this.logRepository.queryRunner.release();
+                    }
                 }
             }
 
-            await this.zoneRepsoitory.queryRunner.release();
+            await this.zoneRepository.queryRunner.release();
 
             break;
         } while (true);
 
         await this.hubRepository.queryRunner.release();
-        await this.logRepository.queryRunner.release();
     }
 
     private async sendEmailNotification(emails: string, zoneName: string, sensorName: string, temperature: number, notifType: number)
