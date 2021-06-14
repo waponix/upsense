@@ -1,6 +1,6 @@
 $(() => {
     const companyId = $('input#data-company-id').val();
-
+    console.log('test');
     $('form#zone-form').on('submit', function (e) {
         e.preventDefault();
 

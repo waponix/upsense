@@ -7,12 +7,32 @@ $(() => {
             e.preventDefault();
 
             let formData = {
-                serial: $(this).find('input[name="serial"]').val(),
+                serial: $(this).find('input[name="serial"]').val() || null,
             };
+
+            let submit = true;
+
+            if (!$(this).find('input[name="serial"]').val()) {
+                $('#hub-serial').addClass('is-invalid');
+                $('#error-hub-serial').text('The serial field is required');
+                submit = false;
+            }
+
+            if (parseInt($(this).find('select[name="company"]').val()) == 0) {
+                $('#hub-company').addClass('is-invalid');
+                $('#error-hub-company').text('The company field is required');
+                submit = false;
+            }
 
             if (parseInt($(this).find('select[name="zone"]').val()) != 0) {
                 formData.zone = $(this).find('select[name="zone"]').val();
+            } else {
+                $('#hub-zone').addClass('is-invalid');
+                $('#error-hub-zone').text('The zone field is required');
+                submit = false;
             }
+
+            if (!submit) return false;
 
             $.ajax({
                 url: '/devices/hub/new',

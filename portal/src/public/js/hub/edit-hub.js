@@ -9,17 +9,40 @@ $(() => {
 
         loadCompanyOptions($('form#hub-form select[name="company"]'), zoneData.companyId, function () {
             loadZoneChoices(zoneData.companyId, $('form#hub-form select#hub-zone'), null, hubData.zone.id);
+            $('form#hub-form .zone-selection').show();
         });
     });
 
     $('form#hub-form').on('submit', function (e) {
         e.preventDefault();
 
+        $('.is-invalid').removeClass('is-invalid');
+
         let formData = {zone: null};
+
+        let submit = true;
+
+        if (!$(this).find('input[name="serial"]').val()) {
+            $('#hub-serial').addClass('is-invalid');
+            $('#error-hub-serial').text('The serial field is required');
+            submit = false;
+        }
+
+        if (parseInt($(this).find('select[name="company"]').val()) == 0) {
+            $('#hub-company').addClass('is-invalid');
+            $('#error-hub-company').text('The company field is required');
+            submit = false;
+        }
 
         if (parseInt($(this).find('select[name="zone"]').val()) != 0) {
             formData.zone = $(this).find('select[name="zone"]').val();
+        } else {
+            $('#hub-zone').addClass('is-invalid');
+            $('#error-hub-zone').text('The zone field is required');
+            submit = false;
         }
+
+        if (!submit) return false;
 
         $.ajax({
             url: `/devices/hub/${hubId}/edit`,
@@ -27,7 +50,6 @@ $(() => {
             data: {data: formData},
             success: response => {
                 console.log(response);
-                $('.is-invalid').removeClass('is-invalid');
 
                 if (response.status === 'error') {
                     const errorKeys = Object.keys(response.error)
@@ -54,6 +76,7 @@ $(() => {
 
     function loadZoneChoices(companyId, target, callback = null, zoneId = null)
     {
+        $('form#hub-form .zone-selection').prop({disabled: true});
         $.ajax({
             url: `/company/${companyId}/zone/list`,
             method: 'post',
@@ -70,6 +93,8 @@ $(() => {
                     }
                     target.append(option);
                 }
+
+                $('form#hub-form .zone-selection').prop({disabled: false});
 
                 if (callback) callback();
             }
@@ -117,9 +142,13 @@ $(() => {
             success: response => {
                 console.log(response);
                 const hubData = response.data.result || {};
-                getZoneData(hubData.zone.id,function (zoneData) {
-                    if (callback) callback(hubData, zoneData);
-                })
+                if (hubData.zone && hubData.zone.id) {
+                    getZoneData(hubData.zone.id,function (zoneData) {
+                        if (callback) callback(hubData, zoneData);
+                    })
+                } else {
+                    loadCompanyOptions($('form#hub-form select[name="company"]'), null);
+                }
             }
         })
     }
