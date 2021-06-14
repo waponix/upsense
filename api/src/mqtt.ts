@@ -104,6 +104,7 @@ export class SubscriberApp
             hub.lastSeen = dataTimestamp;
 
             await this.hubRepository.save(hub);
+            await this.hubRepository.queryRunner.commitTransaction();
         } catch {
             await this.hubRepository.queryRunner.rollbackTransaction();
         } finally {
@@ -135,6 +136,7 @@ export class SubscriberApp
             sensor.isConnected = 1;
 
             await this.sensorRepository.save(sensor);
+            await this.sensorRepository.queryRunner.commitTransaction();
         } catch {
             await this.sensorRepository.queryRunner.rollbackTransaction();
         } finally {
@@ -160,6 +162,7 @@ export class SubscriberApp
                 }
 
                 await this.sensorReadingRepository.save(sensorReading);
+                await this.sensorReadingRepository.queryRunner.commitTransaction();
             } catch {
                 await this.sensorReadingRepository.queryRunner.rollbackTransaction();
             } finally {
@@ -189,6 +192,7 @@ export class SubscriberApp
         await this.hubRepository.init();
         // send email notification to all users
         let result: string[] = await this.hubRepository.findUserEmailsForNotification(sensor.hub);
+        await this.hubRepository.queryRunner.release();
         let emails: string[] = [];
         for(const row of result) {
             emails.push((<any>row).email);
@@ -207,15 +211,15 @@ export class SubscriberApp
                 recordedTemp: data.temperature
             }
 
-            await this.zoneRepository.init();
-
             if (triggerSendNotification) {
                 if (!alarmingSensors[sensor.serial]) {
                     // cache the sensor that has abnormal reading
                     alarmingSensors[sensor.serial] = true;
                 }
 
+                await this.zoneRepository.init();
                 const zone: Zone | undefined = await this.zoneRepository.findOneByHub(sensor.hub);
+                await this.zoneRepository.queryRunner.release();
                 let zoneName = 'N/A'
                 if (zone !== undefined) {
                     zoneName = zone.name;
@@ -240,6 +244,7 @@ export class SubscriberApp
 
                     await this.zoneRepository.init();
                     const zone: Zone | undefined = await this.zoneRepository.findOneByHub(sensor.hub);
+                    await this.zoneRepository.queryRunner.release();
                     let zoneName = 'N/A'
                     if (zone !== undefined) {
                         zoneName = zone.name;
@@ -259,12 +264,8 @@ export class SubscriberApp
                 }
             }
 
-            await this.zoneRepository.queryRunner.release();
-
             break;
         } while (true);
-
-        await this.hubRepository.queryRunner.release();
     }
 
     private async sendEmailNotification(emails: string, zoneName: string, sensorName: string, temperature: number, notifType: number)
