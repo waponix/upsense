@@ -54,7 +54,7 @@ export const SideMenu = {
             'Sensors': {
                 id: 'sensors',
                 link: '/devices/sensor/list',
-                role: ['admin', 'manager', 'users']
+                role: ['admin', 'manager', 'user']
             }
         }
     }

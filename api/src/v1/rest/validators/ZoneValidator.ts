@@ -27,6 +27,7 @@ Validator.registerAsync('zone_name_available', async function (name: string, att
     const zoneRepository = getRepository(Zone);
     //@ts-ignore
     const companyId = parseInt(this.validator.input.company);
+    console.log(companyId);
     const zone: Zone | undefined = await zoneRepository.findOne({where: {name, company: companyId}});
 
     if (!zone) {

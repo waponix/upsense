@@ -1,6 +1,6 @@
 $(() => {
     const companyId = $('input#data-company-id').val();
-    console.log('test');
+    console.log(companyId);
     $('form#zone-form').on('submit', function (e) {
         e.preventDefault();
 
@@ -14,6 +14,8 @@ $(() => {
             data: {data: formData},
             success: function (response) {
                 $('.is-invalid').removeClass('is-invalid');
+
+                console.log(response);
 
                 if (response.status === 'error') {
                     const errorKeys = Object.keys(response.error)

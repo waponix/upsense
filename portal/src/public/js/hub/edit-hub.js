@@ -3,10 +3,6 @@ $(() => {
 
     // load hub data
     loadHubData(function (hubData, zoneData) {
-        for (const field in hubData) {
-            $('form#hub-form').find(`#hub-${field}`).val(hubData[field]);
-        }
-
         loadCompanyOptions($('form#hub-form select[name="company"]'), zoneData.companyId, function () {
             loadZoneChoices(zoneData.companyId, $('form#hub-form select#hub-zone'), null, hubData.zone.id);
             $('form#hub-form .zone-selection').show();
@@ -148,6 +144,10 @@ $(() => {
                     })
                 } else {
                     loadCompanyOptions($('form#hub-form select[name="company"]'), null);
+                }
+
+                for (const field in hubData) {
+                    $('form#hub-form').find(`#hub-${field}`).val(hubData[field]);
                 }
             }
         })

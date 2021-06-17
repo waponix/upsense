@@ -7,19 +7,20 @@ import {Status} from "../../../components/types/ResponseStatusTypes";
 import {CommonMessages, OperationNotAllowed} from "../../../messages/messages";
 import {zoneCreateValidation, zoneUpdateValidation} from "../validators/ZoneValidator";
 import CompanyServices from "./CompanyServices";
+import {CompanyRepository} from "../repositories/CompanyRepository";
 import {Company} from "../../shared/entities/Company";
-import {companyUpdateValidation} from "../validators/CompanyValidator";
-import {UserRole} from "../../../components/types/UserRoleTypes";
 
 export default class ZoneServices
 {
     private user: any;
     private zoneRepository: ZoneRepository;
+    private companyRepository: CompanyRepository;
 
     constructor(user: any)
     {
         this.user = user;
         this.zoneRepository = new ZoneRepository(Zone);
+        this.companyRepository = new CompanyRepository(Company);
     }
 
     /**
@@ -146,6 +147,8 @@ export default class ZoneServices
         let statusCode: number = 201;
         const data = request.body.data || {};
 
+        await this.companyRepository.init();
+
         data.company = parseInt(request.params.companyId);
 
         // do validation before proceed
@@ -156,11 +159,19 @@ export default class ZoneServices
                 // success callback
                 await this.zoneRepository.init();
                 await this.zoneRepository.queryRunner.startTransaction();
+
+                const company: Company | undefined = await this.companyRepository.findOneBy({id: parseInt(request.params.companyId)});
+                if (company !== undefined) {
+                    data.company = company;
+                }
+                await this.companyRepository.queryRunner.release();
+
                 try {
                     const zone: Zone = await this.zoneRepository.create(data);
                     await this.zoneRepository.queryRunner.commitTransaction();
                     apiResponse.result = zone.serialize();
                 } catch (e) {
+                    console.log(e);
                     await this.zoneRepository.queryRunner.rollbackTransaction();
                 } finally {
                     await this.zoneRepository.queryRunner.release();
@@ -200,7 +211,6 @@ export default class ZoneServices
         let statusCode: number = 200;
         const {id, companyId} = request.params;
         const data = request.body.data || {};
-        data.company = parseInt(companyId);
 
         await this.zoneRepository.init();
         let zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(id), company: parseInt(companyId)});

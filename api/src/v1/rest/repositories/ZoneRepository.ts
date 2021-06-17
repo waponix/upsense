@@ -87,11 +87,14 @@ export class ZoneRepository extends BaseRepository
      */
     async create(data: any): Promise<Zone>
     {
-        const repository = await this.repository;
         let zone: Zone = new Zone();
         zone.name = data.name;
-        zone.company = data.company;
-        await repository.save(zone);
+
+        if (data.company) {
+            zone.company = data.company;
+        }
+
+        await this.repository.save(zone);
         return zone;
     }
 
