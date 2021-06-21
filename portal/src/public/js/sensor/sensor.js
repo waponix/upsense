@@ -21,7 +21,7 @@ $(() => {
                 className: "text-center"
             },
             {
-                targets: 10,
+                targets: 11,
                 sortable: false,
                 className: "text-center"
             }
@@ -31,6 +31,7 @@ $(() => {
                     '                                <input class="form-check-input position-static select-item" type="checkbox">\n' +
                     '                            </div>'},
             {data: 'name'},
+            {data: 'deviceName', defaultContent: 'N/A'},
             {data: 'serial'},
             {data: 'currentTemp'},
             {data: 'minTemp', defaultContent: 'N/A'},
@@ -41,7 +42,7 @@ $(() => {
                                             <div class="mb-0 mr-3 font-weight-bold text-gray-800 battery-text">${cellData}%</div>
                                         </div>
                                         <div class="col">
-                                            <div class="progress progress-sm mr-2 w-25">
+                                            <div class="progress progress-sm mr-2 w-100">
                                                 <div class="progress-bar bg-info battery-bar" role="progressbar" style="width: ${cellData}%" aria-valuenow="${cellData}" aria-valuemin="0" aria-valuemax="${cellData}"></div>
                                             </div>
                                         </div>
@@ -61,13 +62,13 @@ $(() => {
             $(row).attr({id: `sensor-${data.serial}`});
 
             if (!!data.currentTemp) {
-                $(row).find('td:nth-child(4)').addClass('text-success font-weight-bold').append('°C');
+                $(row).find('td:nth-child(5)').addClass('text-success font-weight-bold').append('°C');
             }
             if (!!data.maxTemp) {
-                $(row).find('td:nth-child(5)').append('°C');
+                $(row).find('td:nth-child(6)').append('°C');
             }
             if (!!data.minTemp) {
-                $(row).find('td:nth-child(6)').append('°C');
+                $(row).find('td:nth-child(7)').append('°C');
             }
 
             $(row).find('input.select-item').data({id: data.id});
@@ -142,11 +143,11 @@ $(() => {
             data = JSON.parse(data);
             console.log(data);
             const row = $(`table#sensor-list-table tr#sensor-${data.serial}`);
-            row.find('td:nth-child(4)').text(`${data.temperature}°C`);
-            row.find('td:nth-child(10)').text(moment(data.timestamp * 1000).format('MMMM Do YYYY, h:mm:ss a'));
+            row.find('td:nth-child(5)').text(`${data.temperature}°C`);
+            row.find('td:nth-child(11)').text(moment(data.timestamp * 1000).format('MMMM Do YYYY, h:mm:ss a'));
             if (data.battery) {
-                row.find('td:nth-child(7) .battery-text').text(`${data.battery}%`);
-                row.find('td:nth-child(7) .battery-bar').attr({
+                row.find('td:nth-child(8) .battery-text').text(`${data.battery}%`);
+                row.find('td:nth-child(8) .battery-bar').attr({
                     style: `width: ${data.battery}%`,
                     'aria-valuenow': data.battery,
                     'aria-valuemax': data.battery

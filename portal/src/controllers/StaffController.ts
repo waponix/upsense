@@ -84,7 +84,6 @@ class StaffController
     public async editAction(request: Request, response: Response)
     {
         try {
-            console.log(request.body.data);
             const apiResponse = await Api(request, response).put(`/users/${request.body.id}`, {
                 data: request.body.data || {}
             });

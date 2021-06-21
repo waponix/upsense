@@ -39,7 +39,6 @@ class SensorController {
     public async createAction(request: Request, response: Response)
     {
         try {
-            console.log(request.body.data);
             const apiResponse = await Api(request, response).post('/sensors', {
                 data: request.body.data || {}
             });

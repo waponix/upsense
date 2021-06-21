@@ -1,97 +1,55 @@
 $(() => {
-    const startDate = new Date(2020, 0, 1);
-    const labels = [];
-    for (let i = 0; i < 6; i++) {
-        const date = moment(startDate).add(i, 'days').format('YYYY-MM-DD');
-        labels.push(date.toString());
-    }
+    let socket = io();
 
-    const sensorReading = new Chart(
-        $('canvas#sensor-reading-1'),
-        {
-            type: 'line',
-            data: {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                datasets: [{
-                    label: "Sensor Reading",
-                    lineTension: 0.3,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2,
-                    data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
-                }],
-            },
-            options: {
-                maintainAspectRatio: false,
-                layout: {
-                    padding: {
-                        left: 10,
-                        right: 25,
-                        top: 25,
-                        bottom: 0
-                    }
-                },
-                scales: {
-                    xAxes: [{
-                        time: {
-                            unit: 'date'
-                        },
-                        gridLines: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        ticks: {
-                            maxTicksLimit: 12
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            maxTicksLimit: 5,
-                            padding: 10,
-                            // Include a dollar sign in the ticks
-                            callback: function (value, index, values) {
-                                return `${value}°C`;
-                            }
-                        },
-                        gridLines: {
-                            color: "rgb(234, 236, 244)",
-                            zeroLineColor: "rgb(234, 236, 244)",
-                            drawBorder: false,
-                            borderDash: [2],
-                            zeroLineBorderDash: [2]
-                        }
-                    }],
-                },
-                legend: {
-                    display: false
-                },
-                tooltips: {
-                    backgroundColor: "rgb(255,255,255)",
-                    bodyFontColor: "#858796",
-                    titleMarginBottom: 10,
-                    titleFontColor: '#6e707e',
-                    titleFontSize: 14,
-                    borderColor: '#dddfeb',
-                    borderWidth: 1,
-                    xPadding: 15,
-                    yPadding: 15,
-                    displayColors: false,
-                    intersect: false,
-                    mode: 'index',
-                    caretPadding: 10,
-                    callbacks: {
-                        label: function (tooltipItem, chart) {
-                            return `${tooltipItem.yLabel}°C`;
-                        }
-                    }
+    const notificationTable = $('#notification-list-table').DataTable({
+        bLengthChange: false,
+        language: {
+            emptyTable: 'No entries to show'
+        },
+        dom: '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>',
+        order: [[0, 'asc']],
+        ordering: false,
+        searching: false,
+        paging: false,
+        info: false,
+        columns: [
+            {data: 'message'},
+            {data: 'sensor'},
+            {data: 'zone'},
+            {data: 'company'},
+            {data: 'recordedTemp'},
+            {data: 'minTemp'},
+            {data: 'maxTemp'},
+            {data: 'createdAt', createdCell (td, cellData) {
+                    $(td).text(moment(cellData * 1000).format('MMMM Do YYYY, h:mm:ss a'));
+                }}
+        ]
+    });
+
+    socket.on('event', e => {
+        if (e === 'sensor_update') {
+            refreshDasboard();
+        }
+    });
+
+    function refreshDasboard() {
+        $.ajax({
+            url: '/dashboard',
+            success: response => {
+                console.log(response);
+                if (response.status === 'success') {
+                    $('#total-sensor-count').text(response.data.totalSensors);
+                    $('#healthy-sensor-count').text(response.data.healthy);
+                    $('#warning-sensor-count').text(response.data.warning);
+
+                    notificationTable
+                        .clear()
+                        .rows.add(response.data.notifications)
+                        .draw(false);
                 }
             }
         });
+    }
+
+    refreshDasboard();
 });

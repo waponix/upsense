@@ -57,5 +57,12 @@ export const SideMenu = {
                 role: ['admin', 'manager', 'user']
             }
         }
+    },
+
+    'Settings': {
+        divider: 'Configure',
+        id: 'settings',
+        role: ['admin', 'manager', 'user'],
+        link: '/settings'
     }
 }

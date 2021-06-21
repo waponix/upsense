@@ -2,6 +2,9 @@ import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseReposi
 import {Sensor} from "../../shared/entities/Sensor";
 import {paginationConfig} from "../../../config";
 import {Hub} from "../../shared/entities/Hub";
+import {User} from "../../shared/entities/User";
+import {UserRole} from "../../../components/types/UserRoleTypes";
+import {SensorStatus, SensorStatusType} from "../../../components/types/SensorStatus";
 
 export class SensorRepository extends BaseRepository
 {
@@ -11,7 +14,7 @@ export class SensorRepository extends BaseRepository
         'lastSeen',
     ];
 
-    async getList(options: QueryOptions = {}): Promise<Sensor[]>
+    async getList(options: QueryOptions = {}, user: User | null = null): Promise<Sensor[]>
     {
         let parameters: any = {};
         let whereStatements: any = [];
@@ -23,6 +26,7 @@ export class SensorRepository extends BaseRepository
             .select([
                 's.id',
                 's.name',
+                's.deviceName',
                 's.serial',
                 's.currentTemp',
                 's.batteryStatus',
@@ -33,8 +37,18 @@ export class SensorRepository extends BaseRepository
                 's.createdAt',
                 's.updatedAt'
             ])
+            .leftJoin('s.hub', 'h')
             .offset(offset)
             .limit(paginationConfig.limit);
+
+        if (user && user.role !== UserRole.admin) {
+            query
+                .innerJoin('h.zone', 'z')
+                .innerJoin('z.users', 'u')
+
+            whereStatements.push('u.id = :userId');
+            parameters.userId = user.id;
+        }
 
         // create filters if provided
         if (options.filters !== undefined) {
@@ -78,8 +92,7 @@ export class SensorRepository extends BaseRepository
             }
 
             if (options.relations.indexOf('hub') > -1) {
-                query
-                    .leftJoinAndSelect('s.hub', 'h');
+                query.addSelect('h');
             }
 
             break;
@@ -94,7 +107,8 @@ export class SensorRepository extends BaseRepository
         return await query.getMany();
     }
 
-    async update(sensor: Sensor, data: Partial<Sensor>): Promise<boolean> {
+    async update(sensor: Sensor, data: Partial<Sensor>): Promise<boolean>
+    {
         //@ts-ignore
         sensor.maxTemp = parseInt(data.maxTemp) || sensor.maxTemp;
         //@ts-ignore
@@ -109,7 +123,8 @@ export class SensorRepository extends BaseRepository
         return true;
     }
 
-    async create(data: Partial<Sensor>):Promise<Sensor> {
+    async create(data: Partial<Sensor>):Promise<Sensor>
+    {
         let sensor: Sensor = new Sensor();
 
         sensor.name = data.name!;
@@ -126,7 +141,8 @@ export class SensorRepository extends BaseRepository
         return sensor;
     }
 
-    async findOneBy(options: any, relations: any = null): Promise<Sensor | undefined> {
+    async findOneBy(options: any, relations: any = null): Promise<Sensor | undefined>
+    {
         options = {where: options};
         if (relations !== null) {
             options.relations = relations;
@@ -136,5 +152,48 @@ export class SensorRepository extends BaseRepository
 
     async save(sensor: Sensor) {
         await this.repository.save(sensor);
+    }
+
+    async getSensorCountByStatus(status: SensorStatusType, user: User | null = null)
+    {
+        let parameters: any = { status }
+
+        const query = await this
+            .createQueryBuilder('s')
+            .select('s.id')
+            .where('s.status = :status');
+
+        if (user !== null && user.role !== UserRole.admin) {
+            query
+                .innerJoin('s.hub', 'h')
+                .innerJoin('h.zone', 'z')
+                .innerJoin('z.users', 'u')
+                .andWhere('u.id = :userId')
+
+            parameters.userId = user.id;
+        }
+
+        query.setParameters(parameters);
+
+        return await query.getCount();
+    }
+
+    async getSensorCount(user: User | null = null)
+    {
+        const query = await this
+            .createQueryBuilder('s')
+            .select('s.id');
+
+        if (user !== null && user.role !== UserRole.admin) {
+            query
+                .innerJoin('s.hub', 'h')
+                .innerJoin('h.zone', 'z')
+                .innerJoin('z.users', 'u')
+                .andWhere('u.id = :userId')
+
+            query.setParameter('userId', user.id);
+        }
+
+        return await query.getCount();
     }
 }

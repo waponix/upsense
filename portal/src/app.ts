@@ -161,10 +161,14 @@ class Portal
             //     console.log(`Client ${socket.id} has connected`);
             // });
 
-            this.mqttClient.subscribe('sensors/data');
+            this.mqttClient.subscribe('#');
 
             this.mqttClient.on('message', (topic: string, data: Buffer) => {
-                this.io.emit('sdu', data.toString());
+                if (topic === 'sensors/data') {
+                    this.io.emit('sdu', data.toString());
+                }
+
+                this.io.emit('event', 'sensor_update');
             });
         });
 

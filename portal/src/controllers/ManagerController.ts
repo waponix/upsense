@@ -84,7 +84,6 @@ class ManagerController
     public async editAction(request: Request, response: Response)
     {
         try {
-            console.log(request.body.data);
             const apiResponse = await Api(request, response).put(`/managers/${request.body.id}`, {
                 data: request.body.data || {}
             });

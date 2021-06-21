@@ -10,8 +10,9 @@ import {HubRepository} from "./v1/rest/repositories/HubRepository";
 import {Hub} from "./v1/shared/entities/Hub";
 import {ZoneRepository} from "./v1/rest/repositories/ZoneRepository";
 import {Zone} from "./v1/shared/entities/Zone";
-import {LogRepository} from "./v1/rest/repositories/LogRepository";
-import {Log} from "./v1/shared/entities/Log";
+import {NotificationLogRepository} from "./v1/rest/repositories/NotificationLogRepository";
+import {NotificationLog} from "./v1/shared/entities/NotificationLog";
+import {SensorStatus} from "./components/types/SensorStatus";
 
 const nodeMailer = require('nodemailer');
 
@@ -35,7 +36,7 @@ export class SubscriberApp
     private sensorRepository: SensorRepository;
     private sensorReadingRepository: SensorReadingRepository;
     private zoneRepository: ZoneRepository;
-    private logRepository: LogRepository;
+    private notificationLogRepository: NotificationLogRepository;
     private hubRepository: HubRepository;
     private topic: string = 'iot/+/sensor';
     private transporter: any;
@@ -45,7 +46,7 @@ export class SubscriberApp
         this.sensorReadingRepository = new SensorReadingRepository(SensorReading);
         this.zoneRepository = new ZoneRepository(Zone);
         this.hubRepository = new HubRepository(Hub);
-        this.logRepository = new LogRepository(Log);
+        this.notificationLogRepository = new NotificationLogRepository(NotificationLog);
 
         this.client = mqtt.connect(MQTT_OPTIONS);
 
@@ -100,7 +101,7 @@ export class SubscriberApp
 
             // update hub data
             hub.isConnected = 1;
-            hub.name = data.obj?.rxInfo[0].name;
+            hub.deviceName = data.obj?.rxInfo[0].name;
             hub.lastSeen = dataTimestamp;
 
             await this.hubRepository.save(hub);
@@ -124,8 +125,18 @@ export class SubscriberApp
             sensor.serial = data.obj?.devEUI;
         }
 
+        // Handle notifications
+        let isSensorHealthy = true;
+        if (sensor.maxTemp !== null && data.temperature > sensor.maxTemp) {
+            isSensorHealthy = false;
+        }
+
+        if (sensor.minTemp !== null && data.temperature < sensor.minTemp) {
+            isSensorHealthy = false;
+        }
+
         try {
-            sensor.name = data.obj?.deviceName;
+            sensor.deviceName = data.obj?.deviceName;
             sensor.currentTemp = data.temperature;
 
             if (data.battery) {
@@ -134,6 +145,7 @@ export class SubscriberApp
             //@ts-ignore
             sensor.lastSeen = dataTimestamp;
             sensor.isConnected = 1;
+            sensor.status = isSensorHealthy ? SensorStatus.healthy : SensorStatus.warning;
 
             await this.sensorRepository.save(sensor);
             await this.sensorRepository.queryRunner.commitTransaction();
@@ -179,16 +191,6 @@ export class SubscriberApp
             timestamp: dataTimestamp
         }));
 
-        // Handle notifications
-        let triggerSendNotification = false;
-        if (sensor.maxTemp !== null && data.temperature > sensor.maxTemp) {
-            triggerSendNotification = true;
-        }
-
-        if (sensor.minTemp !== null && data.temperature < sensor.minTemp) {
-            triggerSendNotification = true;
-        }
-
         await this.hubRepository.init();
         // send email notification to all users
         let result: string[] = await this.hubRepository.findUserEmailsForNotification(sensor.hub);
@@ -203,15 +205,13 @@ export class SubscriberApp
                 break;
             }
 
-            const logData = {
-                sensor,
-                message: '',
-                maxtemp: sensor.maxTemp,
-                minTemp: sensor.minTemp,
-                recordedTemp: data.temperature
-            }
+            let notificationLog = new NotificationLog();
+            notificationLog.maxTemp = sensor.maxTemp;
+            notificationLog.minTemp = sensor.minTemp;
+            notificationLog.recordedTemp = sensor.currentTemp;
+            notificationLog.sensor = sensor;
 
-            if (triggerSendNotification) {
+            if (!isSensorHealthy) {
                 if (!alarmingSensors[sensor.serial]) {
                     // cache the sensor that has abnormal reading
                     alarmingSensors[sensor.serial] = true;
@@ -226,18 +226,16 @@ export class SubscriberApp
                 }
                 this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_ABNORMAL);
 
-                await this.logRepository.init();
-                await this.logRepository.queryRunner.startTransaction();
+                await this.notificationLogRepository.init();
                 try {
-                    logData.message = 'Sensor temperature levels exceeded the set limit';
-                    await this.logRepository.create(logData);
-                    await this.logRepository.queryRunner.commitTransaction();
-                } catch {
-                    await this.logRepository.queryRunner.rollbackTransaction();
+                    notificationLog.message = 'Sensor temperature levels exceeded the set limit';
+                    await this.notificationLogRepository.save(notificationLog);
                 } finally {
-                    await this.logRepository.queryRunner.release();
+                    await this.notificationLogRepository.queryRunner.release();
                 }
-            } else if (!triggerSendNotification && alarmingSensors[sensor.serial]) {
+
+                console.log('exceed', notificationLog);
+            } else if (isSensorHealthy && alarmingSensors[sensor.serial]) {
                 // if sensor came back to normal operation send another notification
                 delete alarmingSensors[sensor.serial];
 
@@ -250,17 +248,14 @@ export class SubscriberApp
                 }
                 this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_NORMAL);
 
-                await this.logRepository.init();
-                await this.logRepository.queryRunner.startTransaction();
+                await this.notificationLogRepository.init();
                 try {
-                    logData.message = 'Sensor temperature levels went back to normal';
-                    await this.logRepository.create(logData);await this.logRepository.queryRunner.commitTransaction();
-                } catch {
-                    await this.logRepository.queryRunner.rollbackTransaction();
+                    notificationLog.message = 'Sensor temperature levels went back to normal';
+                    await this.notificationLogRepository.save(notificationLog);
                 } finally {
-                    await this.logRepository.queryRunner.release();
+                    await this.notificationLogRepository.queryRunner.release();
                 }
-
+                console.log('back to normal', notificationLog);
             }
 
             break;

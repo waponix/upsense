@@ -8,6 +8,7 @@ import {CommonMessages} from "../../../messages/messages";
 import {sensorCreateValidation, sensorUpdateValidation} from "../validators/SensorValidator";
 import {Hub} from "../../shared/entities/Hub";
 import {HubRepository} from "../repositories/HubRepository";
+import {User} from "../../shared/entities/User";
 
 export default class SensorServices
 {
@@ -33,7 +34,7 @@ export default class SensorServices
 
         await this.sensorRepository.init();
 
-        let result: any[] = await this.sensorRepository.getList(query);
+        let result: any[] = await this.sensorRepository.getList(query, this.user);
         result = result.map((record: Sensor) => record.serialize());
 
         apiResponse.result = result;

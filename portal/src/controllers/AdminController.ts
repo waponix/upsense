@@ -55,7 +55,6 @@ class AdminController
     {
         if (request.xhr) {
             try {
-                console.log(`/admins/${request.query.id}`);
                 const apiResponse = await Api(request, response).get(`/admins/${request.query.id}`, {
                     data: request.body.data || {}
                 });

@@ -16,7 +16,6 @@ class HubController {
     {
         try {
             const endpoint = `/hubs?${GetQuery(request)}`;
-            console.log(endpoint);
             const apiResponse = await Api(request, response).get(endpoint);
 
             return response.json({
@@ -40,7 +39,6 @@ class HubController {
     public async createAction(request: Request, response: Response)
     {
         try {
-            console.log(request.body.data);
             const apiResponse = await Api(request, response).post('/hubs', {
                 data: request.body.data || {}
             });
