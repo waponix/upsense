@@ -3,7 +3,8 @@ import {Api} from "../components/api";
 import {GetQuery} from "../components/helpers";
 import HubServices from "../services/HubServices";
 
-class SensorController {
+class SensorController
+{
     public async indexView(request: Request, response: Response)
     {
         let viewData: any = {

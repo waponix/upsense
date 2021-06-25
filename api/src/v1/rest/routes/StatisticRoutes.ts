@@ -11,6 +11,7 @@ routes.registerRoutes((router: Router, controller: Controller) => {
     router
         // get dashboard statistic
         .get('/dashboard', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager', 'user']), controller.getDashboardData)
+        .get('/unseen-notifications/count', passport.authenticate('jwt', {session: false, optional: false}), authorize(['admin', 'manager', 'user']), controller.getUnseenNotificationsCount)
 });
 
 module.exports = routes;

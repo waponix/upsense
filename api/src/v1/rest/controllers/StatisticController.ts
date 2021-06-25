@@ -14,4 +14,14 @@ export default class StatisticController extends Controller
             .status(data.statusCode)
             .json(data.body);
     }
+
+    async getUnseenNotificationsCount(request: Request, response: Response)
+    {
+        const statisticServices = new StatisticServices((<any>request).user);
+        const data: ReturnableResponse = await statisticServices.getUnseenNotificationCount(request);
+
+        return response
+            .status(data.statusCode)
+            .json(data.body);
+    }
 }

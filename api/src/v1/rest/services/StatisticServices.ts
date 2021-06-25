@@ -48,4 +48,19 @@ export default class StatisticServices
 
         return new ReturnableResponse(statusCode, apiResponse);
     }
+
+    async getUnseenNotificationCount(request: Request): Promise<ReturnableResponse>
+    {
+        const apiResponse: ApiResponse = new ApiResponse();
+        let statusCode = 200;
+
+        await this.notificationLogRepository.init();
+
+        const count = await this.notificationLogRepository.getUnseenCount(this.user);
+        apiResponse.result = count;
+
+        await this.notificationLogRepository.queryRunner.release();
+
+        return new ReturnableResponse(statusCode, apiResponse);
+    }
 }

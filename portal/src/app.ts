@@ -17,6 +17,8 @@ import {GlobalVariablesHandler} from "./middlewares/Twig";
 import HubController from "./controllers/HubController";
 import SensorController from "./controllers/SensorController";
 import ZoneController from "./controllers/ZoneController";
+import SharedController from "./controllers/SharedController";
+import NotificationController from "./controllers/NotificationController";
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -135,6 +137,13 @@ class Portal
             .get('/devices/sensor/:id(\\d+)/edit', Authenticate, SensorController.editView)
             .post('/devices/sensor/:id(\\d+)/edit', Authenticate, SensorController.editAction)
 
+            // Notification route
+            .get('/notification', Authenticate, NotificationController.indexView)
+            .post('/notification', Authenticate, NotificationController.indexAction)
+
+            // Shared
+            .post('/unseen-notification-count', Authenticate, SharedController.notificationCountAction)
+
             .use(Authenticate, (request: Request, response: Response) => {
                 response
                     .status(404)
@@ -166,9 +175,10 @@ class Portal
             this.mqttClient.on('message', (topic: string, data: Buffer) => {
                 if (topic === 'sensors/data') {
                     this.io.emit('sdu', data.toString());
+                    this.io.emit('sensor_update', null);
+                } else if (topic === 'notifications') {
+                    this.io.emit('notification', null);
                 }
-
-                this.io.emit('event', 'sensor_update');
             });
         });
 

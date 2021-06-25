@@ -26,17 +26,19 @@ $(() => {
         ]
     });
 
-    socket.on('event', e => {
-        if (e === 'sensor_update') {
-            refreshDasboard();
-        }
+    socket.on('sensor_update', e => {
+        refreshDasboard();
     });
 
+    let dashboardDataAjax = null;
     function refreshDasboard() {
-        $.ajax({
+        if (dashboardDataAjax !== null) {
+            dashboardDataAjax.abort();
+        }
+
+        dashboardDataAjax = $.ajax({
             url: '/dashboard',
             success: response => {
-                console.log(response);
                 if (response.status === 'success') {
                     $('#total-sensor-count').text(response.data.totalSensors);
                     $('#healthy-sensor-count').text(response.data.healthy);

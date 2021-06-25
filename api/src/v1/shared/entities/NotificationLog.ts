@@ -1,16 +1,13 @@
 import {Entity, Column, ManyToOne, JoinColumn} from 'typeorm';
 import { BaseEntity } from './BaseEntity';
 import {Sensor} from "./Sensor";
-import {Field} from "type-graphql";
 
 @Entity({ name: 'notification_logs' })
 export class NotificationLog extends BaseEntity
 {
-    @Field()
     @Column({name: 'min_temp', type: 'mediumint', default: 0})
     minTemp!: number
 
-    @Field()
     @Column({name: 'max_temp', type: 'mediumint', default: 0})
     maxTemp!: number
 
@@ -19,6 +16,9 @@ export class NotificationLog extends BaseEntity
 
     @Column({type: 'text', default: ''})
     message!: string
+
+    @Column({type: 'tinyint', default: 0})
+    seen!: number
 
     @ManyToOne(() => Sensor, { cascade: ['insert', 'update'], onDelete: 'SET NULL'})
     @JoinColumn({name: 'sensor_id'})

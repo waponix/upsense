@@ -21,7 +21,8 @@ const routes: Routes[] = [
     require('./v1/rest/routes/ZoneRoutes'),
     require('./v1/rest/routes/SensorRoutes'),
     require('./v1/rest/routes/HubRoutes'),
-    require('./v1/rest/routes/StatisticRoutes')
+    require('./v1/rest/routes/StatisticRoutes'),
+    require('./v1/rest/routes/NotificationLogRoutes')
 ];
 
 // register v1 apis

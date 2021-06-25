@@ -230,11 +230,10 @@ export class SubscriberApp
                 try {
                     notificationLog.message = 'Sensor temperature levels exceeded the set limit';
                     await this.notificationLogRepository.save(notificationLog);
+                    this.client.publish('notifications', '');
                 } finally {
                     await this.notificationLogRepository.queryRunner.release();
                 }
-
-                console.log('exceed', notificationLog);
             } else if (isSensorHealthy && alarmingSensors[sensor.serial]) {
                 // if sensor came back to normal operation send another notification
                 delete alarmingSensors[sensor.serial];
@@ -252,10 +251,10 @@ export class SubscriberApp
                 try {
                     notificationLog.message = 'Sensor temperature levels went back to normal';
                     await this.notificationLogRepository.save(notificationLog);
+                    this.client.publish('notifications', '');
                 } finally {
                     await this.notificationLogRepository.queryRunner.release();
                 }
-                console.log('back to normal', notificationLog);
             }
 
             break;
