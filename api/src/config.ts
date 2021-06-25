@@ -48,3 +48,7 @@ export const mailerConfig = {
     user: 'notice@upsense.co',
     password: '00UpsenseAdmin12300'
 }
+
+export const miscConfig = {
+    defaultZone: 'Default'
+}

@@ -109,6 +109,7 @@ export class SensorRepository extends BaseRepository
 
     async update(sensor: Sensor, data: Partial<Sensor>): Promise<boolean>
     {
+        sensor.name = data.name!;
         //@ts-ignore
         sensor.maxTemp = parseInt(data.maxTemp) || sensor.maxTemp;
         //@ts-ignore

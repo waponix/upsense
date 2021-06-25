@@ -1,6 +1,6 @@
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {Zone} from "../../shared/entities/Zone";
-import {paginationConfig} from "../../../config";
+import {miscConfig, paginationConfig} from "../../../config";
 import {Company} from "../../shared/entities/Company";
 import {Hub} from "../../shared/entities/Hub";
 
@@ -13,10 +13,10 @@ export class ZoneRepository extends BaseRepository
      * @param options
      */
     async getList(companyId: number, options: QueryOptions = {}): Promise<Zone[]> {
-        let parameters: any = { companyId };
+        let parameters: any = { companyId, defaultZone: miscConfig.defaultZone };
         let whereStatements: any = [
-            'z.company = :companyId',
-            'z.deletedAt IS NULL'
+            'z.name != :defaultZone',
+            'z.company = :companyId'
         ];
 
         const offset = options.page ? paginationConfig.limit * (options.page - 1) : 0;

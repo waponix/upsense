@@ -30,7 +30,7 @@ $(() => {
             {data: null, defaultContent: '<div class="form-check">\n' +
                     '                                <input class="form-check-input position-static select-item" type="checkbox">\n' +
                     '                            </div>'},
-            {data: 'name'},
+            {data: 'name', defaultContent: 'N/A'},
             {data: 'deviceName', defaultContent: 'N/A'},
             {data: 'serial'},
             {data: 'currentTemp'},

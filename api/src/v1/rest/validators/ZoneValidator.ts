@@ -32,6 +32,8 @@ Validator.registerAsync('zone_name_available', async function (name: string, att
 
     if (!zone) {
         passes();
+    } else if (name === 'Default') {
+        passes(false, 'Zone name \'Default\' is reserved');
     } else {
         passes(false, 'Zone name already exist');
     }

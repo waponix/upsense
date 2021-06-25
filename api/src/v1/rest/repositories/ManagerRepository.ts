@@ -1,6 +1,6 @@
 import {User as Manager} from "../../shared/entities/User";
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
-import {paginationConfig} from "../../../config";
+import {miscConfig, paginationConfig} from "../../../config";
 import {UserRole} from "../../../components/types/UserRoleTypes";
 import {NotificationSetting} from "../../shared/entities/NotificationSetting";
 
@@ -84,6 +84,8 @@ export class ManagerRepository extends BaseRepository
 
             if (options.relations.indexOf('zones') > -1) {
                 query.leftJoinAndSelect('m.zones', 'z');
+                whereStatements.push('z.name != :defaultZone');
+                parameters.defaultZone = miscConfig.defaultZone;
             }
 
             break;

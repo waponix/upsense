@@ -14,7 +14,10 @@ $(() => {
 
         $('.is-invalid').removeClass('is-invalid');
 
-        let formData = {zone: null};
+        let formData = {
+            name: $(this).find('input[name="name"]').val() || null,
+            zone: null
+        };
 
         let submit = true;
 
@@ -28,15 +31,17 @@ $(() => {
             $('#hub-company').addClass('is-invalid');
             $('#error-hub-company').text('The company field is required');
             submit = false;
+        } else {
+            formData.company = parseInt($(this).find('select[name="company"]').val());
         }
 
         if (parseInt($(this).find('select[name="zone"]').val()) != 0) {
             formData.zone = $(this).find('select[name="zone"]').val();
-        } else {
-            $('#hub-zone').addClass('is-invalid');
-            $('#error-hub-zone').text('The zone field is required');
-            submit = false;
-        }
+        } //else {
+        //     $('#hub-zone').addClass('is-invalid');
+        //     $('#error-hub-zone').text('The zone field is required');
+        //     submit = false;
+        // }
 
         if (!submit) return false;
 

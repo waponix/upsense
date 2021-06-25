@@ -84,6 +84,8 @@ export class HubRepository extends BaseRepository
     }
 
     async update(hub: Hub, data: Partial<Hub>): Promise<boolean> {
+        hub.name = data.name!;
+
         const relationQueryBuilder = this.repository
             .createQueryBuilder()
             .relation(Hub, 'zone');

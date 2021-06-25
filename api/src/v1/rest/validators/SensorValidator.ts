@@ -18,7 +18,6 @@ export const sensorCreateValidation = (data: any) => {
 
 export const sensorUpdateValidation = (data: any) => {
     rules
-        .removeField('name')
         .removeField('serial');
 
     return new Validator(data, rules.fields);

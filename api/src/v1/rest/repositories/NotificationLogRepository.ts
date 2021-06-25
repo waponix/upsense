@@ -118,7 +118,7 @@ export class NotificationLogRepository extends BaseRepository
         if (user && user.role !== UserRole.admin) {
             query
                 .innerJoin('z.users', 'u')
-                .where('u.id = :userId')
+                .andWhere('u.id = :userId')
                 .setParameter('userId', user.id);
         }
 

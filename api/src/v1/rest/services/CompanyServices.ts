@@ -10,6 +10,8 @@ import {UserRepository} from "../repositories/UserRepository";
 import {User, User as Manager} from "../../shared/entities/User";
 import {ManagerRepository} from "../repositories/ManagerRepository";
 import {UserRole} from "../../../components/types/UserRoleTypes";
+import {ZoneRepository} from "../repositories/ZoneRepository";
+import {Zone} from "../../shared/entities/Zone";
 
 export default class companyServices
 {
@@ -17,12 +19,14 @@ export default class companyServices
     private companyRepository: CompanyRepository;
     private userRepository: UserRepository;
     private managerRepository: ManagerRepository;
+    private zoneRepository: ZoneRepository;
 
     constructor(user: any) {
         this.user = user;
         this.companyRepository = new CompanyRepository(Company);
         this.userRepository = new UserRepository(User);
-        this.managerRepository = new ManagerRepository(Manager)
+        this.managerRepository = new ManagerRepository(Manager);
+        this.zoneRepository = new ZoneRepository(Zone);
     }
 
     /**
@@ -181,19 +185,29 @@ export default class companyServices
         return new Promise(resolve => {
             validation.checkAsync(async () => {
                 await this.companyRepository.init();
+                await this.zoneRepository.init();
                 await this.companyRepository.queryRunner.startTransaction();
+                await this.zoneRepository.queryRunner.startTransaction();
 
                 try {
                     const company = await this.companyRepository.create(data);
                     await this.companyRepository.queryRunner.commitTransaction();
+                    const zoneData = {
+                        name: 'Default',
+                        company
+                    }
+                    await this.zoneRepository.create(zoneData);
+                    await this.zoneRepository.queryRunner.commitTransaction();
                     apiResponse.result = company.serialize();
                 } catch (e) {
                     await this.companyRepository.queryRunner.rollbackTransaction();
+                    await this.zoneRepository.queryRunner.rollbackTransaction();
                     apiResponse.status = Status.Error;
                     apiResponse.message = CommonMessages.UnableToSave('Company');
                     statusCode = 500;
                 } finally {
                     await this.companyRepository.queryRunner.release();
+                    await this.zoneRepository.queryRunner.release();
                 }
 
                 resolve(new ReturnableResponse(statusCode, apiResponse));

@@ -1,6 +1,6 @@
 import {BaseRepository, QueryOptions} from "../../shared/repositories/BaseRepository";
 import {Company} from "../../shared/entities/Company";
-import {paginationConfig} from "../../../config";
+import {miscConfig, paginationConfig} from "../../../config";
 import {User, User as Manager} from "../../shared/entities/User";
 import {Zone} from "../../shared/entities/Zone";
 
@@ -70,6 +70,8 @@ export class CompanyRepository extends BaseRepository
 
             if (options.relations.indexOf('zones') > -1) {
                 query.leftJoinAndSelect('c.zones', 'z');
+                whereStatements.push('z.name != :defaultZone');
+                parameters.defaultZone = miscConfig.defaultZone;
             }
 
             break;
@@ -93,13 +95,38 @@ export class CompanyRepository extends BaseRepository
         return await this.em.getRepository(Company).findOne({where: { id }, relations: ['users', 'zones']});
     }
 
-    async findOneBy(options: any, relations: any = null): Promise<Company | undefined>
+    async findOneBy(options: any, relations: any = []): Promise<Company | undefined>
     {
-        options = {where: options};
-        if (relations !== null) {
-            options.relations = relations;
+        // options = {where: options};
+        // if (relations !== null) {
+        //     options.relations = relations;
+        // }
+        // return await this.repository.findOne(options);
+
+        const query = this.createQueryBuilder('c');
+        let whereStatements: any = [];
+        let parameters: any = {};
+
+        for (const field in options) {
+            whereStatements.push(`c.${field} = :${field}`);
+            parameters[field] = options[field];
         }
-        return await this.repository.findOne(options);
+
+        if (relations.indexOf('zones') > -1) {
+            query.leftJoinAndSelect('c.zones', 'z', `z.company_id = c.id AND z.name != '${miscConfig.defaultZone}'`);
+        }
+
+        if (relations.indexOf('users') > -1) {
+            query.leftJoinAndSelect('c.users', 'u');
+        }
+
+        if (whereStatements.length > 0) {
+            query
+                .where(whereStatements.join(' AND '))
+                .setParameters(parameters);
+        }
+
+        return await query.getOne();
     }
 
     /**

@@ -8,6 +8,7 @@ import {CommonMessages} from "../../../messages/messages";
 import {hubCreateValidation, hubUpdateValidation} from "../validators/HubValidator";
 import {Zone} from "../../shared/entities/Zone";
 import {ZoneRepository} from "../repositories/ZoneRepository";
+import {miscConfig} from "../../../config";
 
 export default class HubServices
 {
@@ -83,14 +84,17 @@ export default class HubServices
                 await this.hubRepository.init();
                 await this.hubRepository.queryRunner.startTransaction();
 
+                await this.zoneRepository.init();
                 if (data.zone) {
-                    await this.zoneRepository.init();
                     const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(data.zone)});
                     data.zone = zone;
-                    await this.zoneRepository.queryRunner.release();
+                } else if (data.company) {
+                    await this.zoneRepository.init();
+                    const zone: Zone | undefined = await this.zoneRepository.findOneBy({name: miscConfig.defaultZone, company: data.company});
+                    delete data.company;
+                    data.zone = zone;
                 }
-
-                console.log(data);
+                await this.zoneRepository.queryRunner.release();
 
                 try {
                     const hub: Hub = await this.hubRepository.create(data);
@@ -147,12 +151,18 @@ export default class HubServices
             validation.checkAsync(async () => {
                 await this.hubRepository.queryRunner.startTransaction();
 
+                await this.zoneRepository.init();
                 if (data.zone) {
-                    await this.zoneRepository.init();
                     const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(data.zone)});
                     data.zone = zone;
-                    await this.zoneRepository.queryRunner.release();
+                } else if (data.company) {
+                    const zone: Zone | undefined = await this.zoneRepository.findOneBy({name: miscConfig.defaultZone, company: data.company});
+                    delete data.company;
+                    data.zone = zone;
                 }
+                await this.zoneRepository.queryRunner.release();
+
+                console.log(data);
 
                 try {
                     //@ts-ignore

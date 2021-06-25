@@ -9,7 +9,8 @@ const Validator = require('validatorjs');
 const rules = new ValidationRules({
     name: ['required', 'string'],
     serial: ['required', 'string', 'serial_not_exist'],
-    zone: ['integer', 'zone_exist']
+    company: ['required', 'numeric', 'company_exist'],
+    zone: ['numeric', 'zone_exist']
 });
 
 export const hubCreateValidation = (data: any) => {
@@ -18,20 +19,17 @@ export const hubCreateValidation = (data: any) => {
 
 export const hubUpdateValidation = (data: any) => {
     rules
-        .removeField('name')
         .removeField('serial');
     return new Validator(data, rules.fields);
 };
 
-Validator.registerAsync('zone_exist', async function (zones: any[], attribute: any, req: any, passes: any) {
+Validator.registerAsync('zone_exist', async function (zoneId: any, attribute: any, req: any, passes: any) {
     const zoneRepository = getRepository(Zone);
 
-    for (let zoneId of zones) {
-        const zone: Zone | undefined = await zoneRepository.findOne({where: {id: parseInt(zoneId)}});
+    const zone: Zone | undefined = await zoneRepository.findOne({where: {id: parseInt(zoneId)}});
 
-        if (zone === undefined) {
-            passes(false, `There is no zone with id ${zoneId}`);
-        }
+    if (zone === undefined) {
+        passes(false, `There is no zone with id ${zoneId}`);
     }
 
     passes();
@@ -47,4 +45,15 @@ Validator.registerAsync('serial_not_exist', async function (serial: string, attr
     }
 
     passes();
+});
+
+Validator.registerAsync('company_exist', async (companyId: number, attribute: any, req: any, passes: any) => {
+    const companyRepository = getRepository(Company);
+    const company: Company | undefined = await companyRepository.findOne({where: {id: companyId}});
+
+    if (!company) {
+        passes(false, 'Company does not exist');
+    } else {
+        passes();
+    }
 });

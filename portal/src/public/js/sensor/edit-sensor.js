@@ -6,7 +6,9 @@ $(() => {
     $('form#sensor-form').on('submit', function (e) {
         e.preventDefault();
 
-        let formData = {};
+        let formData = {
+            name: $(this).find('input[name="name"]').val() || null,
+        };
 
         if (!!$(this).find('input[name="maxTemp"]').val) {
             formData.maxTemp = parseInt($(this).find('input[name="maxTemp"]').val());

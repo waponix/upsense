@@ -11,6 +11,7 @@ $(() => {
             method: 'post',
             data: {data: formData},
             success: function (response) {
+                console.log(response);
                 $('.is-invalid').removeClass('is-invalid');
 
                 if (response.status === 'error') {

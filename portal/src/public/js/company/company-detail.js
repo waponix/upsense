@@ -102,10 +102,12 @@ $(() => {
                     $(`span#company-${field}`).text(companyData[field]);
                 }
 
-                zoneTable
-                    .clear()
-                    .rows.add(response.data.result.zones)
-                    .draw(false);
+                if (response.data.result) {
+                    zoneTable
+                        .clear()
+                        .rows.add(response.data.result.zones)
+                        .draw(false);
+                }
             }
         });
     }

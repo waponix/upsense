@@ -18,7 +18,7 @@ $(() => {
                 className: "text-center"
             },
             {
-                targets: 6,
+                targets: 7,
                 sortable: false,
                 className: "text-center"
             }
@@ -29,8 +29,9 @@ $(() => {
                     '                                <input class="form-check-input position-static select-item" type="checkbox">\n' +
                     '                            </div>'},
             {data: 'name', defaultContent: 'N/A'},
+            {data: 'deviceName', defaultContent: 'N/A'},
             {data: 'serial'},
-            {data: 'zone.name', defaultContent: 'Unassigned'},
+            {data: 'zone.name', defaultContent: 'Unassigned', createdCell: (td, cellData) => { $(td).text(cellData === 'Default' ? 'Unassigned': cellData) }},
             {data: 'isConnected', defaultContent: 'Offline', createdCell: (td, cellData) => { $(td).text(cellData ? 'Online': 'Offline') }},
             {data: 'lastSeen', defaultContent: 'N/A', createdCell: (td, cellData) => { if (cellData) {$(td).text(moment(cellData * 1000).format('MMMM Do YYYY, h:mm:ss a')) }}},
             {data: null, defaultContent: '<a href="#" class="btn btn-edit-hub btn-primary btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Configure">\n' +
