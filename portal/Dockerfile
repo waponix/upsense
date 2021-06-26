@@ -20,6 +20,8 @@ RUN npm install
 RUN npm run build
 
 COPY ./portal/src/public /var/www/portal/dist/public
+COPY ./portal/src/views /var/www/portal/dist/views
+
 RUN rm -rf /var/www/portal/src
 
 CMD ["npm", "start"]
