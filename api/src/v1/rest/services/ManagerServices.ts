@@ -11,6 +11,7 @@ import {Company} from "../../shared/entities/Company";
 import {Zone} from "../../shared/entities/Zone";
 import {ZoneRepository} from "../repositories/ZoneRepository";
 import {UserRole} from "../../../components/types/UserRoleTypes";
+import {miscConfig} from "../../../config";
 
 export default class ManagerServices
 {
@@ -112,16 +113,20 @@ export default class ManagerServices
                     await this.companyRepository.queryRunner.release();
                 }
 
+                await this.zoneRepository.init();
+                let zones = [];
+                const defaultZone: Zone | undefined = await this.zoneRepository.findOneBy({name: miscConfig.defaultZone, company: data.company});
+                zones.push(defaultZone);
+
                 if (data.zones) {
-                    await this.zoneRepository.init();
-                    let zones = [];
                     for (let zoneId of data.zones) {
                         const zone: Zone | undefined = await this.zoneRepository.findOneBy({id: parseInt(zoneId), company: data.company});
                         zones.push(zone);
                     }
-                    data.zones = zones;
-                    await this.zoneRepository.queryRunner.release();
                 }
+
+                data.zones = zones;
+                await this.zoneRepository.queryRunner.release();
 
                 try {
                     const manager: Manager = await this.managerRepository.create(data);

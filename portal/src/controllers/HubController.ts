@@ -68,8 +68,6 @@ class HubController {
                 }
             }
 
-            console.log(details);
-
             return response.json(details);
         }
 

@@ -59,10 +59,10 @@ export const SideMenu = {
         }
     },
 
-    'Settings': {
+    'Notification Settings': {
         divider: 'Configure',
         id: 'settings',
-        role: ['admin', 'manager', 'user'],
+        role: ['manager', 'user'],
         link: '/settings'
     }
 }

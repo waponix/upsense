@@ -86,6 +86,8 @@ export class HubRepository extends BaseRepository
     async update(hub: Hub, data: Partial<Hub>): Promise<boolean> {
         hub.name = data.name!;
 
+        await this.repository.save(hub);
+
         const relationQueryBuilder = this.repository
             .createQueryBuilder()
             .relation(Hub, 'zone');
@@ -95,6 +97,8 @@ export class HubRepository extends BaseRepository
             //@ts-ignore
             await relationQueryBuilder.of(hub).set(data.zone);
         }
+
+        console.log(hub);
 
         return true;
     }

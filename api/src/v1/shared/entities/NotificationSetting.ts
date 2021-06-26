@@ -18,13 +18,7 @@ export class NotificationSetting extends BaseEntity
     // @Column({ type: 'tinyint', name: 'send_push_notification', nullable: false, default: 0 })
     // sendPushNotification!: boolean;
 
-    @Column({ type: 'time', name: 'trigger_time', default: 0 })
-    triggerTime!: number;
-
-    @Column({ type: 'time', name: 'repeat_time', default: 0 })
-    repeatTime!: number;
-
-    @Column({ type: 'smallint', name: 'max_repeat', default: 0 })
+    @Column({ type: 'smallint', name: 'max_repeat', default: 5 })
     maxRepeat!: number;
 
     @OneToOne(() => User, user => user.notificationSetting, { cascade: true })
@@ -35,8 +29,6 @@ export class NotificationSetting extends BaseEntity
         let serialized: any = {
             sendEmail: this.sendEmail,
             sendSendSms: this.sendSms,
-            triggerTime: this.triggerTime,
-            repeatTime: this.repeatTime,
             maxRepeat: this.maxRepeat,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt

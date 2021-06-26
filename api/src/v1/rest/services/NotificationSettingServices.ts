@@ -2,7 +2,7 @@ import {ApiResponse} from "../objects/ApiResponse";
 import {ReturnableResponse} from "../objects/ReturnableResponse";
 import {Request} from "express";
 import {Status} from "../../../components/types/ResponseStatusTypes";
-import {CommonMessages} from "../../../messages/messages";
+import {CommonMessages, OperationNotAllowed} from "../../../messages/messages";
 import {
     notificationSettingUpdateValidation
 } from "../validators/NotificationSettingValidator";
@@ -37,6 +37,14 @@ export default class NotificationSettingServices
         let statusCode = 200;
         const {userId} = request.params;
 
+        if (this.user.id !== userId) {
+            apiResponse.status = Status.Forbidden;
+            apiResponse.message = OperationNotAllowed;
+            statusCode = 403;
+
+            return new ReturnableResponse(statusCode, apiResponse);
+        }
+
         await this.userRepository.init();
         let user: User | undefined = undefined;
         if (!isNaN(parseInt(userId))) {
@@ -66,8 +74,19 @@ export default class NotificationSettingServices
      * @param request
      */
     async update(request: Request): Promise<ReturnableResponse> {
+        let apiResponse: ApiResponse = new ApiResponse();
+        let statusCode: number = 200;
+
         const data = request.body.data || {};
         const {userId} = request.params;
+
+        if (this.user.id !== userId) {
+            apiResponse.status = Status.Forbidden;
+            apiResponse.message = OperationNotAllowed;
+            statusCode = 403;
+
+            return new ReturnableResponse(statusCode, apiResponse);
+        }
 
         if (data.sendEmail) {
             data.sendEmail = (!!data.sendEmail) ? 1 : 0;
@@ -79,15 +98,15 @@ export default class NotificationSettingServices
 
         await this.notificationSettingRepository.init();
 
-        let apiResponse: ApiResponse = new ApiResponse();
-        let statusCode: number = 200;
         await this.userRepository.init();
+
         let user: User | undefined = undefined;
         if (!isNaN(parseInt(userId))) {
             user = await this.userRepository.findOneBy({
                 id: parseInt(userId)
             }, ['notificationSetting']);
         }
+
         await this.userRepository.queryRunner.release();
 
         let notificationSetting: NotificationSetting | undefined = user?.notificationSetting;

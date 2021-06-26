@@ -162,8 +162,6 @@ export default class HubServices
                 }
                 await this.zoneRepository.queryRunner.release();
 
-                console.log(data);
-
                 try {
                     //@ts-ignore
                     await this.hubRepository.update(hub, data);

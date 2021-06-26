@@ -212,11 +212,6 @@ export class SubscriberApp
             notificationLog.sensor = sensor;
 
             if (!isSensorHealthy) {
-                if (!alarmingSensors[sensor.serial]) {
-                    // cache the sensor that has abnormal reading
-                    alarmingSensors[sensor.serial] = true;
-                }
-
                 await this.zoneRepository.init();
                 const zone: Zone | undefined = await this.zoneRepository.findOneByHub(sensor.hub);
                 await this.zoneRepository.queryRunner.release();
@@ -224,7 +219,14 @@ export class SubscriberApp
                 if (zone !== undefined) {
                     zoneName = zone.name;
                 }
-                this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_ABNORMAL);
+
+                if (!alarmingSensors[sensor.serial]) {
+                    // cache the sensor that has abnormal reading
+                    alarmingSensors[sensor.serial] = true;
+
+                    // only send email notification once
+                    await this.sendEmailNotification(emails, zoneName, sensor.name, data.temperature, NOTIF_SENSOR_ABNORMAL);
+                }
 
                 await this.notificationLogRepository.init();
                 try {
@@ -245,7 +247,7 @@ export class SubscriberApp
                 if (zone !== undefined) {
                     zoneName = zone.name;
                 }
-                this.sendEmailNotification(emails.join(','), zoneName, sensor.name, data.temperature, NOTIF_SENSOR_NORMAL);
+                await this.sendEmailNotification(emails, zoneName, sensor.name, data.temperature, NOTIF_SENSOR_NORMAL);
 
                 await this.notificationLogRepository.init();
                 try {
@@ -261,7 +263,7 @@ export class SubscriberApp
         } while (true);
     }
 
-    private async sendEmailNotification(emails: string, zoneName: string, sensorName: string, temperature: number, notifType: number)
+    private async sendEmailNotification(emails: string[], zoneName: string, sensorName: string, temperature: number, notifType: number)
     {
         let date = moment();
 
@@ -291,12 +293,16 @@ export class SubscriberApp
 
         // send mail with defined transport object
         try {
-            let info = await this.transporter.sendMail({
-                from: `Upsense <${mailerConfig.user}>`, // sender address
-                to: emails, // list of receivers
-                subject: `Temperature Alert - ${zoneName} - ${sensorName}`, // Subject line
-                html: content
-            });
+            while (emails.length > 0) {
+                const email: string | undefined = emails.pop();
+
+                await this.transporter.sendMail({
+                    from: `Upsense <${mailerConfig.user}>`, // sender address
+                    to: email, // list of receivers
+                    subject: `Temperature Alert - ${zoneName} - ${sensorName}`, // Subject line
+                    html: content
+                });
+            }
         } catch (e) {
             console.log(e);
         }

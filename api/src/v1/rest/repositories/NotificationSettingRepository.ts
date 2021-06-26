@@ -108,8 +108,6 @@ export class NotificationSettingRepository extends BaseRepository
         let notificationSetting: NotificationSetting = new NotificationSetting();
         notificationSetting.sendEmail = data.sendEmail;
         notificationSetting.sendSms = data.sendSms;
-        notificationSetting.triggerTime = data.triggerTime;
-        notificationSetting.repeatTime = data.repeatTime;
         notificationSetting.maxRepeat = data.maxRepeat;
 
         if (data.user) {
@@ -129,8 +127,6 @@ export class NotificationSettingRepository extends BaseRepository
     async update(notificationSetting: NotificationSetting, data: Partial<NotificationSetting>): Promise<boolean> {
         notificationSetting.sendEmail = data.sendEmail || notificationSetting.sendEmail;
         notificationSetting.sendSms = data.sendSms || notificationSetting.sendSms;
-        notificationSetting.triggerTime = data.triggerTime || notificationSetting.triggerTime;
-        notificationSetting.repeatTime = data.repeatTime || notificationSetting.repeatTime;
         notificationSetting.maxRepeat = data.maxRepeat || notificationSetting.maxRepeat;
 
         await this.repository.save(notificationSetting);
