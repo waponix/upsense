@@ -61,15 +61,15 @@ $(() => {
             } );
         }
         options.language = {
-            emptyTable: '<a href="/company/new" class="btn btn-light btn-icon-split btn-sm btn-add-company">\n' +
+            sZeroRecords: 'No records matched the your search',
+            sEmptyTable: '<a href="/company/new" class="btn btn-light btn-icon-split btn-sm btn-add-company">\n' +
             '                        <span class="icon text-white-50">\n' +
             '                            <i class="fas fa-plus"></i>\n' +
             '                        </span>\n' +
             '                        <span class="text">Please add a Company</span>\n' +
             '         </a>',
-                infoEmpty: 'No entries to show'
+            sInfoEmpty: 'No entries to show'
         };
-        options.dom = '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>';
         options.columnDefs = [
             {
                 targets: 0,
@@ -84,11 +84,11 @@ $(() => {
         ];
         options.order= [[1, 'asc']];
         options.aoColumns = [
-            {mData: null, defaultContent: `<div class="form-check">
+            {mData: null, sDefaultContent: `<div class="form-check">
                                                     <input class="form-check-input position-static select-item" type="checkbox">
                                                 </div>`},
             {mData: 'name'},
-            {mData: null, defaultContent: `<a data-toggle="tooltip" data-placement="top" title="View details" href="#" class="btn btn-view-company btn-info btn-circle btn-sm">
+            {mData: null, sDefaultContent: `<a data-toggle="tooltip" data-placement="top" title="View details" href="#" class="btn btn-view-company btn-info btn-circle btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                     <a data-toggle="tooltip" data-placement="top" title="Edit details" href="#" class="btn btn-edit-company btn-primary btn-circle btn-sm">

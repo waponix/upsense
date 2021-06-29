@@ -35,8 +35,8 @@ export default class AdminServices
         }
 
         await this.adminRepository.init();
-        let result: any[] = await this.adminRepository.getList(query);
-        result = result.map((record: Admin) => record.serialize());
+        let result: any = await this.adminRepository.getList(query);
+        result.data = result.data.map((record: Admin) => record.serialize());
 
         apiResponse.result = result;
 

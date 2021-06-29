@@ -5,7 +5,8 @@ Chart.defaults.global.defaultFontColor = '#858796';
 let dataTableGlobalOptions = {
     bLengthChange: false,
     bServerSide: true,
-    iDisplayLength: 25
+    iDisplayLength: 25,
+    dom: '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>'
 }
 
 $(() => {

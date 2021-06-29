@@ -11,16 +11,7 @@ export const PrepareQuery = (query: any) => {
 
 export const GetTableSorting = (request: Request) => {
     const tableInfo = request.body;
-    const colCount = parseInt(tableInfo.iColumns);
-    let sort: any = {};
+    const sortColumn = tableInfo[`mDataProp_${tableInfo.iSortCol_0}`];
 
-    for (let index = 0; index < colCount; index++) {
-        // check if column is sortable
-        if (tableInfo[`bSortable_${index}`] === 'true') {
-            // add it to sort array
-            sort[tableInfo[`mDataProp_${index}`]] = tableInfo[`sSortDir_${index - 1}`].toString().toUpperCase();
-        }
-    }
-
-    return sort;
+    return {[sortColumn]: tableInfo.sSortDir_0.toString().toUpperCase()};
 }

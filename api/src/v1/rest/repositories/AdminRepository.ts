@@ -18,7 +18,7 @@ export class AdminRepository extends BaseRepository
      * Get admin list
      * @param options
      */
-    async getList (options: QueryOptions = {}): Promise<Admin[]> {
+    async getList (options: QueryOptions = {}): Promise<any> {
         let parameters: any = {
             role: UserRole.admin,
         };
@@ -41,12 +41,10 @@ export class AdminRepository extends BaseRepository
                 'a.image',
                 'a.createdAt',
                 'a.updatedAt'
-            ])
-            .offset(offset)
-            .limit(paginationConfig.limit);
+            ]);
 
         // create filters if provided
-        if (options.filters !== undefined) {
+        if (!!options.filters) {
             for (const [field, value] of Object.entries(options.filters)) {
                 whereStatements.push(`a.${field} = :${field}`);
                 parameters[field] = value;
@@ -54,14 +52,14 @@ export class AdminRepository extends BaseRepository
         }
 
         // add sort and
-        if (options.sort !== undefined) {
+        if (!!options.sort) {
             for (const [field, value] of Object.entries(options.sort)) {
                 query.addOrderBy(`a.${field}`, value)
             }
         }
 
         // create search statement if find is provided
-        if (options.find !== undefined) {
+        if (!!options.find) {
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
 
@@ -72,28 +70,23 @@ export class AdminRepository extends BaseRepository
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
         }
 
-        /*do {
-            if (options.relations === undefined) {
-                break;
-            }
-
-            if (options.relations.indexOf('company') > -1) {
-                query
-                    .leftJoinAndSelect('a.company', 'c');
-            }
-
-            if (options.relations.indexOf('zone') > -1) {
-                query.leftJoinAndSelect('a.zones', 'z');
-            }
-
-            break;
-        } while (true);*/
-
         query
             .where(whereStatements.join(' AND '))
             .setParameters(parameters);
 
-        return await query.getMany();
+        const totalCount: number = await this.getCount(query);
+
+        query
+            .offset(offset)
+            .limit(paginationConfig.limit);
+
+        const data = await query.getManyAndCount();
+
+        return {
+            totalCount: totalCount,
+            count: data[1],
+            data: data[0]
+        };
     }
 
     /**
@@ -156,6 +149,13 @@ export class AdminRepository extends BaseRepository
     async delete (admin: Admin): Promise<boolean> {
         await this.repository.remove(admin);
         return true;
+    }
+
+    private async getCount(query: any): Promise<number>
+    {
+        let queryClone = Object.create(query);
+
+        return await queryClone.getCount();
     }
 }
 

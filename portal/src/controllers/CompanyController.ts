@@ -16,14 +16,7 @@ class CompanyController
 
     public async indexAction(request: Request, response: Response)
     {
-        console.log(request.body);
         const query = PrepareQuery({
-            find: request.body.sSearch,
-            page: (parseInt(request.body.iDisplayStart) / parseInt(request.body.iDisplayLength)) + 1,
-            sort: GetTableSorting(request)
-        });
-
-        console.log({
             find: request.body.sSearch,
             page: (parseInt(request.body.iDisplayStart) / parseInt(request.body.iDisplayLength)) + 1,
             sort: GetTableSorting(request)
