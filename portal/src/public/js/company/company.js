@@ -1,51 +1,7 @@
 $(() => {
-    const companyTable = $('#company-list-table').DataTable({
-        bLengthChange: false,
-        language: {
-            emptyTable: '<a href="/company/new" class="btn btn-light btn-icon-split btn-sm btn-add-company">\n' +
-                '                        <span class="icon text-white-50">\n' +
-                '                            <i class="fas fa-plus"></i>\n' +
-                '                        </span>\n' +
-                '                        <span class="text">Please add a Company</span>\n' +
-                '         </a>',
-            infoEmpty: 'No entries to show'
-        },
-        dom: '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>',
-        columnDefs: [
-            {
-                targets: 0,
-                sortable: false,
-                className: "text-center"
-            },
-            {
-                targets: 2,
-                sortable: false,
-                className: "text-center"
-            }
-        ],
-        order: [[1, 'asc']],
-        columns: [
-            {data: null, defaultContent: `<div class="form-check">
-                                                    <input class="form-check-input position-static select-item" type="checkbox">
-                                                </div>`},
-            {data: 'name'},
-            {data: null, defaultContent: `<a data-toggle="tooltip" data-placement="top" title="View details" href="#" class="btn btn-view-company btn-info btn-circle btn-sm">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a data-toggle="tooltip" data-placement="top" title="Edit details" href="#" class="btn btn-edit-company btn-primary btn-circle btn-sm">
-                                                        <i class="fas fa-pen"></i>
-                                                    </a>
-                                                    <a data-toggle="tooltip" data-placement="top" title="Delete" href="#" class="btn btn-delete-company btn-outline-dark btn-circle btn-sm">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>`}
-        ],
-        fnCreatedRow: (row, data) => {
-            $(row).find('input.select-item').data({id: data.id});
-            $(row).find('a.btn-view-company').attr({href: `/company/${data.id}/view`});
-            $(row).find('a.btn-edit-company').attr({href: `/company/${data.id}/edit`});
-            $(row).find('a.btn-delete-company').attr({href: `/company/${data.id}/delete`});
-        }
-    });
+
+
+    const companyTable = $('#company-list-table').DataTable(getTableOptions());
 
     $('div.datatable-extra')
         .addClass('float-left')
@@ -91,19 +47,64 @@ $(() => {
         $('input.select-item').trigger('change');
     });
 
-    function updateCompanyList()
-    {
-        $.ajax({
-            url: '/company/list',
-            method: 'post',
-           success: (response) => {
-                companyTable
-                    .clear()
-                    .rows.add(response.data)
-                    .draw(false);
-           }
-        });
-    }
+    function getTableOptions() {
+        let options = dataTableGlobalOptions;
 
-    updateCompanyList();
+        options.sAjaxSource = '/company/list';
+        options.fnServerData = function ( sSource, aoData, fnCallback, oSettings ) {
+            oSettings.jqXHR = $.ajax( {
+                dataType: 'json',
+                type: 'post',
+                url: sSource,
+                data: aoData,
+                success: fnCallback
+            } );
+        }
+        options.language = {
+            emptyTable: '<a href="/company/new" class="btn btn-light btn-icon-split btn-sm btn-add-company">\n' +
+            '                        <span class="icon text-white-50">\n' +
+            '                            <i class="fas fa-plus"></i>\n' +
+            '                        </span>\n' +
+            '                        <span class="text">Please add a Company</span>\n' +
+            '         </a>',
+                infoEmpty: 'No entries to show'
+        };
+        options.dom = '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>';
+        options.columnDefs = [
+            {
+                targets: 0,
+                sortable: false,
+                className: "text-center"
+            },
+            {
+                targets: 2,
+                sortable: false,
+                className: "text-center"
+            }
+        ];
+        options.order= [[1, 'asc']];
+        options.aoColumns = [
+            {mData: null, defaultContent: `<div class="form-check">
+                                                    <input class="form-check-input position-static select-item" type="checkbox">
+                                                </div>`},
+            {mData: 'name'},
+            {mData: null, defaultContent: `<a data-toggle="tooltip" data-placement="top" title="View details" href="#" class="btn btn-view-company btn-info btn-circle btn-sm">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a data-toggle="tooltip" data-placement="top" title="Edit details" href="#" class="btn btn-edit-company btn-primary btn-circle btn-sm">
+                                                        <i class="fas fa-pen"></i>
+                                                    </a>
+                                                    <a data-toggle="tooltip" data-placement="top" title="Delete" href="#" class="btn btn-delete-company btn-outline-dark btn-circle btn-sm">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>`}
+        ];
+        options.fnCreatedRow = (row, data) => {
+            $(row).find('input.select-item').data({id: data.id});
+            $(row).find('a.btn-view-company').attr({href: `/company/${data.id}/view`});
+            $(row).find('a.btn-edit-company').attr({href: `/company/${data.id}/edit`});
+            $(row).find('a.btn-delete-company').attr({href: `/company/${data.id}/delete`});
+        };
+
+        return options;
+    }
 });

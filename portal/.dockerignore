@@ -1,6 +1,5 @@
 ./Dockerfile
 ./DockerfileDev
 ./Readme.md
-./src
 ./node_modules
 ./tsconfig.json

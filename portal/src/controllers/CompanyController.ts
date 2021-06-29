@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {Api} from "../components/api";
 import moment from "moment";
 import CompanyServices from "../services/CompanyServices";
+import {GetTableSorting, PrepareQuery} from "../components/helpers";
 
 class CompanyController
 {
@@ -15,15 +16,32 @@ class CompanyController
 
     public async indexAction(request: Request, response: Response)
     {
-        try {
-            const apiResponse = await Api(request, response).get('/companies');
+        console.log(request.body);
+        const query = PrepareQuery({
+            find: request.body.sSearch,
+            page: (parseInt(request.body.iDisplayStart) / parseInt(request.body.iDisplayLength)) + 1,
+            sort: GetTableSorting(request)
+        });
 
-            return response.json({
-                status: 'success',
-                data: apiResponse.data.result
-            });
+        console.log({
+            find: request.body.sSearch,
+            page: (parseInt(request.body.iDisplayStart) / parseInt(request.body.iDisplayLength)) + 1,
+            sort: GetTableSorting(request)
+        });
+
+        try {
+            const apiResponse: any = await Api(request, response).get(`/companies?${query}`);
+
+            const dataTableResponse = {
+                iTotalRecords: apiResponse.data.result.totalCount,
+                iTotalDisplayRecords: apiResponse.data.result.count,
+                sEcho: request.body.sEcho,
+                aaData: apiResponse.data.result.data
+            }
+
+            return response.json(dataTableResponse);
         } catch (error) {
-            return response.json({status: 'error'});
+            return response.json({});
         }
     }
 

@@ -15,7 +15,7 @@ export class CompanyRepository extends BaseRepository
      *
      * @param options
      */
-    async getList(options: QueryOptions = {}): Promise<Company[]> {
+    async getList(options: QueryOptions = {}): Promise<any> {
         let parameters: any = {};
         let whereStatements: any = [];
 
@@ -28,12 +28,10 @@ export class CompanyRepository extends BaseRepository
                 'c.name',
                 'c.updatedAt',
                 'c.createdAt'
-            ])
-            .offset(offset)
-            .limit(paginationConfig.limit);
+            ]);
 
         // create filters if provided
-        if (options.filters !== undefined) {
+        if (!!options.filters) {
             for (const [field, value] of Object.entries(options.filters)) {
                 whereStatements.push(`c.${field} = :${field}`);
                 parameters[field] = value;
@@ -41,14 +39,14 @@ export class CompanyRepository extends BaseRepository
         }
 
         // add sort and
-        if (options.sort !== undefined) {
+        if (!!options.sort) {
             for (const [field, value] of Object.entries(options.sort)) {
                 query.addOrderBy(`c.${field}`, value)
             }
         }
 
         // create search statement if find is provided
-        if (options.find !== undefined) {
+        if (!!options.find) {
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
 
@@ -83,7 +81,19 @@ export class CompanyRepository extends BaseRepository
                 .setParameters(parameters);
         }
 
-        return await query.getMany();
+        const count: number = await this.getCount(query);
+
+        query
+            .offset(offset)
+            .limit(paginationConfig.limit);
+
+        const data = await query.getManyAndCount();
+
+        return {
+            totalCount: count,
+            count: data[1],
+            data: data[0]
+        };
     }
 
     /**
@@ -207,5 +217,12 @@ export class CompanyRepository extends BaseRepository
         await this.em.getRepository(User).remove(company.users);
         await this.repository.delete(company.id);
         return true;
+    }
+
+    private async getCount(query: any): Promise<number>
+    {
+        let queryClone = Object.create(query);
+
+        return await queryClone.getCount();
     }
 }

@@ -77,20 +77,21 @@ export class NotificationLogRepository extends BaseRepository
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
         }
 
-        const count = await this.getCount(query);
-
-        query
-            .offset(offset)
-            .limit(paginationConfig.limit);
-
         if (whereStatements.length > 0) {
             query
                 .where(whereStatements.join(' AND '))
                 .setParameters(parameters);
         }
 
+        query
+            .offset(offset)
+            .limit(paginationConfig.limit);
+
+        const count = await this.getCount(query);
+
         return {
-            count: count,
+            totalCount: count,
+            count: paginationConfig.limit,
             data: await query.getRawMany()
         };
     }

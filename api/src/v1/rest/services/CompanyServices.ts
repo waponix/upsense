@@ -44,8 +44,8 @@ export default class companyServices
 
         await this.companyRepository.init();
 
-        let result: any[] = await this.companyRepository.getList(query);
-        result = result.map((record: Company) => record.serialize());
+        let result: any = await this.companyRepository.getList(query);
+        result.data = result.data.map((record: Company) => record.serialize());
 
         apiResponse.result = result;
 
