@@ -16,11 +16,16 @@ class CompanyController
 
     public async indexAction(request: Request, response: Response)
     {
-        const query = PrepareQuery({
-            find: request.body.sSearch,
-            page: (parseInt(request.body.iDisplayStart) / parseInt(request.body.iDisplayLength)) + 1,
-            sort: GetTableSorting(request)
-        });
+        let query: any = '';
+        if (request.body.data && request.body.data === 'raw') {
+
+        } else {
+            query = PrepareQuery({
+                find: request.body.sSearch,
+                page: (parseInt(request.body.iDisplayStart) / parseInt(request.body.iDisplayLength)) + 1,
+                sort: GetTableSorting(request)
+            });
+        }
 
         try {
             const apiResponse: any = await Api(request, response).get(`/companies?${query}`);

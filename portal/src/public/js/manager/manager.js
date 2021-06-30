@@ -1,52 +1,5 @@
 $(() => {
-    const managerTable = $('#manager-list-table').DataTable({
-        bLengthChange: false,
-        language: {
-            emptyTable: '<a href="/accounts/manager/new" class="btn btn-light btn-icon-split btn-sm btn-add-manager">\n' +
-                '                        <span class="icon text-white-50">\n' +
-                '                            <i class="fas fa-plus"></i>\n' +
-                '                        </span>\n' +
-                '                        <span class="text">Please add a Manager</span>\n' +
-                '         </a>',
-            infoEmpty: 'No entries to show'
-        },
-        dom: '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>',
-        columnDefs: [
-            {
-                targets: 0,
-                sortable: false,
-                className: "text-center"
-            },
-            {
-                targets: 7,
-                sortable: false,
-                className: "text-center"
-            }
-        ],
-        order: [[1, 'asc']],
-        columns: [
-            {data: null, defaultContent: '<div class="form-check">\n' +
-                    '                                <input class="form-check-input position-static select-item" type="checkbox">\n' +
-                    '                            </div>'},
-            {data: 'firstName'},
-            {data: 'lastName'},
-            {data: 'username'},
-            {data: 'email'},
-            {data: 'mobile', defaultContent: 'N/A'},
-            {data: 'company.name'},
-            {data: null, defaultContent: '<a href="#" class="btn btn-edit-manager btn-primary btn-circle btn-sm">\n' +
-                    '                                    <i class="fas fa-pen"></i>\n' +
-                    '                                </a>\n' +
-                    '                                <a href="#" class="btn btn-delete-manager btn-outline-dark btn-circle btn-sm">\n' +
-                    '                                    <i class="fas fa-trash"></i>\n' +
-                    '                                </a>'}
-        ],
-        fnCreatedRow: (row, data) => {
-            $(row).find('input.select-item').data({id: data.id});
-            $(row).find('a.btn-edit-manager').attr({href: `/accounts/manager/${data.id}/edit`});
-            $(row).find('a.btn-delete-manager').attr({href: `/accounts/manager/${data.id}/delete`});
-        }
-    });
+    const managerTable = $('#manager-list-table').DataTable(getTableOptions());
 
     $('div.datatable-extra')
         .addClass('float-left')
@@ -92,21 +45,65 @@ $(() => {
         $('input.select-item').trigger('change');
     });
 
-    function updateManagerList()
-    {
-        $.ajax({
-            url: '/accounts/manager/list',
-            data: {query: {relations: ['company']}},
-            method: 'post',
-            success: (response) => {
-                console.log(response);
-                managerTable
-                    .clear()
-                    .rows.add(response.data)
-                    .draw(false);
-            }
-        });
-    }
+    function getTableOptions() {
+        let options = dataTableGlobalOptions;
 
-    updateManagerList();
+        options.sAjaxSource = '/accounts/admin/list';
+        options.fnServerData = function ( sSource, aoData, fnCallback, oSettings ) {
+            oSettings.jqXHR = $.ajax( {
+                dataType: 'json',
+                type: 'post',
+                url: sSource,
+                data: aoData,
+                success: fnCallback
+            } );
+        }
+        options.language = {
+            zeroRecords: 'No record matched your search',
+            emptyTable: '<a href="/accounts/manager/new" class="btn btn-light btn-icon-split btn-sm btn-add-manager">\n' +
+                '                        <span class="icon text-white-50">\n' +
+                '                            <i class="fas fa-plus"></i>\n' +
+                '                        </span>\n' +
+                '                        <span class="text">Please add a Manager</span>\n' +
+                '         </a>',
+            infoEmpty: 'No entries to show'
+        };
+        options.columnDefs = [
+            {
+                targets: 0,
+                sortable: false,
+                className: "text-center"
+            },
+            {
+                targets: 7,
+                sortable: false,
+                className: "text-center"
+            }
+        ];
+        options.order= [[1, 'asc']];
+        options.aoColumns = [
+            {mData: null, sDefaultContent: '<div class="form-check">\n' +
+                    '                                <input class="form-check-input position-static select-item" type="checkbox">\n' +
+                    '                            </div>'},
+            {mData: 'firstName'},
+            {mData: 'lastName'},
+            {mData: 'username'},
+            {mData: 'email'},
+            {mData: 'mobile', sDefaultContent: 'N/A'},
+            {mData: 'company.name'},
+            {mData: null, sDefaultContent: '<a href="#" class="btn btn-edit-manager btn-primary btn-circle btn-sm">\n' +
+                    '                                    <i class="fas fa-pen"></i>\n' +
+                    '                                </a>\n' +
+                    '                                <a href="#" class="btn btn-delete-manager btn-outline-dark btn-circle btn-sm">\n' +
+                    '                                    <i class="fas fa-trash"></i>\n' +
+                    '                                </a>'}
+        ];
+        options.fnCreatedRow = (row, data) => {
+            $(row).find('input.select-item').data({id: data.id});
+            $(row).find('a.btn-edit-manager').attr({href: `/accounts/manager/${data.id}/edit`});
+            $(row).find('a.btn-delete-manager').attr({href: `/accounts/manager/${data.id}/delete`});
+        };
+
+        return options;
+    }
 });

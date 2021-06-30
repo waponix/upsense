@@ -43,8 +43,8 @@ export default class ManagerServices
         }
 
         await this.managerRepository.init();
-        let result: any[] = await this.managerRepository.getList(query);
-        result = result.map((record: Manager) => record.serialize());
+        let result: any = await this.managerRepository.getList(query);
+        result.data = result.data.map((record: Manager) => record.serialize());
 
         apiResponse.result = result;
 

@@ -19,7 +19,7 @@ export class ManagerRepository extends BaseRepository
      * Get manager list
      * @param options
      */
-    async getList (options: QueryOptions = {}): Promise<Manager[]> {
+    async getList (options: QueryOptions = {}): Promise<any> {
         let parameters: any = {
             role: UserRole.manager
         };
@@ -41,12 +41,10 @@ export class ManagerRepository extends BaseRepository
                 'm.image',
                 'm.createdAt',
                 'm.updatedAt'
-            ])
-            .offset(offset)
-            .limit(paginationConfig.limit);
+            ]);
 
         // create filters if provided
-        if (options.filters !== undefined) {
+        if (!!options.filters) {
             for (const [field, value] of Object.entries(options.filters)) {
                 whereStatements.push(`m.${field} = :${field}`);
                 parameters[field] = value;
@@ -54,14 +52,14 @@ export class ManagerRepository extends BaseRepository
         }
 
         // add sort and
-        if (options.sort !== undefined) {
+        if (!!options.sort) {
             for (const [field, value] of Object.entries(options.sort)) {
                 query.addOrderBy(`m.${field}`, value)
             }
         }
 
         // create search statement if find is provided
-        if (options.find !== undefined) {
+        if (!!options.find) {
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
 
@@ -95,7 +93,19 @@ export class ManagerRepository extends BaseRepository
             .where(whereStatements.join(' AND '))
             .setParameters(parameters);
 
-        return await query.getMany();
+        const totalCount = await this.getCount(query);
+
+        query
+            .offset(offset)
+            .limit(paginationConfig.limit)
+
+        const data =  await query.getManyAndCount();
+
+        return {
+            totalCount: totalCount,
+            count: data[1],
+            data: data[0]
+        }
     }
 
     /**
@@ -204,5 +214,11 @@ export class ManagerRepository extends BaseRepository
         await this.repository.remove(manager);
         return true;
     }
-}
 
+    private async getCount(query: any): Promise<number>
+    {
+        let queryClone = Object.create(query);
+
+        return await queryClone.getCount();
+    }
+}

@@ -23,8 +23,6 @@ class AdminController
         try {
             const apiResponse = await Api(request, response).get(`/admins?${query}`);
 
-            console.log(apiResponse.data);
-
             const dataTableResponse = {
                 iTotalRecords: apiResponse.data.result.totalCount,
                 iTotalDisplayRecords: apiResponse.data.result.count,
