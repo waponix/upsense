@@ -80,12 +80,12 @@ export class AdminRepository extends BaseRepository
             .offset(offset)
             .limit(paginationConfig.limit);
 
-        const data = await query.getManyAndCount();
+        const data = await query.getMany();
 
         return {
             totalCount: totalCount,
-            count: data[1],
-            data: data[0]
+            count: data.length,
+            data: data
         };
     }
 

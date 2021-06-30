@@ -23,7 +23,7 @@ export class UserRepository extends BaseRepository
      * @param options
      * @param user
      */
-    async getList(options: QueryOptions = {}, apiUser: any): Promise<User[]> {
+    async getList(options: QueryOptions = {}, apiUser: any): Promise<any> {
         let parameters: any = {
             role: UserRole.user
         };
@@ -45,9 +45,7 @@ export class UserRepository extends BaseRepository
                 'u.image',
                 'u.createdAt',
                 'u.updatedAt'
-            ])
-            .offset(offset)
-            .limit(paginationConfig.limit);
+            ]);
 
         if (apiUser.role && apiUser.role === UserRole.manager) {
             const companyRepository: Repository<Company> = this.em.getRepository(Company);
@@ -97,13 +95,11 @@ export class UserRepository extends BaseRepository
             }
 
             if (options.relations.indexOf('company') > -1) {
-                mainQuery
-                    .leftJoinAndSelect('u.company', 'c');
+                mainQuery.leftJoinAndSelect('u.company', 'c');
             }
 
             if (options.relations.indexOf('zones') > -1) {
                 mainQuery.leftJoinAndSelect('u.zones', 'z');
-                whereStatements.push('z.name != :defaultZone');
                 parameters.defaultZone = miscConfig.defaultZone;
             }
 
@@ -114,7 +110,19 @@ export class UserRepository extends BaseRepository
             .where(whereStatements.join(' AND '))
             .setParameters(parameters);
 
-        return await mainQuery.getMany();
+        const totalCount: number = await this.getCount(mainQuery);
+
+        mainQuery
+            .offset(offset)
+            .limit(paginationConfig.limit);
+
+        const data = await mainQuery.getMany();
+
+        return {
+            totalCount: totalCount,
+            count: data.length,
+            data: data
+        }
     }
 
     /**
@@ -254,6 +262,13 @@ export class UserRepository extends BaseRepository
     async delete(user: User): Promise<boolean> {
         await this.repository.remove(user);
         return true;
+    }
+
+    private async getCount(query: any): Promise<number>
+    {
+        let queryClone = Object.create(query);
+
+        return await queryClone.getCount();
     }
 }
 

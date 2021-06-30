@@ -93,8 +93,9 @@ $(() => {
         $.ajax({
             url: '/company/list',
             method: 'post',
+            data: {data: 'raw'},
             success: response => {
-                const companies = response.data;
+                const companies = response.aaData;
 
                 for (const company of companies) {
                     const option = $('<option>').text(company.name).val(company.id);

@@ -96,7 +96,6 @@ $(() => {
             method: 'post',
             data: {data: 'raw'},
             success: response => {
-                console.log(response);
                 const companies = response.aaData;
 
                 for (const company of companies) {

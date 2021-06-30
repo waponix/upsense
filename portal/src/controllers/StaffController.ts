@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {Api} from "../components/api";
-import {GetQuery} from "../components/helpers";
+import {GetQuery, GetTableSorting, PrepareQuery} from "../components/helpers";
 
 class StaffController
 {
@@ -14,17 +14,28 @@ class StaffController
 
     public async indexAction(request: Request, response: Response)
     {
+        const query = PrepareQuery({
+            relations: ['company', 'zones'],
+            find: request.body.sSearch,
+            page: (parseInt(request.body.iDisplayStart) / parseInt(request.body.iDisplayLength)) + 1,
+            sort: GetTableSorting(request),
+        });
+
         try {
-            let endpoint = `/users?${GetQuery(request)}`;
+            let endpoint = `/users?${query}`;
 
             const apiResponse = await Api(request, response).get(endpoint);
 
-            return response.json({
-                status: 'success',
-                data: apiResponse.data.result
-            });
+            const dataTableResponse = {
+                iTotalRecords: apiResponse.data.result.totalCount,
+                iTotalDisplayRecords: apiResponse.data.result.count,
+                sEcho: request.body.sEcho,
+                aaData: apiResponse.data.result.data
+            }
+
+            return response.json(dataTableResponse);
         } catch (error) {
-            return response.json({status: 'error'});
+            return response.json({});
         }
     }
 

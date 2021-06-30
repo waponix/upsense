@@ -48,7 +48,7 @@ $(() => {
     function getTableOptions() {
         let options = dataTableGlobalOptions;
 
-        options.sAjaxSource = '/accounts/admin/list';
+        options.sAjaxSource = '/accounts/manager/list';
         options.fnServerData = function ( sSource, aoData, fnCallback, oSettings ) {
             oSettings.jqXHR = $.ajax( {
                 dataType: 'json',

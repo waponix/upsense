@@ -82,7 +82,6 @@ export class ManagerRepository extends BaseRepository
 
             if (options.relations.indexOf('zones') > -1) {
                 query.leftJoinAndSelect('m.zones', 'z');
-                whereStatements.push('z.name != :defaultZone');
                 parameters.defaultZone = miscConfig.defaultZone;
             }
 
@@ -99,12 +98,12 @@ export class ManagerRepository extends BaseRepository
             .offset(offset)
             .limit(paginationConfig.limit)
 
-        const data =  await query.getManyAndCount();
+        const data =  await query.getMany();
 
         return {
             totalCount: totalCount,
-            count: data[1],
-            data: data[0]
+            count: data.length,
+            data: data
         }
     }
 
@@ -188,8 +187,6 @@ export class ManagerRepository extends BaseRepository
         const relationQueryBuilder = this.repository
             .createQueryBuilder()
             .relation(Manager, 'zones');
-
-        console.log(data);
 
         //@ts-ignore
         if (data.removeZones) {

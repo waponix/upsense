@@ -98,8 +98,6 @@ export class HubRepository extends BaseRepository
             await relationQueryBuilder.of(hub).set(data.zone);
         }
 
-        console.log(hub);
-
         return true;
     }
 

@@ -43,8 +43,8 @@ export default class UserServices
         }
 
         await this.userRepository.init();
-        let result: any[] = await this.userRepository.getList(query, this.user);
-        result = result.map((record: User) => record.serialize());
+        let result: any = await this.userRepository.getList(query, this.user);
+        result.data = result.data.map((record: User) => record.serialize());
 
         apiResponse.result = result;
 
