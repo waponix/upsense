@@ -63,7 +63,7 @@ export class UserRepository extends BaseRepository
         }
 
         // create filters if provided
-        if (options.filters !== undefined) {
+        if (!!options.filters) {
             for (const [field, value] of Object.entries(options.filters)) {
                 whereStatements.push(`u.${field} = :${field}`);
                 parameters[field] = value;
@@ -71,14 +71,14 @@ export class UserRepository extends BaseRepository
         }
 
         // add sort and
-        if (options.sort !== undefined) {
+        if (!!options.sort) {
             for (const [field, value] of Object.entries(options.sort)) {
                 mainQuery.addOrderBy(`u.${field}`, value)
             }
         }
 
         // create search statement if find is provided
-        if (options.find !== undefined) {
+        if (!!options.find) {
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
 

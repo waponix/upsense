@@ -9,7 +9,7 @@ export class HubRepository extends BaseRepository
         'serial',
         'lastSeen',
     ];
-    async getList(options: QueryOptions = {}): Promise<Hub[]> {
+    async getList(options: QueryOptions = {}): Promise<any> {
         let parameters: any = {};
         let whereStatements: any = [];
 
@@ -25,12 +25,10 @@ export class HubRepository extends BaseRepository
                 'h.isConnected',
                 'h.createdAt',
                 'h.updatedAt'
-            ])
-            .offset(offset)
-            .limit(paginationConfig.limit);
+            ]);
 
         // create filters if provided
-        if (options.filters !== undefined) {
+        if (!!options.filters) {
             for (const [field, value] of Object.entries(options.filters)) {
                 whereStatements.push(`h.${field} = :${field}`);
                 parameters[field] = value;
@@ -38,14 +36,14 @@ export class HubRepository extends BaseRepository
         }
 
         // add sort and
-        if (options.sort !== undefined) {
+        if (!!options.sort) {
             for (const [field, value] of Object.entries(options.sort)) {
                 query.addOrderBy(`h.${field}`, value)
             }
         }
 
         // create search statement if find is provided
-        if (options.find !== undefined) {
+        if (!!options.find) {
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
 
@@ -80,7 +78,19 @@ export class HubRepository extends BaseRepository
                 .setParameters(parameters);
         }
 
-        return await query.getMany();
+        const totalCount = await this.getCount(query);
+
+        query
+            .offset(offset)
+            .limit(paginationConfig.limit);
+
+        const data = await query.getMany();
+
+        return {
+            totalCount: totalCount,
+            count: data.length,
+            data: data
+        }
     }
 
     async update(hub: Hub, data: Partial<Hub>): Promise<boolean> {
@@ -146,5 +156,12 @@ export class HubRepository extends BaseRepository
             .andWhere('h.id = :hubId')
             .setParameter('hubId', hub.id)
             .getRawMany();
+    }
+
+    private async getCount(query: any): Promise<number>
+    {
+        let queryClone = Object.create(query);
+
+        return await queryClone.getCount();
     }
 }

@@ -14,7 +14,7 @@ export class SensorRepository extends BaseRepository
         'lastSeen',
     ];
 
-    async getList(options: QueryOptions = {}, user: User | null = null): Promise<Sensor[]>
+    async getList(options: QueryOptions = {}, user: User | null = null): Promise<any>
     {
         let parameters: any = {};
         let whereStatements: any = [];
@@ -37,9 +37,7 @@ export class SensorRepository extends BaseRepository
                 's.createdAt',
                 's.updatedAt'
             ])
-            .leftJoin('s.hub', 'h')
-            .offset(offset)
-            .limit(paginationConfig.limit);
+            .leftJoin('s.hub', 'h');
 
         if (user && user.role !== UserRole.admin) {
             query
@@ -51,7 +49,7 @@ export class SensorRepository extends BaseRepository
         }
 
         // create filters if provided
-        if (options.filters !== undefined) {
+        if (!!options.filters) {
             for (const [field, value] of Object.entries(options.filters)) {
                 if (field === 'hub') {
                     switch (value) {
@@ -68,14 +66,14 @@ export class SensorRepository extends BaseRepository
         }
 
         // add sort and
-        if (options.sort !== undefined) {
+        if (!!options.sort) {
             for (const [field, value] of Object.entries(options.sort)) {
                 query.addOrderBy(`s.${field}`, value)
             }
         }
 
         // create search statement if find is provided
-        if (options.find !== undefined) {
+        if (!!options.find) {
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
 
@@ -104,7 +102,19 @@ export class SensorRepository extends BaseRepository
                 .setParameters(parameters);
         }
 
-        return await query.getMany();
+        const totalCount = await this.getCount(query);
+
+        query
+            .offset(offset)
+            .limit(paginationConfig.limit)
+
+        const data = await query.getMany();
+
+        return {
+            totalCount: totalCount,
+            count: data.length,
+            data: data
+        }
     }
 
     async update(sensor: Sensor, data: Partial<Sensor>): Promise<boolean>
@@ -196,5 +206,12 @@ export class SensorRepository extends BaseRepository
         }
 
         return await query.getCount();
+    }
+
+    private async getCount(query: any): Promise<number>
+    {
+        let queryClone = Object.create(query);
+
+        return await queryClone.getCount();
     }
 }

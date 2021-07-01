@@ -1,52 +1,5 @@
 $(() => {
-    const hubTable = $('#hub-list-table').DataTable({
-        bLengthChange: false,
-        language: {
-            emptyTable: '<a href="/devices/hub/new" class="btn btn-light btn-icon-split btn-sm btn-add-hub">\n' +
-                '                        <span class="icon text-white-50">\n' +
-                '                            <i class="fas fa-plus"></i>\n' +
-                '                        </span>\n' +
-                '                        <span class="text">Please add a Hub</span>\n' +
-                '         </a>',
-            infoEmpty: 'No entries to show'
-        },
-        dom: '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>',
-        columnDefs: [
-            {
-                targets: 0,
-                sortable: false,
-                className: "text-center"
-            },
-            {
-                targets: 7,
-                sortable: false,
-                className: "text-center"
-            }
-        ],
-        order: [[1, 'asc']],
-        columns: [
-            {data: null, defaultContent: '<div class="form-check">\n' +
-                    '                                <input class="form-check-input position-static select-item" type="checkbox">\n' +
-                    '                            </div>'},
-            {data: 'name', defaultContent: 'N/A'},
-            {data: 'deviceName', defaultContent: 'N/A'},
-            {data: 'serial'},
-            {data: 'zone.name', defaultContent: 'Unassigned', createdCell: (td, cellData) => { $(td).text(cellData === 'Default' ? 'Unassigned': cellData) }},
-            {data: 'isConnected', defaultContent: 'Offline', createdCell: (td, cellData) => { $(td).text(cellData ? 'Online': 'Offline') }},
-            {data: 'lastSeen', defaultContent: 'N/A', createdCell: (td, cellData) => { if (cellData) {$(td).text(moment(cellData * 1000).format('MMMM Do YYYY, h:mm:ss a')) }}},
-            {data: null, defaultContent: '<a href="#" class="btn btn-edit-hub btn-primary btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Configure">\n' +
-                    '                                    <i class="fas fa-cog"></i>\n' +
-                    '                                </a>\n' +
-                    '                                <a href="#" class="btn btn-delete-hub btn-outline-dark btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">\n' +
-                    '                                    <i class="fas fa-trash"></i>\n' +
-                    '                                </a>'}
-        ],
-        fnCreatedRow: (row, data) => {
-            $(row).find('input.select-item').data({id: data.id});
-            $(row).find('a.btn-edit-hub').attr({href: `/devices/hub/${data.id}/edit`});
-            $(row).find('a.btn-delete-hub').attr({href: `/devices/hub/${data.id}/delete`});
-        }
-    });
+    const hubTable = $('#hub-list-table').DataTable(getTableOptions());
 
     $('div.datatable-extra')
         .addClass('float-left')
@@ -92,21 +45,84 @@ $(() => {
         $('input.select-item').trigger('change');
     });
 
-    function updateHubList()
-    {
-        $.ajax({
-            url: '/devices/hub/list',
-            method: 'post',
-            data: {query: {relations: ['zone']}},
-            success: (response) => {
-                console.log(response);
-                hubTable
-                    .clear()
-                    .rows.add(response.data)
-                    .draw(false);
-            }
-        });
-    }
+    function getTableOptions() {
+        let options = dataTableGlobalOptions;
 
-    updateHubList();
+        options.sAjaxSource = '/devices/hub/list';
+        options.fnServerData = function (sSource, aoData, fnCallback, oSettings) {
+            oSettings.jqXHR = $.ajax({
+                dataType: 'json',
+                type: 'post',
+                url: sSource,
+                data: aoData,
+                success: fnCallback
+            });
+        }
+        options.language = {
+            sZeroRecords: 'No records matched the your search',
+            sEmptyTable: '<a href="/devices/hub/new" class="btn btn-light btn-icon-split btn-sm btn-add-hub">\n' +
+                '                        <span class="icon text-white-50">\n' +
+                '                            <i class="fas fa-plus"></i>\n' +
+                '                        </span>\n' +
+                '                        <span class="text">Please add a Hub</span>\n' +
+                '         </a>',
+            sInfoEmpty: 'No entries to show'
+        };
+        options.columnDefs = [
+            {
+                targets: 0,
+                sortable: false,
+                className: "text-center"
+            },
+            {
+                targets: 7,
+                sortable: false,
+                className: "text-center"
+            }
+        ];
+        options.order = [[1, 'asc']];
+        options.aoColumns = [
+            {
+                mData: null, sDefaultContent: '<div class="form-check">\n' +
+                    '                                <input class="form-check-input position-static select-item" type="checkbox">\n' +
+                    '                            </div>'
+            },
+            {mData: 'name', sDefaultContent: 'N/A'},
+            {mData: 'deviceName', sDefaultContent: 'N/A'},
+            {mData: 'serial'},
+            {
+                mData: 'zone.name', sDefaultContent: 'Unassigned', createdCell: (td, cellData) => {
+                    $(td).text(cellData === 'Default' ? 'Unassigned' : cellData)
+                }
+            },
+            {
+                mData: 'isConnected', sDefaultContent: 'Offline', createdCell: (td, cellData) => {
+                    $(td).text(cellData ? 'Online' : 'Offline')
+                }
+            },
+            {
+                mData: 'lastSeen', sDefaultContent: 'N/A', createdCell: (td, cellData) => {
+                    if (cellData) {
+                        $(td).text(moment(cellData * 1000).format('MMMM Do YYYY, h:mm:ss a'))
+                    }
+                }
+            },
+            {
+                mData: null,
+                sDefaultContent: '<a href="#" class="btn btn-edit-hub btn-primary btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Configure">\n' +
+                    '                                    <i class="fas fa-cog"></i>\n' +
+                    '                                </a>\n' +
+                    '                                <a href="#" class="btn btn-delete-hub btn-outline-dark btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">\n' +
+                    '                                    <i class="fas fa-trash"></i>\n' +
+                    '                                </a>'
+            }
+        ];
+        options.fnCreatedRow = (row, data) => {
+            $(row).find('input.select-item').data({id: data.id});
+            $(row).find('a.btn-edit-hub').attr({href: `/devices/hub/${data.id}/edit`});
+            $(row).find('a.btn-delete-hub').attr({href: `/devices/hub/${data.id}/delete`});
+        };
+
+        return options;
+    }
 });

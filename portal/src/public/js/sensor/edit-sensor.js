@@ -49,7 +49,7 @@ $(() => {
         $.ajax({
             url: '/devices/hub/list',
             method: 'post',
-            data: {query: {relations: ['zones']}},
+            data: {query: {relations: ['zones']}, data: 'raw'},
             success: response => {
                 console.log(response);
                 const hubs = response.data;

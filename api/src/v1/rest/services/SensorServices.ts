@@ -34,8 +34,8 @@ export default class SensorServices
 
         await this.sensorRepository.init();
 
-        let result: any[] = await this.sensorRepository.getList(query, this.user);
-        result = result.map((record: Sensor) => record.serialize());
+        let result: any = await this.sensorRepository.getList(query, this.user);
+        result.data = result.data.map((record: Sensor) => record.serialize());
 
         apiResponse.result = result;
 
