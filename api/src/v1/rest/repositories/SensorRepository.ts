@@ -5,7 +5,7 @@ import {Hub} from "../../shared/entities/Hub";
 import {User} from "../../shared/entities/User";
 import {UserRole} from "../../../components/types/UserRoleTypes";
 import {SensorStatus, SensorStatusType} from "../../../components/types/SensorStatus";
-
+import moment from 'moment';
 export class SensorRepository extends BaseRepository
 {
     private searchableFields: string[] = [
@@ -206,6 +206,17 @@ export class SensorRepository extends BaseRepository
         }
 
         return await query.getCount();
+    }
+
+    async getSensorsLastSeenLongerThan(duration: number)
+    {
+        const maxIdleTime = moment().unix() - duration;
+        const query = this
+            .createQueryBuilder('s')
+            .select('s.id')
+            .where('s.lastSeen <= :maxIdleTime', {maxIdleTime});
+
+        return await query.getMany();
     }
 
     private async getCount(query: any): Promise<number>

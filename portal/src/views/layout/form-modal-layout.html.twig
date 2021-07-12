@@ -1,0 +1,18 @@
+<form id="{{ formId }}">
+    <div class="modal-header">
+        {% block modalHeader %}
+        <h5 class="modal-title">{% if modalTitle is defined and modalTitle is not empty %}{{ modalTitle }}{% endif %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {% endblock %}
+    </div>
+    <div class="modal-body">
+        {% block modalBody%}
+        {% endblock %}
+    </div>
+    <div class="modal-footer">
+        {% block modalFooter %}
+        {% endblock %}
+    </div>
+</form>

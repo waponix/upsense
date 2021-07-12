@@ -66,9 +66,9 @@ $(() => {
         $.ajax({
             url: `/company/${company.id}/zone/list`,
             method: 'post',
+            data: {data: 'raw'},
             success: response => {
-                console.log(response);
-                const zones = response.data;
+                const zones = response.aaData;
 
                 target.html('');
 

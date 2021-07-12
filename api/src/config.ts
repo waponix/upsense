@@ -5,14 +5,15 @@ dotenv.config({ path: '../.env' });
  * Application config
  */
 export const appConfig = {
-    port: process.env.API_PORT
+    port: process.env.API_PORT,
+    idleTime: 1
 };
 
 /**
  * API pagination config
  */
 export const paginationConfig = {
-    limit: 25
+    limit: 25000
 }
 
 /**

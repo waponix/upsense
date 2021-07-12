@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {Api} from "../components/api";
-import {GetQuery} from "../components/helpers";
+import {GetQuery, GetTableSorting, PrepareQuery} from "../components/helpers";
 
 class NotificationController
 {
@@ -31,16 +31,26 @@ class NotificationController
         }
 
         try {
-            let endpoint = `/notification-logs`;
+            const query = PrepareQuery({
+                find: request.body.sSearch,
+                page: (parseInt(request.body.iDisplayStart) / parseInt(request.body.iDisplayLength)) + 1,
+                sort: GetTableSorting(request)
+            });
+
+            let endpoint = `/notification-logs?${query}`;
 
             const apiResponse = await Api(request, response).get(endpoint);
 
-            return response.json({
-                status: 'success',
-                data: apiResponse.data.result
-            });
+            const dataTableResponse = {
+                iTotalRecords: apiResponse.data.result.count,
+                iTotalDisplayRecords: apiResponse.data.result.totalCount,
+                sEcho: request.body.sEcho,
+                aaData: apiResponse.data.result.data
+            }
+
+            return response.json(dataTableResponse);
         } catch (error) {
-            return response.json({status: 'error'});
+            return response.json({});
         }
     }
 }

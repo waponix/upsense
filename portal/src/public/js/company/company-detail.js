@@ -3,49 +3,7 @@ $(() => {
 
     loadCompanyData();
 
-    const zoneTable = $('#zone-list-table').DataTable({
-        bLengthChange: false,
-        language: {
-            emptyTable: `<a href="/company/${companyId}/zone/new" class="btn btn-light btn-icon-split btn-sm btn-add-zone">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-plus"></i>
-                                        </span>
-                                        <span class="text">Please add a Zone</span>
-                         </a>`,
-            infoEmpty: 'No entries to show'
-        },
-        dom: '<"datatable-extra">frt<"row"<"col-md-6"i><"col-md-6"p>>',
-        columnDefs: [
-            {
-                targets: 0,
-                sortable: false,
-                className: "text-center"
-            },
-            {
-                targets: 2,
-                sortable: false,
-                className: "text-center"
-            }
-        ],
-        order: [[1, 'asc']],
-        columns: [
-            {data: null, defaultContent: `<div class="form-check">
-                                                    <input class="form-check-input position-static select-item" type="checkbox">
-                                                </div>`},
-            {data: 'name'},
-            {data: null, defaultContent: `<a data-toggle="tooltip" data-placement="top" title="Edit details" href="#" class="btn btn-edit-zone btn-primary btn-circle btn-sm">
-                                                        <i class="fas fa-pen"></i>
-                                                    </a>
-                                                    <a data-toggle="tooltip" data-placement="top" title="Delete" href="#" class="btn btn-delete-zone btn-outline-dark btn-circle btn-sm">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>`}
-        ],
-        fnCreatedRow: (row, data) => {
-            $(row).find('input.select-item').data({id: data.id});
-            $(row).find('a.btn-edit-zone').attr({href: `/company/${companyId}/zone/${data.id}/edit`});
-            $(row).find('a.btn-delete-zone').attr({href: `/company/${companyId}/zone/${data.id}/delete`});
-        }
-    });
+    const zoneTable = $('#zone-list-table').DataTable(getTableOptions());
 
     $('div.datatable-extra')
         .addClass('float-left')
@@ -101,14 +59,64 @@ $(() => {
                 for (const field in companyData) {
                     $(`span#company-${field}`).text(companyData[field]);
                 }
-
-                if (response.data.result) {
-                    zoneTable
-                        .clear()
-                        .rows.add(response.data.result.zones)
-                        .draw(false);
-                }
             }
         });
+    }
+
+    function getTableOptions() {
+        let options = dataTableGlobalOptions;
+
+        options.sAjaxSource = `/company/${companyId}/zone/list`;
+        options.fnServerData = function ( sSource, aoData, fnCallback, oSettings ) {
+            oSettings.jqXHR = $.ajax( {
+                dataType: 'json',
+                type: 'post',
+                url: sSource,
+                data: aoData,
+                success: fnCallback
+            } );
+        }
+        options.language = {
+            zeroRecords: 'No record matched your search',
+            emptyTable: `<a href="/company/${companyId}/zone/new" class="btn btn-light btn-icon-split btn-sm btn-add-zone">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span class="text">Please add a Zone</span>
+                         </a>`,
+            infoEmpty: 'No entries to show'
+        };
+        options.columnDefs = [
+            {
+                targets: 0,
+                sortable: false,
+                className: "text-center"
+            },
+            {
+                targets: 2,
+                sortable: false,
+                className: "text-center"
+            }
+        ];
+        options.order= [[1, 'asc']];
+        options.aoColumns = [
+            {mData: null, sDefaultContent: `<div class="form-check">
+                                                    <input class="form-check-input position-static select-item" type="checkbox">
+                                                </div>`},
+            {mData: 'name'},
+            {mData: null, sDefaultContent: `<a data-toggle="tooltip" data-placement="top" title="Edit details" href="#" class="btn btn-edit-zone btn-primary btn-circle btn-sm">
+                                                        <i class="fas fa-pen"></i>
+                                                    </a>
+                                                    <a data-toggle="tooltip" data-placement="top" title="Delete" href="#" class="btn btn-delete-zone btn-outline-dark btn-circle btn-sm">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>`}
+        ];
+        options.fnCreatedRow = (row, data) => {
+            $(row).find('input.select-item').data({id: data.id});
+            $(row).find('a.btn-edit-zone').attr({href: `/company/${companyId}/zone/${data.id}/edit`});
+            $(row).find('a.btn-delete-zone').attr({href: `/company/${companyId}/zone/${data.id}/delete`});
+        };
+
+        return options;
     }
 });

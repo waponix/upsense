@@ -72,14 +72,14 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- Logout Modal-->
-<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+{% block formModal %}
+<div id="form-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="form-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
         </div>
     </div>
 </div>
+{% endblock %}
 
 <!-- Bootstrap core JavaScript-->
 <script src="/assets/vendor/jquery/jquery.min.js"></script>

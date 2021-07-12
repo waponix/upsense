@@ -9,6 +9,7 @@ import {sensorCreateValidation, sensorUpdateValidation} from "../validators/Sens
 import {Hub} from "../../shared/entities/Hub";
 import {HubRepository} from "../repositories/HubRepository";
 import {User} from "../../shared/entities/User";
+import {appConfig} from "../../../config";
 
 export default class SensorServices
 {
@@ -180,5 +181,14 @@ export default class SensorServices
                 resolve(new ReturnableResponse(statusCode, apiResponse));
             });
         });
+    }
+
+    async manageConnectionStatus()
+    {
+        await this.sensorRepository.init();
+        const sensorIds = await this.sensorRepository.getSensorsLastSeenLongerThan(appConfig.idleTime);
+        await this.sensorRepository.release();
+
+        console.log(sensorIds);
     }
 }

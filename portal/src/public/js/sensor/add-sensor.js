@@ -55,7 +55,7 @@ $(() => {
             data: {query: {relations: ['zones']}},
             success: response => {
                 console.log(response);
-                const hubs = response.data;
+                const hubs = response.aaData;
                 const defaultOption = target.find('option:first-child').detach();
                 target.html('').append(defaultOption);
 

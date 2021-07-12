@@ -45,6 +45,12 @@ export abstract class BaseRepository {
         return this;
     }
 
+    public async release()
+    {
+        if (this.queryRunner) await this.queryRunner.release();
+        return this;
+    }
+
     protected createQueryBuilder(alias: string)
     {
         const repository = this.em.getRepository(this.entity);

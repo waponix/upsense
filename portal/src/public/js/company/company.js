@@ -1,6 +1,4 @@
 $(() => {
-
-
     const companyTable = $('#company-list-table').DataTable(getTableOptions());
 
     $('div.datatable-extra')
@@ -11,12 +9,12 @@ $(() => {
             '                        </span>\n' +
             '                        <span class="text">Delete selection</span>\n' +
             '                    </button>\n' +
-            '<a href="/company/new" class="btn btn-sm btn-primary btn-icon-split btn-add-company">\n' +
+            '<button class="btn btn-sm btn-primary btn-icon-split btn-add-company">\n' +
         '                        <span class="icon text-white-50">\n' +
         '                            <i class="fas fa-plus"></i>\n' +
         '                        </span>\n' +
         '                        <span class="text">Add company</span>\n' +
-        '                    </a>');
+        '                    </button>');
 
     $('table').on('change', 'input.select-item', function (e) {
         e.stopPropagation();
@@ -47,6 +45,22 @@ $(() => {
         $('input.select-item').trigger('change');
     });
 
+    $('body').on('click', 'button.btn-add-company', function () {
+        $.ajax({
+            url: '/company/new',
+            method: 'get',
+            success: response => {
+                const formModal = $('#form-modal');
+
+                //prepare the modal contents
+                formModal.find('.modal-content').html(response.toString());
+
+                // show the modal
+                formModal.modal('show');
+            }
+        })
+    });
+
     function getTableOptions() {
         let options = dataTableGlobalOptions;
 
@@ -62,12 +76,12 @@ $(() => {
         }
         options.language = {
             sZeroRecords: 'No records matched the your search',
-            sEmptyTable: '<a href="/company/new" class="btn btn-light btn-icon-split btn-sm btn-add-company">\n' +
+            sEmptyTable: '<button class="btn btn-light btn-icon-split btn-sm btn-add-company">\n' +
             '                        <span class="icon text-white-50">\n' +
             '                            <i class="fas fa-plus"></i>\n' +
             '                        </span>\n' +
             '                        <span class="text">Please add a Company</span>\n' +
-            '         </a>',
+            '         </button>',
             sInfoEmpty: 'No entries to show'
         };
         options.columnDefs = [

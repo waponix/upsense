@@ -2,18 +2,34 @@ import {Request, Response} from "express";
 import {Api} from "../components/api";
 import moment from "moment";
 import CompanyServices from "../services/ZoneServices";
+import {GetTableSorting, PrepareQuery} from "../components/helpers";
 
 class ZoneController
 {
     public async indexAction(request: Request, response: Response)
     {
-        try {
-            const apiResponse = await Api(request, response).get(`/companies/${request.params.companyId}/zones`);
+        let query: any = '';
+        if (request.body.data && request.body.data === 'raw') {
 
-            return response.json({
-                status: 'success',
-                data: apiResponse.data.result
+        } else {
+            query = PrepareQuery({
+                find: request.body.sSearch,
+                page: (parseInt(request.body.iDisplayStart) / parseInt(request.body.iDisplayLength)) + 1,
+                sort: GetTableSorting(request)
             });
+        }
+
+        try {
+            const apiResponse = await Api(request, response).get(`/companies/${request.params.companyId}/zones?${query}`);
+
+            const dataTableResponse = {
+                iTotalRecords: apiResponse.data.result.count,
+                iTotalDisplayRecords: apiResponse.data.result.totalCount,
+                sEcho: request.body.sEcho,
+                aaData: apiResponse.data.result.data
+            }
+
+            return response.json(dataTableResponse);
         } catch (error) {
             return response.json({status: 'error'});
         }

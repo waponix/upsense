@@ -41,8 +41,6 @@ $(() => {
             //     submit = false;
             // }
 
-            console.log(submit);
-
             if (!submit) return false;
 
             $.ajax({
@@ -82,9 +80,9 @@ $(() => {
         $.ajax({
             url: `/company/${companyId}/zone/list`,
             method: 'post',
+            data: {data: 'raw'},
             success: response => {
-                console.log(response);
-                const zones = response.data;
+                const zones = response.aaData;
                 const defaultOption = target.find('option:first-child').detach();
                 target.html('').append(defaultOption);
 
@@ -103,8 +101,9 @@ $(() => {
         $.ajax({
             url: '/company/list',
             method: 'post',
+            data: {data: 'raw'},
             success: response => {
-                const companies = response.data;
+                const companies = response.aaData;
 
                 for (const company of companies) {
                     const option = $('<option>').text(company.name).val(company.id);

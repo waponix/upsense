@@ -6,14 +6,24 @@ import {paginationConfig} from "../../../config";
 
 export class NotificationLogRepository extends BaseRepository
 {
-    private searchableFields: string[] = [
-        'name',
-        'minTemp',
-        'maxTemp',
-        'recordedTemp',
-        'message',
-        'seen'
+    private searchableFields: any = [
+        's.name',
+        'nl.minTemp',
+        'nl.maxTemp',
+        'nl.recordedTemp',
+        'nl.message'
     ];
+
+    private sortableFields: any = {
+        message: 'nl.message',
+        sensor: 's.name',
+        zone: 'z.name',
+        company: 'c.name',
+        recordedTemp: 'nl.recordedTemp',
+        minTemp: 'nl.minTemp',
+        maxTemp: 'nl.maxTemp',
+        createdAt: 'nl.createdAt'
+    }
 
     async getList(options: QueryOptions = {}, user: User | null = null): Promise<any>
     {
@@ -49,7 +59,7 @@ export class NotificationLogRepository extends BaseRepository
         }
 
         // create filters if provided
-        if (options.filters !== undefined) {
+        if (!!options.filters) {
             for (const [field, value] of Object.entries(options.filters)) {
                 whereStatements.push(`s.${field} = :${field}`);
                 parameters[field] = value;
@@ -57,21 +67,21 @@ export class NotificationLogRepository extends BaseRepository
         }
 
         // add sort and
-        if (options.sort !== undefined) {
+        if (!!options.sort) {
             for (const [field, value] of Object.entries(options.sort)) {
-                query.addOrderBy(`nl.${field}`, value)
+                if (this.sortableFields[field]) query.addOrderBy(`${this.sortableFields[field]}`, value)
             }
         } else {
             query.addOrderBy('nl.createdAt', 'DESC');
         }
 
         // create search statement if find is provided
-        if (options.find !== undefined) {
+        if (!!options.find) {
             parameters.find = `%${options.find}%`;
             let searchStatement = [];
 
             for (const field of this.searchableFields) {
-                searchStatement.push(`s.${field} LIKE :find`);
+                searchStatement.push(`${field} LIKE :find`);
             }
 
             whereStatements.push(`(${searchStatement.join(' OR ')})`);
@@ -83,16 +93,18 @@ export class NotificationLogRepository extends BaseRepository
                 .setParameters(parameters);
         }
 
+        const totalCount = await this.getCount(query);
+
         query
             .offset(offset)
             .limit(paginationConfig.limit);
 
-        const count = await this.getCount(query);
+        const data = await query.getRawMany();
 
         return {
-            totalCount: count,
-            count: paginationConfig.limit,
-            data: await query.getRawMany()
+            totalCount: totalCount,
+            count: data.length,
+            data: data
         };
     }
 

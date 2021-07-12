@@ -51,8 +51,8 @@ export default class ZoneServices
 
         await this.zoneRepository.init();
 
-        let result: any[] = await this.zoneRepository.getList(companyId, query);
-        result = result.map((record: Zone) => record.serialize());
+        let result: any = await this.zoneRepository.getList(companyId, query);
+        result.data = result.data.map((record: Zone) => record.serialize());
 
         apiResponse.result = result;
 

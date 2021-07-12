@@ -13,6 +13,7 @@ import {Zone} from "./v1/shared/entities/Zone";
 import {NotificationLogRepository} from "./v1/rest/repositories/NotificationLogRepository";
 import {NotificationLog} from "./v1/shared/entities/NotificationLog";
 import {SensorStatus} from "./components/types/SensorStatus";
+import SensorServices from "./v1/rest/services/SensorServices";
 
 const nodeMailer = require('nodemailer');
 
@@ -38,6 +39,7 @@ export class SubscriberApp
     private zoneRepository: ZoneRepository;
     private notificationLogRepository: NotificationLogRepository;
     private hubRepository: HubRepository;
+    private sensorServices: SensorServices;
     private topic: string = 'iot/+/sensor';
     private transporter: any;
 
@@ -47,6 +49,8 @@ export class SubscriberApp
         this.zoneRepository = new ZoneRepository(Zone);
         this.hubRepository = new HubRepository(Hub);
         this.notificationLogRepository = new NotificationLogRepository(NotificationLog);
+
+        this.sensorServices = new SensorServices({});
 
         this.client = mqtt.connect(MQTT_OPTIONS);
 
@@ -114,8 +118,8 @@ export class SubscriberApp
 
 
         await this.sensorRepository.init();
-        await this.sensorRepository.queryRunner.startTransaction();
         let sensor: Sensor | undefined = await this.sensorRepository.findOneBy({serial: data.obj?.devEUI}, ['hub']);
+        await this.sensorRepository.queryRunner.release();
 
         if (sensor === undefined) {
             sensor = new Sensor();
@@ -134,6 +138,9 @@ export class SubscriberApp
         if (sensor.minTemp !== null && data.temperature < sensor.minTemp) {
             isSensorHealthy = false;
         }
+
+        await this.sensorRepository.init();
+        await this.sensorRepository.queryRunner.startTransaction();
 
         try {
             sensor.deviceName = data.obj?.deviceName;
@@ -253,7 +260,7 @@ export class SubscriberApp
                 try {
                     notificationLog.message = 'Sensor temperature levels went back to normal';
                     await this.notificationLogRepository.save(notificationLog);
-                    this.client.publish('notifications', '');
+                    await this.client.publish('notifications', '');
                 } finally {
                     await this.notificationLogRepository.queryRunner.release();
                 }
@@ -261,6 +268,8 @@ export class SubscriberApp
 
             break;
         } while (true);
+
+        await this.sensorServices.manageConnectionStatus();
     }
 
     private async sendEmailNotification(emails: string[], zoneName: string, sensorName: string, temperature: number, notifType: number)
