@@ -89,7 +89,7 @@ class CompanyController
             next();
         }
 
-        if (request.query.resource !== 'form') {
+        if (!request.query.resource || request.query.resource !== 'form') {
             const details = await CompanyServices.getCompanyDetails(request, response);
             return response.json(details);
         }

@@ -169,7 +169,7 @@ $(() => {
                     // show the modal
                     formModal.modal('show');
                 }
-            })
+            });
         })
         .on('submit', 'form#company-edit-form', function (e) {
             e.preventDefault();
@@ -204,7 +204,6 @@ $(() => {
             url,
             method: 'get',
             success: response => {
-                console.log(response);
                 const companyData = response.data.result || {};
 
                 for (const field in companyData) {

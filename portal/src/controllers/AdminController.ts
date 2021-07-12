@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import {Api} from "../components/api";
 import {GetTableSorting, PrepareQuery} from "../components/helpers";
 
@@ -62,11 +62,14 @@ class AdminController
         }
     }
 
-    public async editView(request: Request, response: Response)
+    public async editView(request: Request, response: Response, next: NextFunction)
     {
-        if (request.xhr) {
+        if (!request.xhr) {
+            next();
+        }
+        if (!request.query.resource || request.query.resource !== 'form') {
             try {
-                const apiResponse = await Api(request, response).get(`/admins/${request.query.id}`, {
+                const apiResponse = await Api(request, response).get(`/admins/${request.params.id}`, {
                     data: request.body.data || {}
                 });
 
@@ -91,7 +94,7 @@ class AdminController
     public async editAction(request: Request, response: Response)
     {
         try {
-            const apiResponse = await Api(request, response).put(`/admins/${request.body.id}`, {
+            const apiResponse = await Api(request, response).put(`/admins/${request.params.id}`, {
                 data: request.body.data || {}
             });
 

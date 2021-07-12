@@ -1,5 +1,7 @@
 $(() => {
     const adminTable = $('#admin-list-table').DataTable(getTableOptions());
+    const adminCreateUrl = '/accounts/admin/new';
+    const adminIndexUrl = '/accounts/admin/list';
 
     $('div.datatable-extra')
         .addClass('float-left')
@@ -9,12 +11,12 @@ $(() => {
             '                        </span>\n' +
             '                        <span class="text">Delete selection</span>\n' +
             '                    </button>\n' +
-            '<a href="/accounts/admin/new" class="btn btn-sm btn-primary btn-icon-split btn-add-admin">\n' +
+            '<button class="btn btn-sm btn-primary btn-icon-split btn-add-admin">\n' +
             '                        <span class="icon text-white-50">\n' +
             '                            <i class="fas fa-plus"></i>\n' +
             '                        </span>\n' +
             '                        <span class="text">Add admin</span>\n' +
-            '                    </a>');
+            '                    </button>');
 
     $('table').on('change', 'input.select-item', function (e) {
         e.stopPropagation();
@@ -60,12 +62,12 @@ $(() => {
         }
         options.language = {
             zeroRecords: 'No record matched your search',
-            emptyTable: '<a href="/accounts/admin/new" class="btn btn-light btn-icon-split btn-sm btn-add-admin">\n' +
+            emptyTable: '<button class="btn btn-light btn-icon-split btn-sm btn-add-admin">\n' +
                 '                        <span class="icon text-white-50">\n' +
                 '                            <i class="fas fa-plus"></i>\n' +
                 '                        </span>\n' +
                 '                        <span class="text">Please add an Admin</span>\n' +
-                '         </a>',
+                '         </button>',
             infoEmpty: 'No entries to show'
         };
         options.columnDefs = [
@@ -90,19 +92,141 @@ $(() => {
             {mData: 'username'},
             {mData: 'email'},
             {mData: 'mobile', sDefaultContent: 'N/A'},
-            {mData: null, sDefaultContent: '<a href="#" class="btn btn-edit-admin btn-primary btn-circle btn-sm">\n' +
+            {mData: null, sDefaultContent: '<button class="btn btn-edit-admin btn-primary btn-circle btn-sm">\n' +
                     '                                    <i class="fas fa-pen"></i>\n' +
-                    '                                </a>\n' +
-                    '                                <a href="#" class="btn btn-delete-admin btn-outline-dark btn-circle btn-sm">\n' +
+                    '                                </button>\n' +
+                    '                                <button class="btn btn-delete-admin btn-outline-dark btn-circle btn-sm">\n' +
                     '                                    <i class="fas fa-trash"></i>\n' +
-                    '                                </a>'}
+                    '                                </button>'}
         ];
         options.fnCreatedRow = (row, data) => {
             $(row).find('input.select-item').data({id: data.id});
-            $(row).find('a.btn-edit-admin').attr({href: `/accounts/admin/${data.id}/edit`});
-            $(row).find('a.btn-delete-admin').attr({href: `/accounts/admin/${data.id}/delete`});
+            $(row).find('button.btn-edit-admin').data({href: `/accounts/admin/${data.id}/edit`});
+            $(row).find('button.btn-delete-admin').data({href: `/accounts/admin/${data.id}/delete`});
         };
 
         return options;
+    }
+
+    // add admin related scripts
+    $(document)
+        .on('click', 'button.btn-add-admin', function () {
+            // display the form modal
+            $.ajax({
+                url: adminCreateUrl,
+                method: 'get',
+                success: response => {
+                    const formModal = $('#form-modal');
+
+                    //prepare the modal contents
+                    formModal.find('.modal-content').html(response.toString());
+
+                    // show the modal
+                    formModal.modal('show');
+                }
+            });
+        })
+        .on('submit', 'form#admin-add-form', function (e) {
+            // manage form submit
+            e.preventDefault();
+
+            const formData = {
+                username: $(this).find('input[name="username"]').val().trim(),
+                password: $(this).find('input[name="password"]').val().trim(),
+                firstName: $(this).find('input[name="firstName"]').val().trim(),
+                lastName: $(this).find('input[name="lastName"]').val().trim(),
+                email: $(this).find('input[name="email"]').val().trim(),
+                mobile: $(this).find('input[name="mobile"]').val().trim() || null
+            };
+
+            $.ajax({
+                url: adminCreateUrl,
+                method: 'post',
+                data: {data: formData},
+                success: response => {
+                    $('.is-invalid').removeClass('is-invalid');
+
+                    if (response.status === 'error') {
+                        const errorKeys = Object.keys(response.error)
+                        for (let errorField of errorKeys) {
+                            $(`#admin-${errorField}`).addClass('is-invalid');
+                            $(`#error-admin-${errorField}`).text(response.error[errorField][0]);
+                        }
+                    } else {
+                        location.replace(adminIndexUrl);
+                    }
+                }
+            });
+        });
+
+    // edit admin related scripts
+    $(document)
+        .on('click', 'button.btn-edit-admin', function () {
+            const url = $(this).data('href');
+            // display the form modal
+            $.ajax({
+                url: `${url}?resource=form`,
+                method: 'get',
+                success: response => {
+                    const formModal = $('#form-modal');
+
+                    //prepare the modal contents
+                    formModal.find('.modal-content').html(response.toString());
+                    formModal.data({href: url});
+                    loadAdminData(url);
+
+                    // show the modal
+                    formModal.modal('show');
+                }
+            });
+        })
+        .on('submit', 'form#admin-edit-form', function (e) {
+            e.preventDefault();
+            const formModal = $('#form-modal');
+
+            let formData = {
+                firstName: $(this).find('input[name="firstName"]').val().trim(),
+                lastName: $(this).find('input[name="lastName"]').val().trim(),
+                email: $(this).find('input[name="email"]').val().trim(),
+                mobile: $(this).find('input[name="mobile"]').val().trim() || null
+            };
+
+            if (!!$(this).find('input[name="password"]').val().trim()) {
+                formData.password = $(this).find('input[name="password"]').val().trim()
+            }
+
+            $.ajax({
+                url: formModal.data('href'),
+                method: 'post',
+                data: {data: formData},
+                success: response => {
+                    console.log(response);
+                    $('.is-invalid').removeClass('is-invalid');
+
+                    if (response.status === 'error') {
+                        const errorKeys = Object.keys(response.error)
+                        for (let errorField of errorKeys) {
+                            $(`#admin-${errorField}`).addClass('is-invalid');
+                            $(`#error-admin-${errorField}`).text(response.error[errorField][0]);
+                        }
+                    } else {
+                        location.replace(adminIndexUrl);
+                    }
+                }
+            });
+        });
+
+    function loadAdminData(url) {
+        $.ajax({
+            url: url,
+            method: 'get',
+            success: response => {
+                const adminData = response.data.result || {};
+
+                for (const field in adminData) {
+                    $('form#admin-edit-form').find(`#admin-${field}`).val(adminData[field]);
+                }
+            }
+        })
     }
 });
