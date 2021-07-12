@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import {Api} from "../components/api";
 import moment from "moment";
 import CompanyServices from "../services/CompanyServices";
@@ -83,25 +83,24 @@ class CompanyController
         }
     }
 
-    public async editView(request: Request, response: Response)
+    public async editView(request: Request, response: Response, next: NextFunction)
     {
-        if (request.xhr) {
+        if (!request.xhr) {
+            next();
+        }
+
+        if (request.query.resource !== 'form') {
             const details = await CompanyServices.getCompanyDetails(request, response);
             return response.json(details);
         }
 
-        let viewData: any = {
-            title: 'Upsense Portal | Edit Company',
-            companyId: request.params.id
-        };
-
-        return response.render('company/edit.html.twig', viewData);
+        return response.render('company/edit.html.twig');
     }
 
     public async editAction(request: Request, response: Response)
     {
         try {
-            const apiResponse = await Api(request, response).put(`/companies/${request.body.id}`, {
+            const apiResponse = await Api(request, response).put(`/companies/${request.params.id}`, {
                 data: request.body.data || {}
             });
 

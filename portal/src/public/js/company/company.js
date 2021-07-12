@@ -45,22 +45,6 @@ $(() => {
         $('input.select-item').trigger('change');
     });
 
-    $('body').on('click', 'button.btn-add-company', function () {
-        $.ajax({
-            url: '/company/new',
-            method: 'get',
-            success: response => {
-                const formModal = $('#form-modal');
-
-                //prepare the modal contents
-                formModal.find('.modal-content').html(response.toString());
-
-                // show the modal
-                formModal.modal('show');
-            }
-        })
-    });
-
     function getTableOptions() {
         let options = dataTableGlobalOptions;
 
@@ -105,20 +89,128 @@ $(() => {
             {mData: null, sDefaultContent: `<a data-toggle="tooltip" data-placement="top" title="View details" href="#" class="btn btn-view-company btn-info btn-circle btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a data-toggle="tooltip" data-placement="top" title="Edit details" href="#" class="btn btn-edit-company btn-primary btn-circle btn-sm">
+                                                    <button data-toggle="tooltip" data-placement="top" title="Edit details" class="btn btn-edit-company btn-primary btn-circle btn-sm">
                                                         <i class="fas fa-pen"></i>
-                                                    </a>
-                                                    <a data-toggle="tooltip" data-placement="top" title="Delete" href="#" class="btn btn-delete-company btn-outline-dark btn-circle btn-sm">
+                                                    </button>
+                                                    <button data-toggle="tooltip" data-placement="top" title="Delete" class="btn btn-delete-company btn-outline-dark btn-circle btn-sm">
                                                         <i class="fas fa-trash"></i>
-                                                    </a>`}
+                                                    </button>`}
         ];
         options.fnCreatedRow = (row, data) => {
             $(row).find('input.select-item').data({id: data.id});
             $(row).find('a.btn-view-company').attr({href: `/company/${data.id}/view`});
-            $(row).find('a.btn-edit-company').attr({href: `/company/${data.id}/edit`});
-            $(row).find('a.btn-delete-company').attr({href: `/company/${data.id}/delete`});
+            $(row).find('button.btn-edit-company').data({href: `/company/${data.id}/edit`});
+            $(row).find('button.btn-delete-company').data({href: `/company/${data.id}/delete`});
         };
 
         return options;
+    }
+
+    // add company script
+    $(document)
+        .on('click', 'button.btn-add-company', function () {
+            $.ajax({
+                url: '/company/new',
+                method: 'get',
+                success: response => {
+                    const formModal = $('#form-modal');
+
+                    //prepare the modal contents
+                    formModal.find('.modal-content').html(response.toString());
+
+                    // show the modal
+                    formModal.modal('show');
+                }
+            })
+        })
+        .on('submit', 'form#company-add-form', function (e) {
+            e.preventDefault();
+
+            const formData = {
+                name: $(this).find('input[name="name"]').val()
+            };
+
+            $.ajax({
+                url: '/company/new',
+                method: 'post',
+                data: {data: formData},
+                success: function (response) {
+                    console.log(response);
+                    $('.is-invalid').removeClass('is-invalid');
+
+                    if (response.status === 'error') {
+                        const errorKeys = Object.keys(response.error)
+                        for (let errorField of errorKeys) {
+                            $(`#company-${errorField}`).addClass('is-invalid');
+                            $(`#error-company-${errorField}`).text(response.error[errorField][0]);
+                        }
+                    } else {
+                        location.replace('/company/list');
+                    }
+                }
+            });
+        });
+
+    // edit company scripts
+    $(document)
+        .on('click', 'button.btn-edit-company', function () {
+            const url = $(this).data('href');
+            $.ajax({
+                url: `${url}?resource=form`,
+                method: 'get',
+                success: response => {
+                    const formModal = $('#form-modal');
+
+                    //prepare the modal contents
+                    formModal.find('.modal-content').html(response.toString());
+                    formModal.data({href: url});
+                    loadCompanyData(url);
+
+                    // show the modal
+                    formModal.modal('show');
+                }
+            })
+        })
+        .on('submit', 'form#company-edit-form', function (e) {
+            e.preventDefault();
+            const formModal = $('#form-modal');
+
+            const formData = {
+                name: $(this).find('input[name="name"]').val()
+            };
+
+            $.ajax({
+                url: formModal.data('href'),
+                method: 'post',
+                data: {data: formData},
+                success: function (response) {
+                    $('.is-invalid').removeClass('is-invalid');
+
+                    if (response.status === 'error') {
+                        const errorKeys = Object.keys(response.error)
+                        for (let errorField of errorKeys) {
+                            $(`#company-${errorField}`).addClass('is-invalid');
+                            $(`#error-company-${errorField}`).text(response.error[errorField][0]);
+                        }
+                    } else {
+                        location.replace('/company/list');
+                    }
+                }
+            });
+        });
+
+    function loadCompanyData(url) {
+        $.ajax({
+            url,
+            method: 'get',
+            success: response => {
+                console.log(response);
+                const companyData = response.data.result || {};
+
+                for (const field in companyData) {
+                    $('form#company-edit-form').find(`#company-${field}`).val(companyData[field]);
+                }
+            }
+        })
     }
 });
