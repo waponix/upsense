@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:10.5.8-focal
+    ports:
+      - 3305:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_DATABASE: upsense
+    volumes:
+      - ./mysql/default.sql:/docker-entrypoint-initdb.d/default.sql
+      - ./mysql:/var/mysql
+    restart: unless-stopped
+
+  influxdb:
+    image: influxdb:1.8.3
+    ports:
+      - 8086:8086
+    environment:
+      INFLUXDB_HTTP_LOG_ENABLED: 0
+    volumes:
+      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
+      - ./influxdb/storage:/var/lib/influxdb
+    restart: unless-stopped
+
+  api:
+    build:
+      dockerfile: ./api/Dockerfile
+      context: ./
+    image: upsense_api:latest
+    ports:
+      - 8442:8443
+    links:
+      - mariadb:mysql
+      - influxdb
+      - broker
+    restart: unless-stopped
+
+  broker:
+    build:
+      dockerfile: ./mqtt/Dockerfile
+      context: ./
+    image: upsense_broker:latest
+    ports:
+      - 1883:1883
+    links:
+      - influxdb
+    restart: unless-stopped
+
+  portal:
+    build:
+      dockerfile: ./portal/Dockerfile
+      context: ./
+    image: upsense_portal:latest
+    ports:
+      - 8990:3000
+    links:
+      - api
+    restart: unless-stopped
