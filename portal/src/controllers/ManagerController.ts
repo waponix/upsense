@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import {Api} from "../components/api";
 import {GetQuery, GetTableSorting, PrepareQuery} from "../components/helpers";
 
@@ -64,11 +64,14 @@ class ManagerController
         }
     }
 
-    public async editView(request: Request, response: Response)
+    public async editView(request: Request, response: Response, next: NextFunction)
     {
-        if (request.xhr) {
+        if (!request.xhr) {
+            next();
+        }
+        if (!request.query.resource || request.query.resource !== 'form') {
             try {
-                const apiResponse = await Api(request, response).get(`/managers/${request.query.id}`, {
+                const apiResponse = await Api(request, response).get(`/managers/${request.params.id}`, {
                     data: request.body.data || {}
                 });
 
@@ -93,7 +96,7 @@ class ManagerController
     public async editAction(request: Request, response: Response)
     {
         try {
-            const apiResponse = await Api(request, response).put(`/managers/${request.body.id}`, {
+            const apiResponse = await Api(request, response).put(`/managers/${request.params.id}`, {
                 data: request.body.data || {}
             });
 
