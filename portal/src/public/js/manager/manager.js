@@ -3,6 +3,9 @@ $(() => {
     const managerCreateUrl = '/accounts/manager/new';
     const managerIndexUrl = '/accounts/manager/list';
 
+    let zoneDataLoadAjax = null;
+    let managerDataLoadAjax = null;
+
     $('div.datatable-extra')
         .addClass('float-left')
         .html('<button class="mr-2 btn btn-sm btn-danger btn-icon-split btn-delete-selection" style="display: none">\n' +
@@ -110,7 +113,6 @@ $(() => {
     }
 
     // manager add related scripts
-    // add admin related scripts
     $(document)
         .on('click', 'button.btn-add-manager', function () {
             // display the form modal
@@ -188,7 +190,10 @@ $(() => {
 
     function loadZoneChoices(target, companyId, currentZones = null, callback = null)
     {
-        $.ajax({
+        if (zoneDataLoadAjax !== null) {
+            zoneDataLoadAjax.abort();
+        }
+        zoneDataLoadAjax = $.ajax({
             url: `/company/${companyId}/zone/list`,
             method: 'post',
             data: {data: 'raw'},
@@ -211,7 +216,7 @@ $(() => {
 
                     const option = $(`
                         <div class="form-check form-check-inline mr-5">
-                          <input class="form-check-input zone-select ${checked ? 'zone-selected' : ''}" type="checkbox" value="${zone.id}" id="zone-${zone.id}">
+                          <input class="form-check-input zone-select ${checked ? 'zone-selected' : ''}" type="checkbox" value="${zone.id}" id="zone-${zone.id}" ${checked ? 'checked' : ''}>
                           <label class="form-check-label" for="zone-${zone.id}">
                             ${zone.name}
                           </label>
@@ -320,7 +325,11 @@ $(() => {
         });
 
     function loadManagerData(url) {
-        $.ajax({
+        if (managerDataLoadAjax !== null) {
+            managerDataLoadAjax.abort();
+        }
+
+        managerDataLoadAjax = $.ajax({
             url,
             method: 'get',
             success: response => {

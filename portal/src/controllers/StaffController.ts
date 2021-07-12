@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import {Api} from "../components/api";
 import {GetQuery, GetTableSorting, PrepareQuery} from "../components/helpers";
 
@@ -41,11 +41,7 @@ class StaffController
 
     public async createView(request: Request, response: Response)
     {
-        let viewData: any = {
-            title: 'Upsense Portal | Create Staff'
-        };
-
-        return response.render('staff/add.html.twig', viewData);
+        return response.render('staff/add.html.twig');
     }
 
     public async createAction(request: Request, response: Response)
@@ -66,11 +62,14 @@ class StaffController
         }
     }
 
-    public async editView(request: Request, response: Response)
+    public async editView(request: Request, response: Response, next: NextFunction)
     {
-        if (request.xhr) {
+        if (!request.xhr) {
+            next();
+        }
+        if (!request.query.resource || request.query.resource !== 'form') {
             try {
-                const apiResponse = await Api(request, response).get(`/users/${request.query.id}`, {
+                const apiResponse = await Api(request, response).get(`/users/${request.params.id}`, {
                     data: request.body.data || {}
                 });
 
@@ -95,7 +94,7 @@ class StaffController
     public async editAction(request: Request, response: Response)
     {
         try {
-            const apiResponse = await Api(request, response).put(`/users/${request.body.id}`, {
+            const apiResponse = await Api(request, response).put(`/users/${request.params.id}`, {
                 data: request.body.data || {}
             });
 

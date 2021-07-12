@@ -1,44 +1,44 @@
-{% spaceless %}
+{% extends '../layout/form-modal-layout.html.twig' %}
+{% block modalBody %}
     {% if new is not defined %}
         {% set new = 1 %}
     {% endif %}
-    <form id="staff-form">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input type="text" name="username" class="form-control" id="staff-username" placeholder="Username*" {% if new == 0 %}disabled{% endif %}>
-                    <div class="invalid-feedback" id="error-staff-username"></div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input type="password" name="password" class="form-control" id="staff-password" {% if new == 1 %}placeholder="Password*"{% else %}placeholder="Password"{% endif %}>
-                    <div class="invalid-feedback" id="error-staff-password"></div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input type="email" name="email" class="form-control" id="staff-email" placeholder="Email*">
-                    <div class="invalid-feedback" id="error-staff-email"></div>
-                </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="text" name="username" class="form-control" id="staff-username" placeholder="Username*" {% if new == 0 %}disabled{% endif %}>
+                <div class="invalid-feedback" id="error-staff-username"></div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <input type="text" name="firstName" class="form-control" id="staff-firstName" placeholder="First Name*">
-                    <div class="invalid-feedback" id="error-staff-firstName"></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <input type="text" name="lastName" class="form-control" id="staff-lastName" placeholder="Last Name">
-                    <div class="invalid-feedback" id="error-staff-lastName"></div>
-                </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="password" name="password" class="form-control" id="staff-password" {% if new == 1 %}placeholder="Password*"{% else %}placeholder="Password"{% endif %}>
+                <div class="invalid-feedback" id="error-staff-password"></div>
             </div>
         </div>
-        <div class="row">
-            {% if new == 1 %}
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="email" name="email" class="form-control" id="staff-email" placeholder="Email*">
+                <div class="invalid-feedback" id="error-staff-email"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" name="firstName" class="form-control" id="staff-firstName" placeholder="First Name*">
+                <div class="invalid-feedback" id="error-staff-firstName"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" name="lastName" class="form-control" id="staff-lastName" placeholder="Last Name">
+                <div class="invalid-feedback" id="error-staff-lastName"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        {% if new == 1 %}
             <div class="col-md-6">
                 <div class="form-group">
                     <select name="company" class="form-control" id="staff-company">
@@ -47,36 +47,38 @@
                     <div class="invalid-feedback" id="error-staff-company"></div>
                 </div>
             </div>
-            {% endif %}
-            <div class="col-md-6">
-                <div class="form-group">
-                    <input type="text" name="mobile" class="form-control" id="staff-mobile" placeholder="Mobile*">
-                    <div class="invalid-feedback" id="error-staff-mobile"></div>
-                </div>
-            </div>
-        </div>
-        <section id="zone-section" {% if new == 1 %}style="display: none"{% endif %}>
-            <div class="row no-gutters align-items-center pb-3">
-                <div class="col">
-                    <hr/>
-                </div>
-                <div class="col-auto">
-                    <div class="mb-0 mr-3 ml-3 small">Zone Configuration</div>
-                </div>
-                <div class="col">
-                    <hr/>
-                </div>
-            </div>
-            <div class="zone-selection row">
-                <div class="col-md-12"></div>
-            </div>
-        </section>
-        <div class="d-flex justify-content-end">
-            <a href="/accounts/staff/list" type="submit" class="btn btn-outline-dark mnw-100 mr-2">Cancel</a>
-            <button type="submit" class="btn btn-primary mnw-100">Save</button>
-        </div>
-        {% if id is defined %}
-            <input type="hidden" id="data-id" value="{{ id }}">
         {% endif %}
-    </form>
-{% endspaceless %}
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" name="mobile" class="form-control" id="staff-mobile" placeholder="Mobile*">
+                <div class="invalid-feedback" id="error-staff-mobile"></div>
+            </div>
+        </div>
+    </div>
+    <section id="zone-section" {% if new == 1 %}style="display: none"{% endif %}>
+        <div class="row no-gutters align-items-center pb-3">
+            <div class="col">
+                <hr/>
+            </div>
+            <div class="col-auto">
+                <div class="mb-0 mr-3 ml-3 small">Zone Configuration</div>
+            </div>
+            <div class="col">
+                <hr/>
+            </div>
+        </div>
+        <div class="zone-selection row">
+            <div class="col-md-12"></div>
+        </div>
+    </section>
+    {% if id is defined %}
+        <input type="hidden" id="data-id" value="{{ id }}">
+    {% endif %}
+{% endblock %}
+
+{% block modalFooter %}
+    <div class="d-flex justify-content-end">
+        <a href="/accounts/staff/list" type="submit" class="btn btn-outline-dark mnw-100 mr-2">Cancel</a>
+        <button type="submit" class="btn btn-primary mnw-100">Save</button>
+    </div>
+{% endblock %}
