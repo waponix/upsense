@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import {Api} from "../components/api";
+import {PrepareQuery} from "../components/helpers";
 
 class ZoneServices
 {

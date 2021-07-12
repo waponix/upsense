@@ -1,43 +1,46 @@
-{% spaceless %}
-    <form id="hub-form">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <input type="text" name="name" class="form-control" id="hub-name" placeholder="Name*">
-                    <div class="invalid-feedback" id="error-hub-name"></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <input type="text" name="serial" class="form-control" id="hub-serial" placeholder="Serial*" {% if new == 0 %}disabled{% endif %}>
-                    <div class="invalid-feedback" id="error-hub-serial"></div>
-                </div>
-            </div>
+{% extends '../layout/form-modal-layout.html.twig' %}
+
+{% block modalBody %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <input type="text" name="name" class="form-control" id="hub-name" placeholder="Name*">
+            <div class="invalid-feedback" id="error-hub-name"></div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <select name="company" class="form-control" id="hub-company">
-                        <option value=0>Company*</option>
-                    </select>
-                    <div class="invalid-feedback" id="error-hub-company"></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group zone-selection" style="display:none">
-                    <select name="zone" class="form-control" id="hub-zone">
-                        <option value=0>Zone*</option>
-                    </select>
-                    <div class="invalid-feedback" id="error-hub-zone"></div>
-                </div>
-            </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <input type="text" name="serial" class="form-control" id="hub-serial" placeholder="Serial*" {% if new == 0 %}disabled{% endif %}>
+            <div class="invalid-feedback" id="error-hub-serial"></div>
         </div>
-        <div class="d-flex justify-content-end">
-            <a href="/devices/hub/list" type="submit" class="btn btn-outline-dark mnw-100 mr-2">Cancel</a>
-            <button type="submit" class="btn btn-primary mnw-100">Save</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <select name="company" class="form-control" id="hub-company">
+                <option value=0>Company*</option>
+            </select>
+            <div class="invalid-feedback" id="error-hub-company"></div>
         </div>
-        {% if id is defined %}
-            <input type="hidden" id="data-id" value="{{ id }}">
-        {% endif %}
-    </form>
-{% endspaceless %}
+    </div>
+    <div class="col-md-6">
+        <div class="form-group zone-selection" style="display:none">
+            <select name="zone" class="form-control" id="hub-zone">
+                <option value=0>Zone*</option>
+            </select>
+            <div class="invalid-feedback" id="error-hub-zone"></div>
+        </div>
+    </div>
+</div>
+{% if id is defined %}
+    <input type="hidden" id="data-id" value="{{ id }}">
+{% endif %}
+{% endblock %}
+
+{% block modalFooter %}
+    <div class="d-flex justify-content-end">
+        <a href="/devices/hub/list" type="submit" class="btn btn-outline-dark mnw-100 mr-2">Cancel</a>
+        <button type="submit" class="btn btn-primary mnw-100">Save</button>
+    </div>
+{% endblock %}

@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import {Api} from "../components/api";
 import {GetQuery, GetTableSorting, PrepareQuery} from "../components/helpers";
 import HubServices from "../services/HubServices";
@@ -69,9 +69,12 @@ class HubController {
         }
     }
 
-    public async editView(request: Request, response: Response)
+    public async editView(request: Request, response: Response, next: NextFunction)
     {
-        if (request.xhr) {
+        if (!request.xhr) {
+            next();
+        }
+        if (!request.query.resource || request.query.resource !== 'form') {
             let details = await HubServices.getHubDetails(request, response);
 
             if (details.data.result) {
